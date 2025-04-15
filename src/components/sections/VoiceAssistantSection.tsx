@@ -13,10 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { 
   ELEVEN_LABS_VOICES, 
   generateSpeech, 
-  playAudio,
-  getApiKey,
-  saveApiKey as storeApiKey,
-  clearApiKey
+  playAudio
 } from "../../utils/voiceUtils";
 
 const VOICE_OPTIONS = [
@@ -31,18 +28,10 @@ const VoiceAssistantSection = () => {
   const [isListening, setIsListening] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [responses, setResponses] = useState<{text: string, timestamp: number}[]>([]);
-  const [apiKey, setApiKey] = useState("");
   const [showSettings, setShowSettings] = useState(false);
 
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   
-  useEffect(() => {
-    const savedApiKey = getApiKey();
-    if (savedApiKey) {
-      setApiKey(savedApiKey);
-    }
-  }, []);
-
   const initSpeechRecognition = () => {
     const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
     
@@ -86,15 +75,6 @@ const VoiceAssistantSection = () => {
     }
   };
 
-  const handleSaveApiKey = () => {
-    if (saveApiKey(apiKey.trim())) {
-      setShowSettings(false);
-      toast.success("ElevenLabs API key saved securely");
-    } else {
-      toast.error("Invalid API key format. Please check and try again.");
-    }
-  };
-
   const handleSubmit = async () => {
     if (!inputText.trim()) return;
     
@@ -114,7 +94,7 @@ const VoiceAssistantSection = () => {
       // Use setTimeout to add a delay, but properly handle async operations inside
       setTimeout(async () => {
         try {
-          const audioUrl = await generateSpeech(simulatedResponse.text, selectedVoice, getApiKey());
+          const audioUrl = await generateSpeech(simulatedResponse.text, selectedVoice);
           await playAudio(audioUrl);
           
           const selectedVoiceName = VOICE_OPTIONS.find(v => v.id === selectedVoice)?.name || "Default";
@@ -134,15 +114,8 @@ const VoiceAssistantSection = () => {
   };
 
   const playElevenLabsResponse = async (text: string) => {
-    const currentApiKey = getApiKey();
-    if (!currentApiKey) {
-      toast.error("ElevenLabs API key is required. Please set it in settings.");
-      setShowSettings(true);
-      return;
-    }
-
     try {
-      const audioUrl = await generateSpeech(text, selectedVoice, currentApiKey);
+      const audioUrl = await generateSpeech(text, selectedVoice);
       await playAudio(audioUrl);
       
       const selectedVoiceName = VOICE_OPTIONS.find(v => v.id === selectedVoice)?.name || "Default";
@@ -216,31 +189,17 @@ const VoiceAssistantSection = () => {
                   </DialogTrigger>
                   <DialogContent className="bg-cyber-dark border border-cesium/20 text-white">
                     <DialogHeader>
-                      <DialogTitle className="text-cesium">ElevenLabs Settings</DialogTitle>
+                      <DialogTitle className="text-cesium">Voice Settings</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
                       <div className="space-y-2">
-                        <label htmlFor="apiKey" className="text-sm font-medium text-gray-300">
-                          ElevenLabs API Key
-                        </label>
-                        <Input
-                          id="apiKey"
-                          type="password"
-                          value={apiKey}
-                          onChange={(e) => setApiKey(e.target.value)}
-                          placeholder="Enter your ElevenLabs API key"
-                          className="bg-cyber border-cesium/30 text-white"
-                        />
+                        <p className="text-sm text-gray-300">
+                          All voice settings are now managed securely on the server.
+                        </p>
                         <p className="text-xs text-gray-500">
-                          Your API key is stored securely in session storage and never sent to our servers.
+                          Your API key is stored securely in Supabase and never exposed to the client.
                         </p>
                       </div>
-                      <Button 
-                        onClick={handleSaveApiKey} 
-                        className="w-full bg-cesium hover:bg-cesium/80 text-cyber-dark"
-                      >
-                        Save API Key
-                      </Button>
                     </div>
                   </DialogContent>
                 </Dialog>

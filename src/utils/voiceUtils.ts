@@ -1,6 +1,9 @@
+
 /**
  * Voice utility functions for the CesiumCyber application
  */
+
+import { supabase } from "@/integrations/supabase/client";
 
 // ElevenLabs voice IDs for reference
 export const ELEVEN_LABS_VOICES = {
@@ -22,7 +25,7 @@ export const ELEVEN_LABS_MODELS = {
   TURBO_V2: "eleven_turbo_v2",
 };
 
-// Get API key from secure storage
+// Get API key from secure storage - Legacy method, kept for backward compatibility
 export const getApiKey = (): string => {
   const storedKey = sessionStorage.getItem('elevenLabsApiKey') || '';
   
@@ -30,7 +33,7 @@ export const getApiKey = (): string => {
   return storedKey.startsWith('sk_') ? storedKey : '';
 };
 
-// Securely save API key to session storage (more secure than localStorage)
+// Securely save API key to session storage - Legacy method, kept for backward compatibility
 export const saveApiKey = (apiKey: string): boolean => {
   // Basic API key format validation (ElevenLabs typically starts with 'sk_')
   const isValidKey = apiKey.startsWith('sk_') && apiKey.length > 10;
@@ -43,45 +46,46 @@ export const saveApiKey = (apiKey: string): boolean => {
   return false;
 };
 
-// Clear API key from session storage
+// Clear API key from session storage - Legacy method, kept for backward compatibility
 export const clearApiKey = (): void => {
   sessionStorage.removeItem('elevenLabsApiKey');
 };
 
 /**
- * Generate speech using ElevenLabs API
+ * Generate speech using ElevenLabs API through Supabase Edge Function
  * @param text Text to convert to speech
  * @param voiceId ElevenLabs voice ID
- * @param apiKey ElevenLabs API key
  * @returns Promise with audio URL
  */
 export const generateSpeech = async (
   text: string,
   voiceId: string,
-  apiKey: string
 ): Promise<string> => {
   try {
-    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "xi-api-key": apiKey,
-      },
-      body: JSON.stringify({
+    // Call the secure Supabase Edge Function instead of directly calling ElevenLabs
+    const { data, error } = await supabase.functions.invoke('elevenlabs-tts', {
+      body: {
         text,
-        model_id: ELEVEN_LABS_MODELS.MONOLINGUAL_V1,
-        voice_settings: {
-          stability: 0.5,
-          similarity_boost: 0.5,
-        },
-      }),
+        voiceId,
+        model: ELEVEN_LABS_MODELS.MONOLINGUAL_V1,
+      },
     });
 
-    if (!response.ok) {
-      throw new Error(`ElevenLabs API error: ${response.status}`);
+    if (error) {
+      console.error("Error calling elevenlabs-tts function:", error);
+      throw new Error(`Failed to generate speech: ${error.message}`);
     }
 
-    const audioBlob = await response.blob();
+    // Create a Blob from the returned audio data
+    const base64Data = data.audio;
+    const binaryString = window.atob(base64Data);
+    const bytes = new Uint8Array(binaryString.length);
+    
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    
+    const audioBlob = new Blob([bytes], { type: 'audio/mpeg' });
     return URL.createObjectURL(audioBlob);
   } catch (error) {
     console.error("Error generating speech:", error);

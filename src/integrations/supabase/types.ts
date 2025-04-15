@@ -9,13 +9,42 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      text_to_speech_logs: {
+        Row: {
+          character_count: number
+          created_at: string
+          id: string
+          text_content: string
+          user_id: string | null
+          voice_id: string
+        }
+        Insert: {
+          character_count: number
+          created_at?: string
+          id?: string
+          text_content: string
+          user_id?: string | null
+          voice_id: string
+        }
+        Update: {
+          character_count?: number
+          created_at?: string
+          id?: string
+          text_content?: string
+          user_id?: string | null
+          voice_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_speech: {
+        Args: { text_content: string; voice_id: string }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
