@@ -1,4 +1,3 @@
-
 import { CheckCircle, UserCheck, Award, Clock, BarChart } from "lucide-react";
 import ScrollAnimation from "../utils/ScrollAnimation";
 
@@ -76,7 +75,7 @@ const AboutSection = () => {
                     <CheckCircle className="h-6 w-6 text-cesium mr-3 flex-shrink-0 mt-0.5" />
                     <div>
                       <h3 className="text-white font-medium">Certified Expertise</h3>
-                      <p className="text-gray-400">Our team holds industry-leading certifications including CISSP, CEH, and OSCP.</p>
+                      <p className="text-gray-400">Our team holds industry-leading certifications including CISSP, CEH, and PenTest+.</p>
                     </div>
                   </div>
                 </ScrollAnimation>
