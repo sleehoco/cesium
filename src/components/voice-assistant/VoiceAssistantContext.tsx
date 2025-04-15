@@ -2,6 +2,7 @@
 import { createContext, useState, useContext, ReactNode } from "react";
 import { generateSpeech, playAudio, ELEVEN_LABS_VOICES } from "../../utils/voiceUtils";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 interface VoiceAssistantContextProps {
   selectedVoice: string;
@@ -29,33 +30,52 @@ export const VoiceAssistantProvider = ({ children }: { children: ReactNode }) =>
     setIsProcessing(true);
     
     try {
-      // Create the simulated response object
-      const simulatedResponse = {
-        text: `Here's information about ${inputText}. CesiumCyber provides advanced protection against the latest threats using our proprietary detection systems.`,
+      // Call the Supabase Edge Function to get response from LLM
+      const { data, error } = await supabase.functions.invoke('llm-response', {
+        body: { question: inputText }
+      });
+
+      if (error) {
+        console.error("Error calling llm-response function:", error);
+        toast.error(`Failed to get AI response: ${error.message}`);
+        setIsProcessing(false);
+        return;
+      }
+
+      if (!data || !data.response) {
+        console.error("No response data received from LLM");
+        toast.error("Failed to get AI response");
+        setIsProcessing(false);
+        return;
+      }
+      
+      // Create the response object with LLM-generated text
+      const aiResponse = {
+        text: data.response,
         timestamp: Date.now()
       };
       
-      // Update the UI state first
-      setResponses(prev => [...prev, simulatedResponse]);
+      // Update the UI state with the response
+      setResponses(prev => [...prev, aiResponse]);
       
-      // Use setTimeout to add a delay, but properly handle async operations inside
-      setTimeout(async () => {
-        try {
-          const audioUrl = await generateSpeech(simulatedResponse.text, selectedVoice);
-          await playAudio(audioUrl);
-          
-          const voiceName = getVoiceName(selectedVoice);
-          toast.success(`Played response with ${voiceName} voice`);
-        } catch (error) {
-          console.error("Error playing audio:", error);
-          toast.error("Failed to generate speech. Please check your API key.");
-        } finally {
-          setIsProcessing(false);
-        }
-      }, 1500);
+      // Generate and play speech for the AI response
+      try {
+        setIsGeneratingSpeech(true);
+        const audioUrl = await generateSpeech(aiResponse.text, selectedVoice);
+        await playAudio(audioUrl);
+        
+        const voiceName = getVoiceName(selectedVoice);
+        toast.success(`Played response with ${voiceName} voice`);
+      } catch (speechError) {
+        console.error("Error playing audio:", speechError);
+        toast.error("Failed to generate speech. Please check your API key.");
+      } finally {
+        setIsGeneratingSpeech(false);
+      }
     } catch (error) {
       console.error("Error processing request:", error);
       toast.error("Failed to process your request. Please try again.");
+    } finally {
       setIsProcessing(false);
     }
   };
