@@ -8,6 +8,8 @@ interface VoiceAssistantContextProps {
   setSelectedVoice: (voice: string) => void;
   responses: {text: string, timestamp: number}[];
   isProcessing: boolean;
+  isGeneratingSpeech: boolean;
+  currentPlayingResponseId: number | null;
   submitQuestion: (text: string) => Promise<void>;
   playElevenLabsResponse: (text: string) => Promise<void>;
 }
@@ -17,6 +19,8 @@ const VoiceAssistantContext = createContext<VoiceAssistantContextProps | undefin
 export const VoiceAssistantProvider = ({ children }: { children: ReactNode }) => {
   const [selectedVoice, setSelectedVoice] = useState(ELEVEN_LABS_VOICES.DANIEL);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isGeneratingSpeech, setIsGeneratingSpeech] = useState(false);
+  const [currentPlayingResponseId, setCurrentPlayingResponseId] = useState<number | null>(null);
   const [responses, setResponses] = useState<{text: string, timestamp: number}[]>([]);
 
   const submitQuestion = async (inputText: string) => {
@@ -58,6 +62,13 @@ export const VoiceAssistantProvider = ({ children }: { children: ReactNode }) =>
 
   const playElevenLabsResponse = async (text: string) => {
     try {
+      // Find the response with the matching text to get its timestamp
+      const responseToPlay = responses.find(r => r.text === text);
+      if (responseToPlay) {
+        setCurrentPlayingResponseId(responseToPlay.timestamp);
+      }
+      
+      setIsGeneratingSpeech(true);
       const audioUrl = await generateSpeech(text, selectedVoice);
       await playAudio(audioUrl);
       
@@ -67,6 +78,9 @@ export const VoiceAssistantProvider = ({ children }: { children: ReactNode }) =>
     } catch (error) {
       console.error("Error playing audio:", error);
       toast.error("Failed to generate speech. Please check your API key.");
+    } finally {
+      setIsGeneratingSpeech(false);
+      setCurrentPlayingResponseId(null);
     }
   };
 
@@ -86,6 +100,8 @@ export const VoiceAssistantProvider = ({ children }: { children: ReactNode }) =>
         setSelectedVoice,
         responses,
         isProcessing,
+        isGeneratingSpeech,
+        currentPlayingResponseId,
         submitQuestion,
         playElevenLabsResponse
       }}

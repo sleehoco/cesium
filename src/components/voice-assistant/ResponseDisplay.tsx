@@ -1,13 +1,20 @@
 
-import { Volume2, Bot } from "lucide-react";
+import { Volume2, Bot, Loader2 } from "lucide-react";
 import { Button } from "../ui/button";
 
 interface ResponseDisplayProps {
   responses: { text: string; timestamp: number }[];
   onPlayResponse: (text: string) => void;
+  isGeneratingSpeech?: boolean;
+  currentPlayingResponseId?: number | null;
 }
 
-const ResponseDisplay = ({ responses, onPlayResponse }: ResponseDisplayProps) => {
+const ResponseDisplay = ({ 
+  responses, 
+  onPlayResponse, 
+  isGeneratingSpeech = false,
+  currentPlayingResponseId = null 
+}: ResponseDisplayProps) => {
   if (responses.length === 0) {
     return (
       <div className="flex-1 flex items-center justify-center">
@@ -35,8 +42,13 @@ const ResponseDisplay = ({ responses, onPlayResponse }: ResponseDisplayProps) =>
               size="icon" 
               onClick={() => onPlayResponse(response.text)}
               className="h-8 w-8 text-gray-400 hover:text-cesium"
+              disabled={isGeneratingSpeech}
             >
-              <Volume2 className="h-4 w-4" />
+              {isGeneratingSpeech && currentPlayingResponseId === response.timestamp ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Volume2 className="h-4 w-4" />
+              )}
             </Button>
           </div>
           <p className="text-gray-300">{response.text}</p>
