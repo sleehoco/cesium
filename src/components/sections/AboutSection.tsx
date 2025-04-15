@@ -1,5 +1,4 @@
-
-import { CheckCircle, UserCheck, Award, Clock, BarChart, AlertTriangle } from "lucide-react";
+import { CheckCircle, UserCheck, Award, BarChart, AlertTriangle } from "lucide-react";
 import ScrollAnimation from "../utils/ScrollAnimation";
 import { Alert, AlertTitle, AlertDescription } from "../ui/alert";
 
@@ -109,16 +108,6 @@ const AboutSection = () => {
                     <div>
                       <h3 className="text-white font-medium">Industry Recognition</h3>
                       <p className="text-gray-400">Recognized for excellence in cybersecurity services and innovation.</p>
-                    </div>
-                  </div>
-                </ScrollAnimation>
-                
-                <ScrollAnimation className="delay-400">
-                  <div className="flex items-start">
-                    <Clock className="h-6 w-6 text-cesium mr-3 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h3 className="text-white font-medium">24/7 Support</h3>
-                      <p className="text-gray-400">Round-the-clock monitoring and support to address security concerns at any time.</p>
                     </div>
                   </div>
                 </ScrollAnimation>
