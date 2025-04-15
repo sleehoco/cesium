@@ -53,14 +53,24 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				cesium: {
-					DEFAULT: '#4ad9db', // A light teal/blue for cesium
-					dark: '#2a9d9f',
-					light: '#7aeaec',
+					DEFAULT: '#D4AF37', // Classic gold
+					dark: '#B78727',    // Darker gold for contrast
+					light: '#FFD700',   // Brighter gold for highlights
 				},
 				cyber: {
-					dark: '#0f172a', // Very dark blue, almost black
-					DEFAULT: '#1e293b', // Dark blue-gray
-					light: '#334155', // Lighter blue-gray
+					dark: '#0A0A0A',     // Black instead of dark blue
+					DEFAULT: '#1A1A1A',  // Slightly lighter black
+					light: '#2A2A2A',    // Even lighter black
+				},
+				gold: {
+					DEFAULT: '#D4AF37', // Classic gold
+					dark: '#B78727',    // Darker gold for contrast
+					light: '#FFD700',   // Brighter gold for highlights
+				},
+				black: {
+					DEFAULT: '#0A0A0A',  // Deep black
+					dark: '#000000',     // Absolute black
+					light: '#1A1A1A',    // Slightly lighter black
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
