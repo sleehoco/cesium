@@ -39,8 +39,8 @@ serve(async (req) => {
     // Prompt the LLM to act as a cybersecurity assistant
     const systemPrompt = "You are an expert cybersecurity assistant for CesiumCyber. Provide helpful, detailed and accurate information about cybersecurity threats, best practices, and protective measures. Keep responses focused, professional, and concise (around 3-4 sentences maximum).";
     
-    // Call the Gemini API
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey}`, {
+    // Call the Gemini API - updated to use the correct API URL format
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${geminiApiKey}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -97,4 +97,3 @@ serve(async (req) => {
     );
   }
 });
-
