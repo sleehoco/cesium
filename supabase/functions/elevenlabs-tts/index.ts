@@ -24,7 +24,14 @@ serve(async (req) => {
     const apiKey = Deno.env.get("ELEVENLABS_API_KEY");
     
     if (!apiKey) {
-      throw new Error('ElevenLabs API key not configured on the server');
+      console.error('ElevenLabs API key is not configured');
+      return new Response(
+        JSON.stringify({ error: 'ElevenLabs API key not configured' }),
+        { 
+          status: 500, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
     }
 
     // Log the request for monitoring
@@ -50,18 +57,30 @@ serve(async (req) => {
     if (!response.ok) {
       const errorData = await response.text();
       console.error("ElevenLabs API error:", errorData);
-      throw new Error(`ElevenLabs API error: ${response.status}`);
+      return new Response(
+        JSON.stringify({ error: `ElevenLabs API error: ${response.status}`, details: errorData }),
+        { 
+          status: response.status, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
     }
 
-    // Return the audio directly to the client with the correct content type
+    // Convert audio to base64 for transmission
     const audioBuffer = await response.arrayBuffer();
+    const base64Audio = btoa(
+      String.fromCharCode.apply(null, new Uint8Array(audioBuffer))
+    );
     
-    return new Response(audioBuffer, {
-      headers: { 
-        ...corsHeaders,
-        'Content-Type': 'audio/mpeg',
-      },
-    });
+    return new Response(
+      JSON.stringify({ audio: base64Audio }),
+      { 
+        headers: { 
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
   } catch (error) {
     console.error("Error in elevenlabs-tts function:", error);
     
