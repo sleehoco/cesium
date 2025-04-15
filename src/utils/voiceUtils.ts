@@ -1,4 +1,3 @@
-
 /**
  * Voice utility functions for the CesiumCyber application
  */
@@ -25,12 +24,23 @@ export const ELEVEN_LABS_MODELS = {
 
 // Get API key from secure storage
 export const getApiKey = (): string => {
-  return sessionStorage.getItem('elevenLabsApiKey') || '';
+  const storedKey = sessionStorage.getItem('elevenLabsApiKey') || '';
+  
+  // Optional: Add runtime validation if needed
+  return storedKey.startsWith('sk_') ? storedKey : '';
 };
 
 // Securely save API key to session storage (more secure than localStorage)
-export const saveApiKey = (apiKey: string): void => {
-  sessionStorage.setItem('elevenLabsApiKey', apiKey);
+export const saveApiKey = (apiKey: string): boolean => {
+  // Basic API key format validation (ElevenLabs typically starts with 'sk_')
+  const isValidKey = apiKey.startsWith('sk_') && apiKey.length > 10;
+  
+  if (isValidKey) {
+    sessionStorage.setItem('elevenLabsApiKey', apiKey);
+    return true;
+  }
+  
+  return false;
 };
 
 // Clear API key from session storage

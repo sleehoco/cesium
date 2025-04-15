@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Mic, MicOff, Send, Bot, Volume2, Loader2, Settings } from "lucide-react";
 import { Button } from "../ui/button";
@@ -88,12 +87,11 @@ const VoiceAssistantSection = () => {
   };
 
   const handleSaveApiKey = () => {
-    if (apiKey.trim()) {
-      storeApiKey(apiKey);
+    if (saveApiKey(apiKey.trim())) {
       setShowSettings(false);
       toast.success("ElevenLabs API key saved securely");
     } else {
-      toast.error("Please enter a valid API key");
+      toast.error("Invalid API key format. Please check and try again.");
     }
   };
 
