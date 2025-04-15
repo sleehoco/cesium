@@ -1,4 +1,3 @@
-
 import { createContext, useState, useContext, ReactNode } from "react";
 import { generateSpeech, playAudio, ELEVEN_LABS_VOICES } from "../../utils/voiceUtils";
 import { toast } from "sonner";
@@ -49,9 +48,12 @@ export const VoiceAssistantProvider = ({ children }: { children: ReactNode }) =>
         return;
       }
       
+      // Append "Thank you for checking out CesiumCyber" to the response
+      const fullResponse = `${data.response}\n\nThank you for checking out CesiumCyber.`;
+      
       // Create the response object with LLM-generated text
       const aiResponse = {
-        text: data.response,
+        text: fullResponse,
         timestamp: Date.now()
       };
       
@@ -138,3 +140,5 @@ export const useVoiceAssistant = () => {
   }
   return context;
 };
+
+export default VoiceAssistantContext;
