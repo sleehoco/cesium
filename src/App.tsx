@@ -10,12 +10,13 @@ import ClientDashboard from "./pages/ClientDashboard";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/utils/ProtectedRoute";
 
-// Create a client for React Query
+// Create a client for React Query with default options
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: false,
+      retry: 1,
       refetchOnWindowFocus: false,
+      staleTime: 5 * 60 * 1000, // 5 minutes
     },
   },
 });

@@ -8,7 +8,7 @@ const PageLoader = () => {
     // Use a shorter timeout to ensure it doesn't block rendering
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1000);
+    }, 800);
 
     return () => clearTimeout(timer);
   }, []);
