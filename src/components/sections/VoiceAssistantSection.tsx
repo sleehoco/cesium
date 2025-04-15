@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { Mic, MicOff, Send, Bot, Volume2, Loader2, Settings } from "lucide-react";
 import { Button } from "../ui/button";
@@ -102,21 +103,30 @@ const VoiceAssistantSection = () => {
     setIsProcessing(true);
     
     try {
-      setTimeout(() => {
-        const simulatedResponse = {
-          text: `Here's information about ${inputText}. CesiumCyber provides advanced protection against the latest threats using our proprietary detection systems.`,
-          timestamp: Date.now()
-        };
-        
-        setResponses(prev => [...prev, simulatedResponse]);
-        setInputText("");
-        setIsProcessing(false);
-        
-        const audioUrl = await generateSpeech(simulatedResponse.text, selectedVoice, getApiKey());
-        await playAudio(audioUrl);
-        
-        const selectedVoiceName = VOICE_OPTIONS.find(v => v.id === selectedVoice)?.name || "Default";
-        toast.success(`Played response with ${selectedVoiceName} voice`);
+      // Create the simulated response object
+      const simulatedResponse = {
+        text: `Here's information about ${inputText}. CesiumCyber provides advanced protection against the latest threats using our proprietary detection systems.`,
+        timestamp: Date.now()
+      };
+      
+      // Update the UI state first
+      setResponses(prev => [...prev, simulatedResponse]);
+      setInputText("");
+      
+      // Use setTimeout to add a delay, but properly handle async operations inside
+      setTimeout(async () => {
+        try {
+          const audioUrl = await generateSpeech(simulatedResponse.text, selectedVoice, getApiKey());
+          await playAudio(audioUrl);
+          
+          const selectedVoiceName = VOICE_OPTIONS.find(v => v.id === selectedVoice)?.name || "Default";
+          toast.success(`Played response with ${selectedVoiceName} voice`);
+        } catch (error) {
+          console.error("Error playing audio:", error);
+          toast.error("Failed to generate speech. Please check your API key.");
+        } finally {
+          setIsProcessing(false);
+        }
       }, 1500);
     } catch (error) {
       console.error("Error processing request:", error);
