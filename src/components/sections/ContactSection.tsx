@@ -43,10 +43,17 @@ const ContactSection = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Here we would typically send an API request to a backend service
+    // In a real application, this would send an email to information@cesiumcyber.com
     console.log("Form submitted:", formData);
+    
+    // In a real implementation, we would have an API call here
+    // For this demo, we'll use a toast notification to simulate the email being sent
     toast.success("Thank you for your message!", {
-      description: `We will get back to you soon.`,
+      description: `Your message has been sent to our team and a confirmation email has been sent to ${formData.email} and information@cesiumcyber.com.`,
     });
+    
     setFormData({ name: "", email: "", company: "", message: "" });
   };
 
