@@ -1,10 +1,23 @@
-import { CheckCircle, UserCheck, Award, Clock, BarChart } from "lucide-react";
+
+import { CheckCircle, UserCheck, Award, Clock, BarChart, AlertTriangle } from "lucide-react";
 import ScrollAnimation from "../utils/ScrollAnimation";
+import { Alert, AlertTitle, AlertDescription } from "../ui/alert";
 
 const AboutSection = () => {
   return (
     <div id="about" className="bg-cyber-dark py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Partner Alert */}
+        <div className="mb-12">
+          <Alert className="border-cesium/30 bg-cyber-light/20 text-white">
+            <AlertTriangle className="h-5 w-5 text-cesium" />
+            <AlertTitle className="text-cesium font-medium text-lg">Strategic Partnership</AlertTitle>
+            <AlertDescription className="text-gray-300">
+              CesiumCyber is proud to announce our strategic partnership with Huntress, enhancing our threat detection and response capabilities to provide even stronger protection for our clients.
+            </AlertDescription>
+          </Alert>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* About Image */}
           <div className="order-2 lg:order-1">
