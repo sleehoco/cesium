@@ -23,6 +23,21 @@ export const ELEVEN_LABS_MODELS = {
   TURBO_V2: "eleven_turbo_v2",
 };
 
+// Get API key from secure storage
+export const getApiKey = (): string => {
+  return sessionStorage.getItem('elevenLabsApiKey') || '';
+};
+
+// Securely save API key to session storage (more secure than localStorage)
+export const saveApiKey = (apiKey: string): void => {
+  sessionStorage.setItem('elevenLabsApiKey', apiKey);
+};
+
+// Clear API key from session storage
+export const clearApiKey = (): void => {
+  sessionStorage.removeItem('elevenLabsApiKey');
+};
+
 /**
  * Generate speech using ElevenLabs API
  * @param text Text to convert to speech

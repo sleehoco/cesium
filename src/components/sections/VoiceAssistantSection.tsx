@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Mic, MicOff, Send, Bot, Volume2, Loader2, Settings } from "lucide-react";
 import { Button } from "../ui/button";
@@ -8,38 +7,42 @@ import {
   RadioGroupItem
 } from "../ui/radio-group";
 import ScrollAnimation from "../utils/ScrollAnimation";
-import { toast } from "../ui/sonner";
+import { toast } from "sonner";
 import { Input } from "../ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { 
+  ELEVEN_LABS_VOICES, 
+  generateSpeech, 
+  playAudio,
+  getApiKey,
+  saveApiKey as storeApiKey,
+  clearApiKey
+} from "../../utils/voiceUtils";
 
-// Voice options with ElevenLabs voice IDs
 const VOICE_OPTIONS = [
-  { id: "EXAVITQu4vr4xnSDxMaL", name: "Sarah", description: "Professional female voice" },
-  { id: "N2lVS1w4EtoT3dr4eOWO", name: "Callum", description: "British male voice" },
-  { id: "onwK4e9ZLuTAKqWW03F9", name: "Daniel", description: "Cybersecurity expert voice" },
+  { id: ELEVEN_LABS_VOICES.SARAH, name: "Sarah", description: "Professional female voice" },
+  { id: ELEVEN_LABS_VOICES.CALLUM, name: "Callum", description: "British male voice" },
+  { id: ELEVEN_LABS_VOICES.DANIEL, name: "Daniel", description: "Cybersecurity expert voice" },
 ];
 
 const VoiceAssistantSection = () => {
   const [inputText, setInputText] = useState("");
-  const [selectedVoice, setSelectedVoice] = useState("onwK4e9ZLuTAKqWW03F9");
+  const [selectedVoice, setSelectedVoice] = useState(ELEVEN_LABS_VOICES.DANIEL);
   const [isListening, setIsListening] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [responses, setResponses] = useState<{text: string, timestamp: number}[]>([]);
   const [apiKey, setApiKey] = useState("");
   const [showSettings, setShowSettings] = useState(false);
 
-  // Refs for speech recognition and audio
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   
-  // Check for saved API key on component mount
   useEffect(() => {
-    const savedApiKey = localStorage.getItem("elevenLabsApiKey");
+    const savedApiKey = getApiKey();
     if (savedApiKey) {
       setApiKey(savedApiKey);
     }
   }, []);
 
-  // Initialize speech recognition (with proper type checking)
   const initSpeechRecognition = () => {
     const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
     
@@ -65,7 +68,6 @@ const VoiceAssistantSection = () => {
     }
   };
 
-  // Toggle speech recognition
   const toggleListening = () => {
     initSpeechRecognition();
     
@@ -84,26 +86,22 @@ const VoiceAssistantSection = () => {
     }
   };
 
-  // Save API key to localStorage
-  const saveApiKey = () => {
+  const handleSaveApiKey = () => {
     if (apiKey.trim()) {
-      localStorage.setItem("elevenLabsApiKey", apiKey);
+      storeApiKey(apiKey);
       setShowSettings(false);
-      toast.success("ElevenLabs API key saved");
+      toast.success("ElevenLabs API key saved securely");
     } else {
       toast.error("Please enter a valid API key");
     }
   };
 
-  // Submit query to LLM and get voice response
   const handleSubmit = async () => {
     if (!inputText.trim()) return;
     
     setIsProcessing(true);
     
     try {
-      // In a real implementation, this would call your LLM API
-      // For demo purposes, we'll simulate a response
       setTimeout(() => {
         const simulatedResponse = {
           text: `Here's information about ${inputText}. CesiumCyber provides advanced protection against the latest threats using our proprietary detection systems.`,
@@ -114,8 +112,11 @@ const VoiceAssistantSection = () => {
         setInputText("");
         setIsProcessing(false);
         
-        // Play audio response using ElevenLabs
-        playElevenLabsResponse(simulatedResponse.text);
+        const audioUrl = await generateSpeech(simulatedResponse.text, selectedVoice, getApiKey());
+        await playAudio(audioUrl);
+        
+        const selectedVoiceName = VOICE_OPTIONS.find(v => v.id === selectedVoice)?.name || "Default";
+        toast.success(`Played response with ${selectedVoiceName} voice`);
       }, 1500);
     } catch (error) {
       console.error("Error processing request:", error);
@@ -124,47 +125,20 @@ const VoiceAssistantSection = () => {
     }
   };
 
-  // Play audio response using ElevenLabs
   const playElevenLabsResponse = async (text: string) => {
-    if (!apiKey) {
+    const currentApiKey = getApiKey();
+    if (!currentApiKey) {
       toast.error("ElevenLabs API key is required. Please set it in settings.");
       setShowSettings(true);
       return;
     }
 
     try {
-      const response = await fetch("https://api.elevenlabs.io/v1/text-to-speech/" + selectedVoice, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "xi-api-key": apiKey
-        },
-        body: JSON.stringify({
-          text: text,
-          model_id: "eleven_monolingual_v1",
-          voice_settings: {
-            stability: 0.5,
-            similarity_boost: 0.5
-          }
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error(`ElevenLabs API error: ${response.status}`);
-      }
-
-      const audioBlob = await response.blob();
-      const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-      
-      audio.onended = () => {
-        URL.revokeObjectURL(audioUrl);
-      };
-      
-      audio.play();
+      const audioUrl = await generateSpeech(text, selectedVoice, currentApiKey);
+      await playAudio(audioUrl);
       
       const selectedVoiceName = VOICE_OPTIONS.find(v => v.id === selectedVoice)?.name || "Default";
-      toast.success(`Playing response with ${selectedVoiceName} voice`);
+      toast.success(`Played response with ${selectedVoiceName} voice`);
       
     } catch (error) {
       console.error("Error playing audio:", error);
@@ -187,7 +161,6 @@ const VoiceAssistantSection = () => {
         </ScrollAnimation>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          {/* Chat history panel */}
           <div className="lg:col-span-3 bg-cyber-dark rounded-lg border border-cesium/20 p-6 h-[500px] overflow-y-auto flex flex-col">
             {responses.length === 0 ? (
               <div className="flex-1 flex items-center justify-center">
@@ -223,7 +196,6 @@ const VoiceAssistantSection = () => {
             )}
           </div>
 
-          {/* Input and controls panel */}
           <div className="lg:col-span-2 bg-cyber-dark rounded-lg border border-cesium/20 p-6">
             <ScrollAnimation className="h-full flex flex-col">
               <div className="flex justify-between items-center mb-4">
@@ -252,11 +224,11 @@ const VoiceAssistantSection = () => {
                           className="bg-cyber border-cesium/30 text-white"
                         />
                         <p className="text-xs text-gray-500">
-                          Your API key is stored locally and never sent to our servers.
+                          Your API key is stored securely in session storage and never sent to our servers.
                         </p>
                       </div>
                       <Button 
-                        onClick={saveApiKey} 
+                        onClick={handleSaveApiKey} 
                         className="w-full bg-cesium hover:bg-cesium/80 text-cyber-dark"
                       >
                         Save API Key
