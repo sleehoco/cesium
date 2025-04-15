@@ -25,27 +25,28 @@ const VoiceAssistantSection = () => {
   const [responses, setResponses] = useState<{text: string, timestamp: number}[]>([]);
   
   // Refs for speech recognition and audio
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Initialize speech recognition (mock implementation)
+  // Initialize speech recognition (with proper type checking)
   const initSpeechRecognition = () => {
-    if (!recognitionRef.current && window.SpeechRecognition || window.webkitSpeechRecognition) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognition();
+    const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+    
+    if (!recognitionRef.current && SpeechRecognitionAPI) {
+      recognitionRef.current = new SpeechRecognitionAPI();
       recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
       
-      recognitionRef.current.onresult = (event: any) => {
+      recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
         const transcript = Array.from(event.results)
-          .map((result: any) => result[0])
-          .map((result: any) => result.transcript)
+          .map((result) => result[0])
+          .map((result) => result.transcript)
           .join("");
         
         setInputText(transcript);
       };
       
-      recognitionRef.current.onerror = (event: any) => {
+      recognitionRef.current.onerror = (event: ErrorEvent) => {
         console.error("Speech recognition error", event);
         setIsListening(false);
         toast.error("Speech recognition error. Please try again.");
