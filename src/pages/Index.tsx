@@ -10,6 +10,7 @@ import TestimonialSection from "../components/sections/TestimonialSection";
 import ContactSection from "../components/sections/ContactSection";
 import ScrollToTop from "../components/utils/ScrollToTop";
 import PageLoader from "../components/utils/PageLoader";
+import VoiceAssistantSection from "../components/sections/VoiceAssistantSection";
 
 const Index = () => {
   // Remove the previous anchor link handling since we now handle this with button clicks
@@ -23,6 +24,7 @@ const Index = () => {
         <ServicesSection />
         <AboutSection />
         <ApproachSection />
+        <VoiceAssistantSection />
         <TestimonialSection />
         <ContactSection />
       </main>
