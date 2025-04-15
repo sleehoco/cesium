@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
@@ -65,16 +64,23 @@ const Navbar = () => {
             >
               Contact
             </button>
-            <button 
-              onClick={() => scrollToSection('contact')} 
-              className="bg-cesium hover:bg-cesium-dark text-cyber-dark font-medium px-4 py-2 rounded-md transition-colors"
+            <Link 
+              to="/login"
+              className="bg-cesium hover:bg-cesium-dark text-cyber-dark font-medium px-4 py-2 rounded-md transition-colors flex items-center gap-2"
             >
-              Get a Consultation
-            </button>
+              <LogIn className="h-4 w-4" />
+              Login
+            </Link>
           </div>
           
           {/* Mobile menu button */}
-          <div className="flex md:hidden items-center">
+          <div className="flex md:hidden items-center space-x-4">
+            <Link 
+              to="/login"
+              className="text-cesium hover:text-cesium-dark"
+            >
+              <LogIn />
+            </Link>
             <button
               type="button"
               className="text-gray-300 hover:text-white focus:outline-none"
@@ -125,12 +131,13 @@ const Navbar = () => {
             >
               Contact
             </button>
-            <button
-              onClick={() => scrollToSection('contact')}
-              className="bg-cesium hover:bg-cesium-dark text-cyber-dark block px-3 py-2 rounded-md text-base font-medium w-full text-left"
+            <Link 
+              to="/login"
+              className="bg-cesium hover:bg-cesium-dark text-cyber-dark block px-3 py-2 rounded-md text-base font-medium w-full text-left flex items-center gap-2"
             >
-              Get a Consultation
-            </button>
+              <LogIn className="h-4 w-4" />
+              Login
+            </Link>
           </div>
         </div>
       )}
