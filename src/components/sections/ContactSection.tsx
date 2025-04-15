@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Send, Mail, Phone, MapPin } from "lucide-react";
 import ScrollAnimation from "../utils/ScrollAnimation";
@@ -18,7 +17,6 @@ const ContactSection = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real implementation, this would submit the form data
     console.log("Form submitted:", formData);
     alert("Thank you for your message! We'll get back to you soon.");
     setFormData({ name: "", email: "", company: "", message: "" });
@@ -37,7 +35,6 @@ const ContactSection = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Form */}
           <ScrollAnimation>
             <div className="bg-cyber-dark rounded-lg border border-cesium/20 p-6 md:p-8">
               <h3 className="text-2xl font-semibold text-white mb-6">Send us a message</h3>
@@ -121,7 +118,6 @@ const ContactSection = () => {
             </div>
           </ScrollAnimation>
           
-          {/* Contact Information */}
           <div>
             <div className="bg-cyber-dark rounded-lg border border-cesium/20 p-6 md:p-8 mb-8">
               <h3 className="text-2xl font-semibold text-white mb-6">Get in touch</h3>
@@ -133,8 +129,7 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <h4 className="text-white font-medium mb-1">Email</h4>
-                    <p className="text-gray-400">info@cesiumcyber.com</p>
-                    <p className="text-gray-400">support@cesiumcyber.com</p>
+                    <p className="text-gray-400">information@cesiumcyber.com</p>
                   </div>
                 </div>
                 
@@ -144,8 +139,7 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <h4 className="text-white font-medium mb-1">Phone</h4>
-                    <p className="text-gray-400">(555) 123-4567</p>
-                    <p className="text-gray-400">(555) 987-6543</p>
+                    <p className="text-gray-400">(301) 531-5670</p>
                   </div>
                 </div>
                 
@@ -155,8 +149,8 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <h4 className="text-white font-medium mb-1">Office</h4>
-                    <p className="text-gray-400">123 Cyber Street</p>
-                    <p className="text-gray-400">Tech City, TC 10101</p>
+                    <p className="text-gray-400">8850 Columbia 100 Pkwy</p>
+                    <p className="text-gray-400">Columbia, MD 21045</p>
                   </div>
                 </div>
               </div>
