@@ -1,4 +1,3 @@
-
 import { ArrowRight, Shield, Lock, Server } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -80,12 +79,6 @@ const HeroSection = () => {
                     <div className="p-4 bg-cyber-dark rounded-lg flex flex-col items-center justify-center border border-cesium/10 hover:border-cesium/30 transition-colors">
                       <Server className="h-10 w-10 text-cesium mb-2" />
                       <h3 className="text-white text-center">Infrastructure</h3>
-                    </div>
-                    <div className="p-4 bg-cyber-dark rounded-lg flex flex-col items-center justify-center border border-cesium/10 hover:border-cesium/30 transition-colors">
-                      <div className="h-10 w-10 border-2 border-cesium rounded-full flex items-center justify-center mb-2">
-                        <span className="text-cesium font-bold">24/7</span>
-                      </div>
-                      <h3 className="text-white text-center">Monitoring</h3>
                     </div>
                   </div>
                 </div>
