@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { contactFormSchema, ContactFormValues } from "./ContactFormSchema";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Form,
   FormControl,
@@ -38,20 +39,23 @@ const ContactForm = ({ className }: ContactFormProps) => {
     setIsSubmitting(true);
     
     try {
-      // Here we would typically send an API request to a backend service
-      // In a real application, this would send an email to information@cesiumcyber.com
-      console.log("Form submitted:", values);
+      const { data, error } = await supabase.functions.invoke('send-contact-email', {
+        body: values
+      });
       
-      // In a real implementation, we would have an API call here
-      // For this demo, we'll use a toast notification to simulate the email being sent
+      if (error) {
+        throw new Error(error.message);
+      }
+      
       toast.success("Thank you for your message!", {
-        description: `Your message has been sent to our team and a confirmation email has been sent to ${values.email} and information@cesiumcyber.com.`,
+        description: `Your message has been sent to our team and a confirmation email has been sent to ${values.email}.`,
       });
       
       form.reset();
     } catch (error) {
+      console.error("Error sending message:", error);
       toast.error("Failed to send message", {
-        description: "Please try again later or contact us directly.",
+        description: "Please try again later or contact us directly at information@cesiumcyber.com",
       });
     } finally {
       setIsSubmitting(false);
