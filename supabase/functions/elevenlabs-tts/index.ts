@@ -37,6 +37,7 @@ serve(async (req) => {
     // Log the request details for debugging
     console.log(`Generating speech for text (${text.length} chars) with voice ${voiceId}`);
     console.log(`Using model: ${model || "eleven_monolingual_v1"}`);
+    console.log(`API key available: ${apiKey ? 'Yes' : 'No'}`);
     
     // Make the request to ElevenLabs API
     const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
@@ -72,9 +73,22 @@ serve(async (req) => {
 
     // Convert audio to base64 for transmission
     const audioBuffer = await response.arrayBuffer();
-    const base64Audio = btoa(
-      String.fromCharCode(...new Uint8Array(audioBuffer))
-    );
+    
+    // Process the buffer in chunks to avoid stack overflow
+    function arrayBufferToBase64(buffer) {
+      const bytes = new Uint8Array(buffer);
+      let binary = '';
+      const chunkSize = 1024;
+      
+      for (let i = 0; i < bytes.length; i += chunkSize) {
+        const chunk = bytes.slice(i, Math.min(i + chunkSize, bytes.length));
+        binary += String.fromCharCode.apply(null, chunk);
+      }
+      
+      return btoa(binary);
+    }
+    
+    const base64Audio = arrayBufferToBase64(audioBuffer);
     
     console.log(`Successfully generated audio of size: ${audioBuffer.byteLength} bytes`);
     
