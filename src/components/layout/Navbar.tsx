@@ -10,40 +10,67 @@ const Navbar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  // Function to handle smooth scrolling for anchor links
+  const scrollToSection = (sectionId: string) => {
+    setIsMenuOpen(false);
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <nav className="bg-cyber-dark border-b border-cesium/20 fixed w-full z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20">
           <div className="flex items-center">
-            <Link to="/" className="flex-shrink-0 flex items-center">
+            <button 
+              onClick={() => scrollToSection('top')} 
+              className="flex-shrink-0 flex items-center"
+            >
               <span className="text-cesium font-bold text-2xl">CesiumCyber</span>
               <span className="text-white font-light ml-2">Security</span>
-            </Link>
+            </button>
           </div>
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-gray-300 hover:text-cesium transition-colors">
+            <button 
+              onClick={() => scrollToSection('top')} 
+              className="text-gray-300 hover:text-cesium transition-colors"
+            >
               Home
-            </Link>
-            <Link to="/#services" className="text-gray-300 hover:text-cesium transition-colors">
+            </button>
+            <button 
+              onClick={() => scrollToSection('services')} 
+              className="text-gray-300 hover:text-cesium transition-colors"
+            >
               Services
-            </Link>
-            <Link to="/#about" className="text-gray-300 hover:text-cesium transition-colors">
+            </button>
+            <button 
+              onClick={() => scrollToSection('about')} 
+              className="text-gray-300 hover:text-cesium transition-colors"
+            >
               About Us
-            </Link>
-            <Link to="/#approach" className="text-gray-300 hover:text-cesium transition-colors">
+            </button>
+            <button 
+              onClick={() => scrollToSection('approach')} 
+              className="text-gray-300 hover:text-cesium transition-colors"
+            >
               Our Approach
-            </Link>
-            <Link to="/#contact" className="text-gray-300 hover:text-cesium transition-colors">
+            </button>
+            <button 
+              onClick={() => scrollToSection('contact')} 
+              className="text-gray-300 hover:text-cesium transition-colors"
+            >
               Contact
-            </Link>
-            <Link 
-              to="/#consult" 
+            </button>
+            <button 
+              onClick={() => scrollToSection('contact')} 
               className="bg-cesium hover:bg-cesium-dark text-cyber-dark font-medium px-4 py-2 rounded-md transition-colors"
             >
               Get a Consultation
-            </Link>
+            </button>
           </div>
           
           {/* Mobile menu button */}
@@ -68,48 +95,42 @@ const Navbar = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-cyber-dark border-t border-cesium/10">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <Link 
-              to="/"
-              className="text-gray-300 hover:text-cesium block px-3 py-2 rounded-md text-base font-medium"
-              onClick={toggleMenu}
+            <button 
+              onClick={() => scrollToSection('top')}
+              className="text-gray-300 hover:text-cesium block px-3 py-2 rounded-md text-base font-medium w-full text-left"
             >
               Home
-            </Link>
-            <Link 
-              to="/#services"
-              className="text-gray-300 hover:text-cesium block px-3 py-2 rounded-md text-base font-medium"
-              onClick={toggleMenu}
+            </button>
+            <button 
+              onClick={() => scrollToSection('services')}
+              className="text-gray-300 hover:text-cesium block px-3 py-2 rounded-md text-base font-medium w-full text-left"
             >
               Services
-            </Link>
-            <Link 
-              to="/#about"
-              className="text-gray-300 hover:text-cesium block px-3 py-2 rounded-md text-base font-medium"
-              onClick={toggleMenu}
+            </button>
+            <button 
+              onClick={() => scrollToSection('about')}
+              className="text-gray-300 hover:text-cesium block px-3 py-2 rounded-md text-base font-medium w-full text-left"
             >
               About Us
-            </Link>
-            <Link 
-              to="/#approach"
-              className="text-gray-300 hover:text-cesium block px-3 py-2 rounded-md text-base font-medium"
-              onClick={toggleMenu}
+            </button>
+            <button 
+              onClick={() => scrollToSection('approach')}
+              className="text-gray-300 hover:text-cesium block px-3 py-2 rounded-md text-base font-medium w-full text-left"
             >
               Our Approach
-            </Link>
-            <Link 
-              to="/#contact"
-              className="text-gray-300 hover:text-cesium block px-3 py-2 rounded-md text-base font-medium"
-              onClick={toggleMenu}
+            </button>
+            <button 
+              onClick={() => scrollToSection('contact')}
+              className="text-gray-300 hover:text-cesium block px-3 py-2 rounded-md text-base font-medium w-full text-left"
             >
               Contact
-            </Link>
-            <Link
-              to="/#consult"
-              className="bg-cesium hover:bg-cesium-dark text-cyber-dark block px-3 py-2 rounded-md text-base font-medium"
-              onClick={toggleMenu}
+            </button>
+            <button
+              onClick={() => scrollToSection('contact')}
+              className="bg-cesium hover:bg-cesium-dark text-cyber-dark block px-3 py-2 rounded-md text-base font-medium w-full text-left"
             >
               Get a Consultation
-            </Link>
+            </button>
           </div>
         </div>
       )}

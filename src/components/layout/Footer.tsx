@@ -1,8 +1,16 @@
-import { Link } from "react-router-dom";
+
 import { Mail, Phone, MapPin } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+
+  // Function to handle smooth scrolling for anchor links
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <footer className="bg-cyber-dark border-t border-cesium/20 text-gray-300">
@@ -10,10 +18,13 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="col-span-1 md:col-span-1">
-            <Link to="/" className="flex items-start">
+            <button 
+              onClick={() => scrollToSection('top')} 
+              className="flex items-start"
+            >
               <span className="text-cesium font-bold text-2xl">CesiumCyber</span>
               <span className="text-white font-light ml-2">Security</span>
-            </Link>
+            </button>
             <p className="mt-4 text-sm">
               Providing advanced cybersecurity solutions to protect your business from evolving threats.
             </p>
@@ -24,16 +35,36 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="hover:text-cesium transition-colors">Home</Link>
+                <button 
+                  onClick={() => scrollToSection('top')} 
+                  className="hover:text-cesium transition-colors"
+                >
+                  Home
+                </button>
               </li>
               <li>
-                <Link to="/#services" className="hover:text-cesium transition-colors">Services</Link>
+                <button 
+                  onClick={() => scrollToSection('services')} 
+                  className="hover:text-cesium transition-colors"
+                >
+                  Services
+                </button>
               </li>
               <li>
-                <Link to="/#about" className="hover:text-cesium transition-colors">About Us</Link>
+                <button 
+                  onClick={() => scrollToSection('about')} 
+                  className="hover:text-cesium transition-colors"
+                >
+                  About Us
+                </button>
               </li>
               <li>
-                <Link to="/#approach" className="hover:text-cesium transition-colors">Our Approach</Link>
+                <button 
+                  onClick={() => scrollToSection('approach')} 
+                  className="hover:text-cesium transition-colors"
+                >
+                  Our Approach
+                </button>
               </li>
             </ul>
           </div>
@@ -43,24 +74,36 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Services</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/#vulnerability-assessment" className="hover:text-cesium transition-colors">
+                <button 
+                  onClick={() => scrollToSection('services')} 
+                  className="hover:text-cesium transition-colors"
+                >
                   Vulnerability Assessment
-                </Link>
+                </button>
               </li>
               <li>
-                <Link to="/#penetration-testing" className="hover:text-cesium transition-colors">
+                <button 
+                  onClick={() => scrollToSection('services')} 
+                  className="hover:text-cesium transition-colors"
+                >
                   Penetration Testing
-                </Link>
+                </button>
               </li>
               <li>
-                <Link to="/#security-consulting" className="hover:text-cesium transition-colors">
+                <button 
+                  onClick={() => scrollToSection('services')} 
+                  className="hover:text-cesium transition-colors"
+                >
                   Security Consulting
-                </Link>
+                </button>
               </li>
               <li>
-                <Link to="/#incident-response" className="hover:text-cesium transition-colors">
+                <button 
+                  onClick={() => scrollToSection('services')} 
+                  className="hover:text-cesium transition-colors"
+                >
                   Incident Response
-                </Link>
+                </button>
               </li>
             </ul>
           </div>
@@ -90,12 +133,12 @@ const Footer = () => {
             © {currentYear} CesiumCyber Security. All rights reserved.
           </p>
           <div className="mt-4 md:mt-0 flex space-x-6">
-            <a href="#" className="text-gray-400 hover:text-cesium">
+            <button className="text-gray-400 hover:text-cesium">
               Privacy Policy
-            </a>
-            <a href="#" className="text-gray-400 hover:text-cesium">
+            </button>
+            <button className="text-gray-400 hover:text-cesium">
               Terms of Service
-            </a>
+            </button>
           </div>
         </div>
       </div>
