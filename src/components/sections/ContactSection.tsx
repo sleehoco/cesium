@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Send, Mail, Phone, MapPin } from "lucide-react";
 import ScrollAnimation from "../utils/ScrollAnimation";
@@ -153,8 +152,7 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <h4 className="text-white font-medium mb-1">Office</h4>
-                    <p className="text-gray-400">8850 Columbia 100 Pkwy</p>
-                    <p className="text-gray-400">Columbia, MD 21045</p>
+                    <p className="text-gray-400">8850 Cedar, Columbia, MD 21045</p>
                   </div>
                 </div>
               </div>
