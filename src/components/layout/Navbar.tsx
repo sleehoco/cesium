@@ -1,12 +1,22 @@
+
 import { useState } from "react";
-import { Menu, X, LogIn } from "lucide-react";
+import { Menu, X, LogIn, Search } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import CyberSecuritySearch from "../search/CyberSecuritySearch";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleSearch = () => {
+    setIsSearchOpen(!isSearchOpen);
   };
 
   const scrollToSection = (sectionId: string) => {
@@ -62,6 +72,14 @@ const Navbar = () => {
             >
               Contact
             </button>
+            <Button 
+              onClick={toggleSearch}
+              variant="ghost" 
+              className="text-gray-300 hover:text-gold p-2"
+              size="icon"
+            >
+              <Search className="h-5 w-5" />
+            </Button>
             <Link 
               to="/login"
               className="bg-gold hover:bg-gold-dark text-black-dark font-medium px-4 py-2 rounded-md transition-colors flex items-center gap-2"
@@ -72,6 +90,14 @@ const Navbar = () => {
           </div>
           
           <div className="flex md:hidden items-center space-x-4">
+            <Button 
+              onClick={toggleSearch}
+              variant="ghost" 
+              className="text-gray-300 hover:text-gold p-2"
+              size="icon"
+            >
+              <Search className="h-5 w-5" />
+            </Button>
             <Link 
               to="/login"
               className="text-gold hover:text-gold-dark"
@@ -137,6 +163,15 @@ const Navbar = () => {
           </div>
         </div>
       )}
+      
+      <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
+        <DialogContent className="sm:max-w-[600px] bg-cyber-dark border border-cesium/20">
+          <DialogHeader>
+            <DialogTitle className="text-gold">Search Cybersecurity Events</DialogTitle>
+          </DialogHeader>
+          <CyberSecuritySearch onClose={() => setIsSearchOpen(false)} />
+        </DialogContent>
+      </Dialog>
     </nav>
   );
 };
