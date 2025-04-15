@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Send, Mail, Phone, MapPin } from "lucide-react";
 import ScrollAnimation from "../utils/ScrollAnimation";
-import { toast } from "sonner";  // Import sonner toast
+import { toast } from "sonner";
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({
@@ -20,8 +20,8 @@ const ContactSection = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
-    toast.success("Thank you for your message! We'll get back to you soon.", {
-      description: `Message from ${formData.name} has been received.`,
+    toast.success("Thank you for your message!", {
+      description: `We will get back to you soon.`,
     });
     setFormData({ name: "", email: "", company: "", message: "" });
   };
