@@ -1,7 +1,14 @@
-import { ArrowRight, Shield, Lock, Server } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const HeroSection = () => {
+  const scrollToServices = () => {
+    const servicesSection = document.getElementById('services');
+    if (servicesSection) {
+      servicesSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="relative bg-cyber-dark pt-28 pb-20 overflow-hidden">
       {/* Enhanced Background pattern */}
@@ -32,12 +39,12 @@ const HeroSection = () => {
                 Get a Free Consultation
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
-              <Link
-                to="/#services"
+              <button
+                onClick={scrollToServices}
                 className="border border-cesium/50 text-cesium hover:bg-cesium/10 font-medium px-6 py-3 rounded-md transition-colors flex items-center justify-center"
               >
                 Explore Our Services
-              </Link>
+              </button>
             </div>
             
             {/* Stats */}
