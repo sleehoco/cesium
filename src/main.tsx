@@ -14,13 +14,11 @@ if (!rootElement) {
   } catch (error) {
     console.error("Error rendering the application:", error);
     // Display fallback error UI
-    if (rootElement) {
-      rootElement.innerHTML = `
-        <div style="font-family: sans-serif; padding: 20px; text-align: center;">
-          <h2>Something went wrong</h2>
-          <p>The application failed to load. Please check your console for details.</p>
-        </div>
-      `;
-    }
+    rootElement.innerHTML = `
+      <div style="font-family: sans-serif; padding: 20px; text-align: center;">
+        <h2>Something went wrong</h2>
+        <p>The application failed to load. Please check your console for details.</p>
+      </div>
+    `;
   }
 }
