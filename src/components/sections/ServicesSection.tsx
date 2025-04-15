@@ -1,5 +1,5 @@
 
-import { Shield, AlertTriangle, Clock, ArrowUpRight, Server, Lock, FileKey, Users } from "lucide-react";
+import { Shield, AlertTriangle, Clock, ArrowUpRight, Server, Lock, FileKey, Users, Factory } from "lucide-react";
 import ScrollAnimation from "../utils/ScrollAnimation";
 
 const ServicesSection = () => {
@@ -30,6 +30,15 @@ const ServicesSection = () => {
       color: "text-purple-400",
       bgColor: "bg-purple-400/10",
       borderColor: "border-purple-400/20"
+    },
+    {
+      id: "operational-technology",
+      title: "Operational Technology Security",
+      description: "Specialized security solutions for industrial control systems, SCADA, and IoT environments in critical infrastructure.",
+      icon: Factory,
+      color: "text-yellow-400",
+      bgColor: "bg-yellow-400/10",
+      borderColor: "border-yellow-400/20"
     },
     {
       id: "incident-response",
