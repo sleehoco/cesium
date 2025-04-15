@@ -34,8 +34,9 @@ serve(async (req) => {
       );
     }
 
-    // Log the request for monitoring
+    // Log the request details for debugging
     console.log(`Generating speech for text (${text.length} chars) with voice ${voiceId}`);
+    console.log(`Using model: ${model || "eleven_monolingual_v1"}`);
     
     // Make the request to ElevenLabs API
     const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
@@ -54,6 +55,9 @@ serve(async (req) => {
       }),
     });
 
+    // Log API response status for debugging
+    console.log(`ElevenLabs API response status: ${response.status}`);
+
     if (!response.ok) {
       const errorData = await response.text();
       console.error("ElevenLabs API error:", errorData);
@@ -69,8 +73,10 @@ serve(async (req) => {
     // Convert audio to base64 for transmission
     const audioBuffer = await response.arrayBuffer();
     const base64Audio = btoa(
-      String.fromCharCode.apply(null, new Uint8Array(audioBuffer))
+      String.fromCharCode(...new Uint8Array(audioBuffer))
     );
+    
+    console.log(`Successfully generated audio of size: ${audioBuffer.byteLength} bytes`);
     
     return new Response(
       JSON.stringify({ audio: base64Audio }),

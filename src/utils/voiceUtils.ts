@@ -4,6 +4,7 @@
  */
 
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 // ElevenLabs voice IDs for reference
 export const ELEVEN_LABS_VOICES = {
@@ -62,6 +63,8 @@ export const generateSpeech = async (
   voiceId: string,
 ): Promise<string> => {
   try {
+    console.log(`Calling TTS with text (${text.length} chars) and voice ${voiceId}`);
+    
     // Call the secure Supabase Edge Function instead of directly calling ElevenLabs
     const { data, error } = await supabase.functions.invoke('elevenlabs-tts', {
       body: {
@@ -74,6 +77,11 @@ export const generateSpeech = async (
     if (error) {
       console.error("Error calling elevenlabs-tts function:", error);
       throw new Error(`Failed to generate speech: ${error.message}`);
+    }
+
+    if (!data || !data.audio) {
+      console.error("Invalid response from elevenlabs-tts function:", data);
+      throw new Error("No audio data returned from the TTS service");
     }
 
     // Create a Blob from the returned audio data
@@ -89,6 +97,7 @@ export const generateSpeech = async (
     return URL.createObjectURL(audioBlob);
   } catch (error) {
     console.error("Error generating speech:", error);
+    toast.error(`Speech generation failed: ${error.message}`);
     throw error;
   }
 };
