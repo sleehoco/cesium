@@ -1,11 +1,14 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 6%; // Dark black
-    --foreground: 44 100% 70%; // Gold foreground
+    /* Dark black */
+    --background: 0 0% 6%;
+    /* Gold foreground */
+    --foreground: 44 100% 70%;
     
     --card: 222 47% 11%;
     --card-foreground: 210 40% 98%;
@@ -13,17 +16,23 @@
     --popover: 222 47% 11%;
     --popover-foreground: 210 40% 98%;
     
-    --primary: 44 87% 52%; // Gold
-    --primary-foreground: 0 0% 6%; // Dark black
+    /* Gold */
+    --primary: 44 87% 52%;
+    /* Dark black */
+    --primary-foreground: 0 0% 6%;
     
-    --secondary: 0 0% 13%; // Slightly lighter black
-    --secondary-foreground: 44 100% 70%; // Gold
+    /* Slightly lighter black */
+    --secondary: 0 0% 13%;
+    /* Gold */
+    --secondary-foreground: 44 100% 70%;
     
     --muted: 217 33% 26%;
     --muted-foreground: 215 20% 65%;
     
-    --accent: 44 87% 52%; // Gold
-    --accent-foreground: 0 0% 6%; // Dark black
+    /* Gold */
+    --accent: 44 87% 52%;
+    /* Dark black */
+    --accent-foreground: 0 0% 6%;
     
     --destructive: 0 62% 30%;
     --destructive-foreground: 210 40% 98%;
