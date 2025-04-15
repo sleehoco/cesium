@@ -1,4 +1,3 @@
-
 import { Shield, AlertTriangle, Clock, ArrowUpRight, Server, Lock, FileKey, Users, Factory } from "lucide-react";
 import ScrollAnimation from "../utils/ScrollAnimation";
 
