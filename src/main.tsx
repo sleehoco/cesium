@@ -2,6 +2,7 @@
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
+import { StrictMode } from 'react'
 
 const rootElement = document.getElementById("root");
 
@@ -10,7 +11,11 @@ if (!rootElement) {
 } else {
   try {
     const root = createRoot(rootElement);
-    root.render(<App />);
+    root.render(
+      <StrictMode>
+        <App />
+      </StrictMode>
+    );
   } catch (error) {
     console.error("Error rendering the application:", error);
     // Display fallback error UI

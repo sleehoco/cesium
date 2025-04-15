@@ -5,10 +5,10 @@ const PageLoader = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Use a shorter timeout to ensure it doesn't block rendering
+    // Use a very short timeout to ensure it doesn't block rendering
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 300);
+    }, 100);
 
     return () => clearTimeout(timer);
   }, []);
