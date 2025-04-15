@@ -1,8 +1,8 @@
+
 import { useState } from "react";
 import { Send, Mail, Phone, MapPin } from "lucide-react";
 import ScrollAnimation from "../utils/ScrollAnimation";
 import { toast } from "sonner";
-import DeepseekWidget from "../DeepseekWidget";
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({
@@ -123,10 +123,6 @@ const ContactSection = () => {
           </ScrollAnimation>
           
           <div>
-            <ScrollAnimation>
-              <DeepseekWidget />
-            </ScrollAnimation>
-            
             <div className="bg-cyber-dark rounded-lg border border-cesium/20 p-6 md:p-8 my-8">
               <h3 className="text-2xl font-semibold text-white mb-6">Get in touch</h3>
               

@@ -13,8 +13,6 @@ import PageLoader from "../components/utils/PageLoader";
 import VoiceAssistantSection from "../components/sections/VoiceAssistantSection";
 
 const Index = () => {
-  // Remove the previous anchor link handling since we now handle this with button clicks
-  
   return (
     <div id="top" className="bg-cyber min-h-screen">
       <PageLoader />
