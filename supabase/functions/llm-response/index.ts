@@ -34,12 +34,15 @@ serve(async (req) => {
       );
     }
 
-    console.log(`Processing question: ${question}`);
+    console.log(`Processing cybersecurity question: ${question}`);
     
-    // Prompt the LLM to act as a cybersecurity assistant
-    const systemPrompt = "You are an expert cybersecurity assistant for CesiumCyber. Provide helpful, detailed and accurate information about cybersecurity threats, best practices, and protective measures. Keep responses focused, professional, and concise (around 3-4 sentences maximum).";
+    // Enhanced system prompt for cybersecurity context
+    const systemPrompt = `You are an advanced AI cybersecurity assistant for CesiumCyber. 
+    Your primary goal is to provide expert, concise, and actionable guidance on cybersecurity topics. 
+    Always maintain a professional tone and focus on practical, implementable advice. 
+    Responses should be clear, direct, and tailored to help businesses understand and mitigate cyber risks.`;
     
-    // Call the Gemini API - updated to use the correct API URL format
+    // Call the Gemini API with updated configuration
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${geminiApiKey}`, {
       method: "POST",
       headers: {
@@ -53,8 +56,10 @@ serve(async (req) => {
           }
         ],
         generationConfig: {
-          temperature: 0.7,
+          temperature: 0.6,  // Slightly reduced for more consistent responses
           maxOutputTokens: 300,
+          topP: 0.9,
+          topK: 40
         }
       }),
     });
@@ -74,7 +79,7 @@ serve(async (req) => {
     const data = await response.json();
     const llmResponse = data.candidates[0].content.parts[0].text;
     
-    console.log(`Generated LLM response (${llmResponse.length} chars)`);
+    console.log(`Generated cybersecurity response (${llmResponse.length} chars)`);
     
     return new Response(
       JSON.stringify({ response: llmResponse }),
