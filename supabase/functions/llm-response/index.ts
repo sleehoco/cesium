@@ -20,13 +20,13 @@ serve(async (req) => {
       throw new Error('Missing required parameter: question');
     }
 
-    // Using OpenAI API for LLM responses - API key stored in Supabase secrets
-    const openaiApiKey = Deno.env.get("OPENAI_API_KEY");
+    // Using Gemini API - API key stored in Supabase secrets
+    const geminiApiKey = Deno.env.get("GEMINI_API_KEY");
     
-    if (!openaiApiKey) {
-      console.error('OpenAI API key is not configured');
+    if (!geminiApiKey) {
+      console.error('Gemini API key is not configured');
       return new Response(
-        JSON.stringify({ error: 'OpenAI API key not configured' }),
+        JSON.stringify({ error: 'Gemini API key not configured' }),
         { 
           status: 500, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -39,35 +39,31 @@ serve(async (req) => {
     // Prompt the LLM to act as a cybersecurity assistant
     const systemPrompt = "You are an expert cybersecurity assistant for CesiumCyber. Provide helpful, detailed and accurate information about cybersecurity threats, best practices, and protective measures. Keep responses focused, professional, and concise (around 3-4 sentences maximum).";
     
-    // Call the OpenAI API
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    // Call the Gemini API
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${openaiApiKey}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content: systemPrompt
-          },
+        contents: [
           {
             role: "user",
-            content: question
+            parts: [{ text: systemPrompt + "\n\n" + question }]
           }
         ],
-        temperature: 0.7,
-        max_tokens: 300,
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 300,
+        }
       }),
     });
 
     if (!response.ok) {
       const errorData = await response.text();
-      console.error("OpenAI API error:", errorData);
+      console.error("Gemini API error:", errorData);
       return new Response(
-        JSON.stringify({ error: `OpenAI API error: ${response.status}`, details: errorData }),
+        JSON.stringify({ error: `Gemini API error: ${response.status}`, details: errorData }),
         { 
           status: response.status, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -76,7 +72,7 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    const llmResponse = data.choices[0].message.content;
+    const llmResponse = data.candidates[0].content.parts[0].text;
     
     console.log(`Generated LLM response (${llmResponse.length} chars)`);
     
@@ -101,3 +97,4 @@ serve(async (req) => {
     );
   }
 });
+
