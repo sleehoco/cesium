@@ -10,6 +10,13 @@ const HeroSection = () => {
     }
   };
 
+  const scrollToConsult = () => {
+    const consultSection = document.getElementById('consult');
+    if (consultSection) {
+      consultSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="relative bg-cyber-dark pt-28 pb-20 overflow-hidden">
       {/* Enhanced Background pattern */}
@@ -33,13 +40,13 @@ const HeroSection = () => {
               Protect your business with cutting-edge security solutions tailored to defend against today's evolving threats.
             </p>
             <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-              <Link
-                to="/#consult"
+              <button
+                onClick={scrollToConsult}
                 className="bg-cesium hover:bg-cesium-dark text-cyber-dark font-medium px-6 py-3 rounded-md transition-colors flex items-center justify-center"
               >
                 Get a Free Consultation
                 <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
+              </button>
               <button
                 onClick={scrollToServices}
                 className="border border-cesium/50 text-cesium hover:bg-cesium/10 font-medium px-6 py-3 rounded-md transition-colors flex items-center justify-center"
