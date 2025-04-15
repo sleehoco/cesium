@@ -5,8 +5,15 @@ import { Link } from "react-router-dom";
 const HeroSection = () => {
   return (
     <div className="relative bg-cyber-dark pt-28 pb-20 overflow-hidden">
-      {/* Background pattern */}
+      {/* Enhanced Background pattern */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMyMjIiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djZoNnYtNmgtNnptMCAwdjZoNnYtNmgtNnoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-10"></div>
+      
+      {/* New vivid animated blobs */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-20 -left-20 w-96 h-96 bg-cesium/10 rounded-full mix-blend-screen filter blur-3xl opacity-70 animate-blob"></div>
+        <div className="absolute top-40 -right-20 w-96 h-96 bg-[#F97316]/10 rounded-full mix-blend-screen filter blur-3xl opacity-70 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-20 left-40 w-96 h-96 bg-[#8B5CF6]/10 rounded-full mix-blend-screen filter blur-3xl opacity-70 animate-blob animation-delay-4000"></div>
+      </div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -36,45 +43,45 @@ const HeroSection = () => {
             
             {/* Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-12">
-              <div className="bg-cyber border border-cesium/20 rounded-lg p-4">
+              <div className="bg-cyber border border-cesium/20 rounded-lg p-4 backdrop-blur-sm bg-black/30">
                 <p className="text-cesium text-2xl font-bold">100+</p>
                 <p className="text-gray-400 text-sm">Clients Protected</p>
               </div>
-              <div className="bg-cyber border border-cesium/20 rounded-lg p-4">
+              <div className="bg-cyber border border-cesium/20 rounded-lg p-4 backdrop-blur-sm bg-black/30">
                 <p className="text-cesium text-2xl font-bold">1000+</p>
                 <p className="text-gray-400 text-sm">Threats Mitigated</p>
               </div>
-              <div className="bg-cyber border border-cesium/20 rounded-lg p-4">
+              <div className="bg-cyber border border-cesium/20 rounded-lg p-4 backdrop-blur-sm bg-black/30">
                 <p className="text-cesium text-2xl font-bold">99.9%</p>
                 <p className="text-gray-400 text-sm">Success Rate</p>
               </div>
             </div>
           </div>
           
-          {/* Hero Image/Graphics */}
+          {/* Hero Image/Graphics with enhanced glow */}
           <div className="flex justify-center relative">
             <div className="relative w-full max-w-lg">
-              {/* Glowing effect */}
-              <div className="absolute top-0 -left-4 w-72 h-72 bg-cesium/30 rounded-full mix-blend-screen filter blur-xl opacity-30 animate-blob"></div>
-              <div className="absolute -bottom-8 right-20 w-72 h-72 bg-cesium/20 rounded-full mix-blend-screen filter blur-xl opacity-30 animate-blob animation-delay-4000"></div>
+              {/* Enhanced glowing effects */}
+              <div className="absolute top-0 -left-4 w-72 h-72 bg-cesium/30 rounded-full mix-blend-screen filter blur-xl opacity-50 animate-blob"></div>
+              <div className="absolute -bottom-8 right-20 w-72 h-72 bg-[#D946EF]/30 rounded-full mix-blend-screen filter blur-xl opacity-50 animate-blob animation-delay-4000"></div>
               
               {/* Core graphic */}
               <div className="relative">
-                <div className="bg-cyber rounded-2xl border border-cesium/30 shadow-xl p-8 relative z-10">
+                <div className="bg-cyber rounded-2xl border border-cesium/30 shadow-xl p-8 relative z-10 backdrop-blur-sm bg-black/30">
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 bg-cyber-dark rounded-lg flex flex-col items-center justify-center">
+                    <div className="p-4 bg-cyber-dark rounded-lg flex flex-col items-center justify-center border border-cesium/10 hover:border-cesium/30 transition-colors">
                       <Shield className="h-10 w-10 text-cesium mb-2" />
                       <h3 className="text-white text-center">Threat Protection</h3>
                     </div>
-                    <div className="p-4 bg-cyber-dark rounded-lg flex flex-col items-center justify-center">
+                    <div className="p-4 bg-cyber-dark rounded-lg flex flex-col items-center justify-center border border-cesium/10 hover:border-cesium/30 transition-colors">
                       <Lock className="h-10 w-10 text-cesium mb-2" />
                       <h3 className="text-white text-center">Data Security</h3>
                     </div>
-                    <div className="p-4 bg-cyber-dark rounded-lg flex flex-col items-center justify-center">
+                    <div className="p-4 bg-cyber-dark rounded-lg flex flex-col items-center justify-center border border-cesium/10 hover:border-cesium/30 transition-colors">
                       <Server className="h-10 w-10 text-cesium mb-2" />
                       <h3 className="text-white text-center">Infrastructure</h3>
                     </div>
-                    <div className="p-4 bg-cyber-dark rounded-lg flex flex-col items-center justify-center">
+                    <div className="p-4 bg-cyber-dark rounded-lg flex flex-col items-center justify-center border border-cesium/10 hover:border-cesium/30 transition-colors">
                       <div className="h-10 w-10 border-2 border-cesium rounded-full flex items-center justify-center mb-2">
                         <span className="text-cesium font-bold">24/7</span>
                       </div>
