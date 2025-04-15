@@ -1,4 +1,5 @@
-import { ArrowRight } from "lucide-react";
+
+import { ArrowRight, Shield, Lock, Server } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const HeroSection = () => {
