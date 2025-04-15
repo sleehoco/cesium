@@ -11,10 +11,12 @@ import ContactSection from "../components/sections/ContactSection";
 import ScrollToTop from "../components/utils/ScrollToTop";
 import PageLoader from "../components/utils/PageLoader";
 import VoiceAssistantSection from "../components/sections/VoiceAssistantSection";
+import MetaTags from "../components/utils/MetaTags";
 
 const Index = () => {
   return (
     <div id="top" className="bg-cyber min-h-screen">
+      <MetaTags />
       <PageLoader />
       <Navbar />
       <main>
