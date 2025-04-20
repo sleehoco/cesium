@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import ClientDashboard from "./pages/ClientDashboard";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/utils/ProtectedRoute";
+import BadgeRemover from "./components/utils/BadgeRemover";
 import { useState, useEffect } from "react";
 
 const App = () => {
@@ -34,6 +35,7 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <BrowserRouter>
+          <BadgeRemover />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
