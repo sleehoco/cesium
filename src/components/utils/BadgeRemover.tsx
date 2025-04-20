@@ -7,6 +7,30 @@ import { useEffect } from 'react';
  */
 const BadgeRemover = () => {
   useEffect(() => {
+    // Function to remove badge elements
+    const removeBadgeElements = () => {
+      // Direct DOM removal for specific badge elements
+      const directBadge = document.getElementById('lovable-badge');
+      if (directBadge) {
+        console.log('Removing direct badge element');
+        directBadge.remove();
+      }
+
+      // More aggressive approach - find and remove any elements that match our criteria
+      const possibleBadges = document.querySelectorAll('a[href*="lovable.dev"]');
+      possibleBadges.forEach(badge => {
+        console.log('Removing badge element by URL pattern');
+        badge.remove();
+      });
+
+      // Try to find and remove any script elements that might be injecting the badge
+      const scripts = document.querySelectorAll('script[src*="gpteng"]');
+      scripts.forEach(script => {
+        console.log('Removing script:', script);
+        script.remove();
+      });
+    };
+
     // Add CSS to hide known badge selectors
     const style = document.createElement('style');
     style.innerHTML = `
@@ -15,6 +39,9 @@ const BadgeRemover = () => {
       div[class*="gpte"],
       div[id*="lovable"],
       div[class*="lovable"],
+      a[id*="lovable"],
+      a[href*="lovable.dev"],
+      #lovable-badge,
       #gpt-engineer-select-root,
       .gpt-engineer-widget,
       [data-lovable-badge="true"],
@@ -23,20 +50,35 @@ const BadgeRemover = () => {
         visibility: hidden !important;
         opacity: 0 !important;
         pointer-events: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        position: absolute !important;
+        top: -9999px !important;
+        left: -9999px !important;
       }
     `;
     document.head.appendChild(style);
 
-    // Try to find and remove any scripts that might be injecting the badge
-    const scripts = document.querySelectorAll('script[src*="gpteng"]');
-    scripts.forEach(script => {
-      console.log('Removing script:', script);
-      script.remove();
+    // Call initially
+    removeBadgeElements();
+
+    // Set up a mutation observer to detect and remove the badge if it's added dynamically
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach(() => {
+        removeBadgeElements();
+      });
+    });
+
+    // Start observing the body for added nodes
+    observer.observe(document.body, { 
+      childList: true, 
+      subtree: true 
     });
 
     return () => {
-      // Cleanup if component unmounts
+      // Cleanup when component unmounts
       style.remove();
+      observer.disconnect();
     };
   }, []);
 
