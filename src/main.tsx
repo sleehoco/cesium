@@ -1,11 +1,11 @@
 
+import React, { Component, StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
-import { StrictMode, ErrorBoundary } from 'react'
 
 // Simple error boundary component
-class ErrorFallback extends React.Component {
+class ErrorFallback extends Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false, error: null };
