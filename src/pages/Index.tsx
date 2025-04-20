@@ -7,7 +7,7 @@ import HeroSection from "../components/sections/HeroSection";
 import ServicesSection from "../components/sections/ServicesSection";
 import AboutSection from "../components/sections/AboutSection";
 import ApproachSection from "../components/sections/ApproachSection";
-import TestimonialSection from "../components/sections/TestimonialSection";
+// Removed TestimonialSection import
 import ContactSection from "../components/sections/ContactSection";
 import ScrollToTop from "../components/utils/ScrollToTop";
 import PageLoader from "../components/utils/PageLoader";
@@ -25,7 +25,7 @@ const Index = () => {
         <AboutSection />
         <ApproachSection />
         {/* Removed VoiceAssistantSection */}
-        <TestimonialSection />
+        {/* Removed TestimonialSection */}
         <ContactSection />
       </main>
       <Footer />
