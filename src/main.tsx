@@ -4,18 +4,28 @@ import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 
+// Define types for ErrorFallback component
+interface ErrorFallbackState {
+  hasError: boolean;
+  error: Error | null;
+}
+
+interface ErrorFallbackProps {
+  children: React.ReactNode;
+}
+
 // Simple error boundary component
-class ErrorFallback extends Component {
-  constructor(props) {
+class ErrorFallback extends Component<ErrorFallbackProps, ErrorFallbackState> {
+  constructor(props: ErrorFallbackProps) {
     super(props);
     this.state = { hasError: false, error: null };
   }
   
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(error: Error): ErrorFallbackState {
     return { hasError: true, error };
   }
   
-  componentDidCatch(error, errorInfo) {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
     console.error("Application error:", error, errorInfo);
   }
   
@@ -91,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div style="font-family: sans-serif; padding: 20px; text-align: center;">
           <h2>Something went wrong</h2>
           <p>The application failed to load. Please check your console for details.</p>
-          <p>${error?.message || 'Unknown error'}</p>
+          <p>${(error as Error)?.message || 'Unknown error'}</p>
           <button onclick="window.location.reload()" style="margin-top: 20px; padding: 8px 16px;">
             Refresh Page
           </button>
