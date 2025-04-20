@@ -8,9 +8,15 @@ const PageLoader = () => {
     // Use a very short timeout to ensure it doesn't block rendering
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 100);
+    }, 50);
 
-    return () => clearTimeout(timer);
+    // Log the page loader state
+    console.log("PageLoader mounted");
+
+    return () => {
+      clearTimeout(timer);
+      console.log("PageLoader unmounted");
+    };
   }, []);
 
   if (!loading) return null;

@@ -9,11 +9,11 @@ import Login from "./pages/Login";
 import ClientDashboard from "./pages/ClientDashboard";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/utils/ProtectedRoute";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const App = () => {
   // Create a client for React Query with default options
-  // Moving this inside the component to avoid initialization issues
+  // Using lazy initialization to avoid issues
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
@@ -23,6 +23,12 @@ const App = () => {
       },
     },
   }));
+
+  // Log when the App component mounts
+  useEffect(() => {
+    console.log("App component mounted");
+    return () => console.log("App component unmounted");
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
