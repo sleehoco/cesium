@@ -18,16 +18,26 @@ interface ContactFormData {
 }
 
 serve(async (req) => {
+  // Log the incoming request method
+  console.log("Request method:", req.method);
+  
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const formData: ContactFormData = await req.json();
+    // Parse the request body
+    const requestText = await req.text();
+    console.log("Request body text:", requestText);
+    
+    const formData: ContactFormData = JSON.parse(requestText);
+    console.log("Parsed form data:", formData);
+    
     const { name, email, company, message } = formData;
     
     if (!name || !email || !message) {
+      console.log("Missing required fields:", { name, email, message });
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
         {
@@ -37,6 +47,7 @@ serve(async (req) => {
       );
     }
 
+    console.log("Sending confirmation email to user:", email);
     // Send confirmation email to the user
     const userEmailResponse = await resend.emails.send({
       from: "Cesium Cyber <no-reply@resend.dev>",
@@ -52,7 +63,9 @@ serve(async (req) => {
         </div>
       `,
     });
+    console.log("User email response:", userEmailResponse);
 
+    console.log("Sending notification email to company");
     // Send notification email to the company
     const companyEmailResponse = await resend.emails.send({
       from: "Contact Form <no-reply@resend.dev>",
@@ -68,9 +81,7 @@ serve(async (req) => {
         </div>
       `,
     });
-
-    console.log("User email sent:", userEmailResponse);
-    console.log("Company email sent:", companyEmailResponse);
+    console.log("Company email response:", companyEmailResponse);
 
     return new Response(
       JSON.stringify({ 

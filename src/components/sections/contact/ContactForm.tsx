@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Send } from "lucide-react";
+import { Send, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -37,14 +37,18 @@ const ContactForm = ({ className }: ContactFormProps) => {
 
   const onSubmit = async (values: ContactFormValues) => {
     setIsSubmitting(true);
+    console.log("Submitting form with values:", values);
     
     try {
+      console.log("Calling send-contact-email function...");
       const { data, error } = await supabase.functions.invoke('send-contact-email', {
         body: values
       });
       
+      console.log("Response from function:", { data, error });
+      
       if (error) {
-        throw new Error(error.message);
+        throw new Error(error.message || "Failed to send message");
       }
       
       toast.success("Thank you for your message!", {
@@ -155,8 +159,17 @@ const ContactForm = ({ className }: ContactFormProps) => {
             disabled={isSubmitting}
             className="w-full bg-cesium hover:bg-cesium-dark text-cyber-dark font-medium px-4 py-3 rounded-md transition-colors flex items-center justify-center"
           >
-            {isSubmitting ? "Sending..." : "Send Message"}
-            {!isSubmitting && <Send className="ml-2 h-4 w-4" />}
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Sending...
+              </>
+            ) : (
+              <>
+                Send Message
+                <Send className="ml-2 h-4 w-4" />
+              </>
+            )}
           </Button>
         </form>
       </Form>
