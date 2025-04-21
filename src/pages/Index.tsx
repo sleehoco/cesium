@@ -1,17 +1,14 @@
-
-// Remove the import and usage of VoiceAssistantSection to remove the AI assistant
-
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import HeroSection from "../components/sections/HeroSection";
 import ServicesSection from "../components/sections/ServicesSection";
 import AboutSection from "../components/sections/AboutSection";
 import ApproachSection from "../components/sections/ApproachSection";
-// Removed TestimonialSection import
 import ContactSection from "../components/sections/ContactSection";
 import ScrollToTop from "../components/utils/ScrollToTop";
 import PageLoader from "../components/utils/PageLoader";
 import MetaTags from "../components/utils/MetaTags";
+import CyberSecurityNewsBox from "../components/CyberSecurityNewsBox";
 
 const Index = () => {
   return (
@@ -20,12 +17,11 @@ const Index = () => {
       <PageLoader />
       <Navbar />
       <main>
+        <CyberSecurityNewsBox />
         <HeroSection />
         <ServicesSection />
         <AboutSection />
         <ApproachSection />
-        {/* Removed VoiceAssistantSection */}
-        {/* Removed TestimonialSection */}
         <ContactSection />
       </main>
       <Footer />
@@ -35,4 +31,3 @@ const Index = () => {
 };
 
 export default Index;
-
