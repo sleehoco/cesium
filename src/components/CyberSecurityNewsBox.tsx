@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Shield, Newspaper, ChevronUp, ChevronDown } from "lucide-react";
+import { Shield, Newspaper, ChevronUp, ChevronDown, ArrowUp, ArrowDown } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "./ui/card";
 import { toast } from "./ui/sonner";
 
@@ -35,6 +35,7 @@ const fetchCyberNews = async (): Promise<NewsItem[]> => {
 
 export const CyberSecurityNewsBox: React.FC = () => {
   const [expanded, setExpanded] = React.useState(false);
+  const [currentIdx, setCurrentIdx] = React.useState(0);
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["cyber-news-llm"],
@@ -46,10 +47,29 @@ export const CyberSecurityNewsBox: React.FC = () => {
     if (error) {
       toast.error("Could not fetch Cyber Security News");
     }
-  }, [error]);
+    // Reset to first item when news data changes
+    setCurrentIdx(0);
+  }, [error, data]);
 
-  // Snippet: Only show first news headline & impact when collapsed
-  const newsSnippet = !isLoading && !error && data && data.length > 0 ? data[0] : null;
+  const newsLength = data && Array.isArray(data) ? data.length : 0;
+
+  // Handlers
+  const incrementIdx = () => {
+    if (!data) return;
+    setCurrentIdx(prev => (prev + 1 < newsLength ? prev + 1 : prev));
+  };
+  const decrementIdx = () => {
+    setCurrentIdx(prev => (prev > 0 ? prev - 1 : prev));
+  };
+
+  // Collapsed: only show current news snippet
+  const newsSnippet = !isLoading && !error && data && newsLength > 0 ? data[currentIdx] : null;
+
+  // Pagination for expanded view
+  const PAGINATION_SIZE = 5;
+  // Calculate which slice to show in expanded
+  const pageStart = Math.floor(currentIdx / PAGINATION_SIZE) * PAGINATION_SIZE;
+  const pageEnd = pageStart + PAGINATION_SIZE;
 
   return (
     <div
@@ -83,8 +103,30 @@ export const CyberSecurityNewsBox: React.FC = () => {
           ) : error ? (
             <div className="text-red-500 text-sm">Unable to load news. Please try again later.</div>
           ) : !expanded && newsSnippet ? (
-            // Collapsed: snippet mode
+            // Collapsed: snippet mode with navigation
             <div className="flex flex-row items-start gap-2">
+              <div className="flex flex-col justify-center mr-2 gap-2">
+                <button
+                  className={`rounded-full p-1 disabled:opacity-50`}
+                  aria-label="Previous news"
+                  onClick={decrementIdx}
+                  disabled={currentIdx === 0}
+                  tabIndex={0}
+                  type="button"
+                >
+                  <ArrowUp className="h-4 w-4" />
+                </button>
+                <button
+                  className={`rounded-full p-1 disabled:opacity-50`}
+                  aria-label="Next news"
+                  onClick={incrementIdx}
+                  disabled={currentIdx >= newsLength - 1}
+                  tabIndex={0}
+                  type="button"
+                >
+                  <ArrowDown className="h-4 w-4" />
+                </button>
+              </div>
               <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide mt-1 ${IMPACT_COLORS[newsSnippet.impact] || "bg-gray-400 text-white"}`}>
                 <Shield className="w-4 h-4 mr-1" />
                 {newsSnippet.impact} impact
@@ -96,29 +138,60 @@ export const CyberSecurityNewsBox: React.FC = () => {
                 <div className="text-xs text-gray-400">
                   Source: <span className="underline">{newsSnippet.source}</span>
                 </div>
+                <span className="text-[11px] text-cesium-dark font-medium ml-auto pr-2">{currentIdx + 1}/{newsLength}</span>
               </div>
             </div>
-          ) : expanded && data && data.length > 0 ? (
-            // Expanded: show all news items
-            <ul className="space-y-5 mb-2">
-              {data.map((n, i) => (
-                <li key={i} className="rounded-lg border border-cyber/10 p-3 flex flex-col md:flex-row md:items-center gap-3 bg-cyber">
-                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${IMPACT_COLORS[n.impact] || "bg-gray-400 text-white"}`}>
-                    <Shield className="w-4 h-4 mr-1" />
-                    {n.impact} impact
-                  </span>
-                  <div className="flex-1">
-                    <a href={n.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-cesium hover:underline">
-                      {n.title}
-                    </a>
-                    <div className="text-gray-300 text-sm">{n.summary}</div>
-                    <div className="text-xs text-gray-400 mt-1">
-                      Source: <span className="underline">{n.source}</span>
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
+          ) : expanded && data && newsLength > 0 ? (
+            // Expanded: paginated list with navigation arrows
+            <div>
+              <ul className="space-y-5 mb-2">
+                {data.slice(pageStart, Math.min(pageEnd, newsLength)).map((n, idx) => {
+                  const actualIdx = pageStart + idx;
+                  return (
+                    <li
+                      key={actualIdx}
+                      className={`rounded-lg border border-cyber/10 p-3 flex flex-col md:flex-row md:items-center gap-3 bg-cyber ${actualIdx === currentIdx ? "ring-2 ring-cesium" : ""}`}
+                    >
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${IMPACT_COLORS[n.impact] || "bg-gray-400 text-white"}`}>
+                        <Shield className="w-4 h-4 mr-1" />
+                        {n.impact} impact
+                      </span>
+                      <div className="flex-1">
+                        <a href={n.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-cesium hover:underline">
+                          {n.title}
+                        </a>
+                        <div className="text-gray-300 text-sm">{n.summary}</div>
+                        <div className="text-xs text-gray-400 mt-1">
+                          Source: <span className="underline">{n.source}</span>
+                        </div>
+                      </div>
+                      <span className="text-[11px] text-cesium-dark font-medium ml-auto pr-2">{actualIdx + 1}/{newsLength}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+              {/* Expanded navigation */}
+              <div className="flex justify-between mb-1">
+                <button
+                  className="rounded-full bg-cyber-light hover:bg-cyber px-3 py-1 flex items-center gap-1 disabled:opacity-50"
+                  aria-label="Previous news"
+                  onClick={decrementIdx}
+                  disabled={currentIdx === 0}
+                  type="button"
+                >
+                  <ArrowUp className="h-4 w-4" /> Previous
+                </button>
+                <button
+                  className="rounded-full bg-cyber-light hover:bg-cyber px-3 py-1 flex items-center gap-1 disabled:opacity-50"
+                  aria-label="Next news"
+                  onClick={incrementIdx}
+                  disabled={currentIdx >= newsLength - 1}
+                  type="button"
+                >
+                  Next <ArrowDown className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
           ) : (
             <div className="text-xs text-gray-400">No news found at this time.</div>
           )}
@@ -126,6 +199,7 @@ export const CyberSecurityNewsBox: React.FC = () => {
             <button
               className="mt-2 px-4 py-1 rounded text-cyber-dark bg-cesium hover:bg-cesium-dark font-semibold transition-colors"
               onClick={() => refetch()}
+              type="button"
             >
               Refresh
             </button>
