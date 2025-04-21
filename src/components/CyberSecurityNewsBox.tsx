@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Shield, Newspaper } from "lucide-react";
+import { Shield, Newspaper, ChevronUp, ChevronDown } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "./ui/card";
 import { toast } from "./ui/sonner";
 
@@ -34,6 +34,8 @@ const fetchCyberNews = async (): Promise<NewsItem[]> => {
 };
 
 export const CyberSecurityNewsBox: React.FC = () => {
+  const [expanded, setExpanded] = React.useState(false);
+
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["cyber-news-llm"],
     queryFn: fetchCyberNews,
@@ -42,56 +44,102 @@ export const CyberSecurityNewsBox: React.FC = () => {
 
   React.useEffect(() => {
     if (error) {
-      toast.error("Could not fetch CyberSecurity News");
+      toast.error("Could not fetch Cyber Security News");
     }
   }, [error]);
 
+  // Snippet: Only show first news headline & impact when collapsed
+  const newsSnippet = !isLoading && !error && data && data.length > 0 ? data[0] : null;
+
   return (
-    <Card className="mb-8 shadow-lg bg-gradient-to-br from-cyber-dark via-cyber to-cyber/90 border border-cesium/20 max-w-2xl mx-auto">
-      <CardHeader className="flex flex-row items-center gap-3 pb-2">
-        <Newspaper className="text-cesium h-7 w-7" />
-        <CardTitle className="text-2xl">Cybersecurity News</CardTitle>
-      </CardHeader>
-      <CardContent>
-        {isLoading ? (
-          <div className="text-gray-400 text-sm">Loading latest news...</div>
-        ) : error ? (
-          <div className="text-red-500 text-sm">Unable to load news. Please try again later.</div>
-        ) : (data && data.length > 0) ? (
-          <ul className="space-y-5">
-            {data.map((n, i) => (
-              <li key={i} className="rounded-lg border border-cyber/10 p-3 flex flex-col md:flex-row md:items-center gap-3 bg-cyber">
-                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${IMPACT_COLORS[n.impact] || "bg-gray-400 text-white"}`}>
-                  <Shield className="w-4 h-4 mr-1" />
-                  {n.impact} impact
-                </span>
-                <div className="flex-1">
-                  <a href={n.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-cesium hover:underline">
-                    {n.title}
-                  </a>
-                  <div className="text-gray-300 text-sm">{n.summary}</div>
-                  <div className="text-xs text-gray-400 mt-1">
-                    Source: <span className="underline">{n.source}</span>
-                  </div>
+    <div
+      className={`
+        fixed z-50 right-4 bottom-4 max-w-full md:max-w-md transition-all
+        ${expanded ? "w-[95vw] md:w-[30rem] h-[32rem] md:h-[32rem]" : "w-[95vw] md:w-[22rem] h-auto"}
+      `}
+      style={{ pointerEvents: "all" }}
+    >
+      <Card
+        className={`
+          shadow-lg bg-gradient-to-br from-cyber-dark via-cyber to-cyber/90 border border-cesium/30
+          transition-all duration-300 ease-in-out
+          ${expanded ? "rounded-t-lg" : "rounded-xl"}
+        `}
+      >
+        <CardHeader className="flex flex-row items-center gap-3 pb-2">
+          <Newspaper className="text-cesium h-7 w-7" />
+          <CardTitle className="text-2xl flex-1">Cybersecurity News</CardTitle>
+          <button
+            className="ml-2 rounded-full hover:bg-cyber-light p-1 transition-colors"
+            aria-label={expanded ? "Collapse news" : "Expand news"}
+            onClick={() => setExpanded(e => !e)}
+          >
+            {expanded ? <ChevronDown className="h-5 w-5" /> : <ChevronUp className="h-5 w-5" />}
+          </button>
+        </CardHeader>
+        <CardContent className={`overflow-auto transition-all duration-300 ${expanded ? "" : "max-h-32"}`}>
+          {isLoading ? (
+            <div className="text-gray-400 text-sm">Loading latest news...</div>
+          ) : error ? (
+            <div className="text-red-500 text-sm">Unable to load news. Please try again later.</div>
+          ) : !expanded && newsSnippet ? (
+            // Collapsed: snippet mode
+            <div className="flex flex-row items-start gap-2">
+              <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide mt-1 ${IMPACT_COLORS[newsSnippet.impact] || "bg-gray-400 text-white"}`}>
+                <Shield className="w-4 h-4 mr-1" />
+                {newsSnippet.impact} impact
+              </span>
+              <div className="flex flex-col flex-1 min-w-0">
+                <a href={newsSnippet.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-cesium hover:underline truncate">
+                  {newsSnippet.title}
+                </a>
+                <div className="text-xs text-gray-400">
+                  Source: <span className="underline">{newsSnippet.source}</span>
                 </div>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div className="text-xs text-gray-400">No news found at this time.</div>
+              </div>
+            </div>
+          ) : expanded && data && data.length > 0 ? (
+            // Expanded: show all news items
+            <ul className="space-y-5 mb-2">
+              {data.map((n, i) => (
+                <li key={i} className="rounded-lg border border-cyber/10 p-3 flex flex-col md:flex-row md:items-center gap-3 bg-cyber">
+                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${IMPACT_COLORS[n.impact] || "bg-gray-400 text-white"}`}>
+                    <Shield className="w-4 h-4 mr-1" />
+                    {n.impact} impact
+                  </span>
+                  <div className="flex-1">
+                    <a href={n.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-cesium hover:underline">
+                      {n.title}
+                    </a>
+                    <div className="text-gray-300 text-sm">{n.summary}</div>
+                    <div className="text-xs text-gray-400 mt-1">
+                      Source: <span className="underline">{n.source}</span>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="text-xs text-gray-400">No news found at this time.</div>
+          )}
+          <div className={`flex justify-end ${expanded ? "" : "hidden"}`}>
+            <button
+              className="mt-2 px-4 py-1 rounded text-cyber-dark bg-cesium hover:bg-cesium-dark font-semibold transition-colors"
+              onClick={() => refetch()}
+            >
+              Refresh
+            </button>
+          </div>
+        </CardContent>
+        {expanded && (
+          <CardDescription className="italic pt-2 text-xs text-gray-400 px-6 pb-3">
+            Powered by Gemini AI analysis – summarizing and classifying the latest cybersecurity news for business risk awareness.
+          </CardDescription>
         )}
-        <button
-          className="mt-4 px-4 py-1 rounded text-cyber-dark bg-cesium hover:bg-cesium-dark font-semibold transition-colors"
-          onClick={() => refetch()}
-        >
-          Refresh
-        </button>
-      </CardContent>
-      <CardDescription className="italic pt-2 text-xs text-gray-400">
-        Powered by Gemini AI analysis – summarizing and classifying the latest cybersecurity news for business risk awareness.
-      </CardDescription>
-    </Card>
+      </Card>
+    </div>
   );
 };
 
 export default CyberSecurityNewsBox;
+
