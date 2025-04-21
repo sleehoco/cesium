@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Shield, Newspaper, ChevronUp, ChevronDown, ArrowUp, ArrowDown } from "lucide-react";
@@ -35,6 +36,7 @@ const fetchCyberNews = async (): Promise<NewsItem[]> => {
 export const CyberSecurityNewsBox: React.FC = () => {
   const [expanded, setExpanded] = React.useState(false);
   const [currentIdx, setCurrentIdx] = React.useState(0);
+  const [currentPage, setCurrentPage] = React.useState(0);
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["cyber-news-llm"],
@@ -47,30 +49,50 @@ export const CyberSecurityNewsBox: React.FC = () => {
       toast.error("Could not fetch Cyber Security News");
     }
     setCurrentIdx(0);
+    setCurrentPage(0);
   }, [error, data]);
 
   const newsLength = data && Array.isArray(data) ? data.length : 0;
 
   const incrementIdx = () => {
     if (!data) return;
-    setCurrentIdx((prev) => (prev + 1 < newsLength ? prev + 1 : prev));
+    const nextIdx = currentIdx + 1;
+    if (nextIdx < newsLength) {
+      setCurrentIdx(nextIdx);
+      // Update page if the new index is on a different page
+      setCurrentPage(Math.floor(nextIdx / PAGINATION_SIZE));
+    }
   };
+  
   const decrementIdx = () => {
-    setCurrentIdx((prev) => (prev > 0 ? prev - 1 : prev));
+    const prevIdx = currentIdx - 1;
+    if (prevIdx >= 0) {
+      setCurrentIdx(prevIdx);
+      // Update page if the new index is on a different page
+      setCurrentPage(Math.floor(prevIdx / PAGINATION_SIZE));
+    }
   };
 
   const PAGINATION_SIZE = 5;
-  const pageStart = Math.floor(currentIdx / PAGINATION_SIZE) * PAGINATION_SIZE;
-  const pageEnd = pageStart + PAGINATION_SIZE;
+  const pageStart = currentPage * PAGINATION_SIZE;
+  const pageEnd = Math.min(pageStart + PAGINATION_SIZE, newsLength);
 
   const incrementPage = () => {
-    const nextPageIdx = pageStart + PAGINATION_SIZE;
-    if (nextPageIdx < newsLength) setCurrentIdx(nextPageIdx);
+    if (pageEnd < newsLength) {
+      const nextPage = currentPage + 1;
+      setCurrentPage(nextPage);
+      // Set index to first item of the new page
+      setCurrentIdx(nextPage * PAGINATION_SIZE);
+    }
   };
+  
   const decrementPage = () => {
-    const prevPageIdx = pageStart - PAGINATION_SIZE;
-    if (prevPageIdx >= 0) setCurrentIdx(prevPageIdx);
-    else setCurrentIdx(0);
+    if (currentPage > 0) {
+      const prevPage = currentPage - 1;
+      setCurrentPage(prevPage);
+      // Set index to first item of the new page
+      setCurrentIdx(prevPage * PAGINATION_SIZE);
+    }
   };
 
   const newsSnippet = !isLoading && !error && data && newsLength > 0 ? data[currentIdx] : null;
@@ -151,35 +173,46 @@ export const CyberSecurityNewsBox: React.FC = () => {
                   className="rounded-full bg-cyber-light hover:bg-cyber px-3 py-1 flex items-center gap-1 disabled:opacity-50"
                   aria-label="Page Up"
                   onClick={decrementPage}
-                  disabled={pageStart === 0}
+                  disabled={currentPage === 0}
                   type="button"
                 >
                   <ArrowUp className="h-4 w-4" /> Page Up
                 </button>
+                <span className="text-xs text-cesium-dark font-medium">
+                  Page {currentPage + 1} of {Math.ceil(newsLength / PAGINATION_SIZE)}
+                </span>
                 <button
                   className="rounded-full bg-cyber-light hover:bg-cyber px-3 py-1 flex items-center gap-1 disabled:opacity-50"
                   aria-label="Page Down"
                   onClick={incrementPage}
-                  disabled={pageEnd >= newsLength}
+                  disabled={(currentPage + 1) * PAGINATION_SIZE >= newsLength}
                   type="button"
                 >
                   Page Down <ArrowDown className="h-4 w-4" />
                 </button>
               </div>
               <ul className="space-y-5 mb-2">
-                {data.slice(pageStart, Math.min(pageEnd, newsLength)).map((n, idx) => {
+                {data.slice(pageStart, pageEnd).map((n, idx) => {
                   const actualIdx = pageStart + idx;
                   return (
                     <li
                       key={actualIdx}
                       className={`rounded-lg border border-cyber/10 p-3 flex flex-col md:flex-row md:items-center gap-3 bg-cyber ${actualIdx === currentIdx ? "ring-2 ring-cesium" : ""}`}
+                      onClick={() => setCurrentIdx(actualIdx)}
+                      style={{ cursor: "pointer" }}
                     >
                       <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${IMPACT_COLORS[n.impact] || "bg-gray-400 text-white"}`}>
                         <Shield className="w-4 h-4 mr-1" />
                         {n.impact} impact
                       </span>
                       <div className="flex-1">
-                        <a href={n.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-cesium hover:underline">
+                        <a 
+                          href={n.url} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="font-semibold text-cesium hover:underline"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           {n.title}
                         </a>
                         <div className="text-gray-300 text-sm">{n.summary}</div>
