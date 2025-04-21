@@ -47,49 +47,69 @@ serve(async (req) => {
       );
     }
 
-    console.log("Sending confirmation email to user:", email);
-    // Send confirmation email to the user
-    const userEmailResponse = await resend.emails.send({
-      from: "Cesium Cyber <no-reply@resend.dev>",
-      to: [email],
-      subject: "We've received your message - Cesium Cyber",
-      html: `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #00c896;">Thank you for contacting Cesium Cyber</h2>
-          <p>Hello ${name},</p>
-          <p>We have received your message and will get back to you as soon as possible.</p>
-          <p><strong>Your message:</strong><br>${message}</p>
-          <p>Best regards,<br>The Cesium Cyber Team</p>
-        </div>
-      `,
-    });
-    console.log("User email response:", userEmailResponse);
+    // Send notifications one at a time with better error handling
+    const emails = [];
+    
+    try {
+      console.log("Sending confirmation email to user:", email);
+      // Send confirmation email to the user
+      const userEmailResponse = await resend.emails.send({
+        from: "Cesium Cyber <onboarding@resend.dev>",
+        to: [email],
+        subject: "We've received your message - Cesium Cyber",
+        html: `
+          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #00c896;">Thank you for contacting Cesium Cyber</h2>
+            <p>Hello ${name},</p>
+            <p>We have received your message and will get back to you as soon as possible.</p>
+            <p><strong>Your message:</strong><br>${message}</p>
+            <p>Best regards,<br>The Cesium Cyber Team</p>
+          </div>
+        `,
+      });
+      console.log("User email response:", userEmailResponse);
+      emails.push({ type: "user", success: true, response: userEmailResponse });
+    } catch (userEmailError) {
+      console.error("Error sending user confirmation email:", userEmailError);
+      emails.push({ type: "user", success: false, error: userEmailError.message });
+    }
 
-    console.log("Sending notification email to company");
-    // Send notification email to the company
-    const companyEmailResponse = await resend.emails.send({
-      from: "Contact Form <no-reply@resend.dev>",
-      to: ["information@cesiumcyber.com"],
-      subject: "New Contact Form Submission",
-      html: `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #00c896;">New Contact Form Submission</h2>
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          ${company ? `<p><strong>Company:</strong> ${company}</p>` : ''}
-          <p><strong>Message:</strong><br>${message}</p>
-        </div>
-      `,
-    });
-    console.log("Company email response:", companyEmailResponse);
+    try {
+      console.log("Sending notification email to company at information@cesiumcyber.com");
+      // Send notification email to the company with explicit email address
+      const companyEmailResponse = await resend.emails.send({
+        from: "Contact Form <onboarding@resend.dev>",
+        to: ["information@cesiumcyber.com"],
+        subject: "New Contact Form Submission",
+        html: `
+          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #00c896;">New Contact Form Submission</h2>
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            ${company ? `<p><strong>Company:</strong> ${company}</p>` : ''}
+            <p><strong>Message:</strong><br>${message}</p>
+          </div>
+        `,
+      });
+      console.log("Company email response:", companyEmailResponse);
+      emails.push({ type: "company", success: true, response: companyEmailResponse });
+    } catch (companyEmailError) {
+      console.error("Error sending company notification email:", companyEmailError);
+      emails.push({ type: "company", success: false, error: companyEmailError.message });
+    }
+
+    // Determine overall success based on email sending results
+    const allSuccessful = emails.every(email => email.success);
+    const statusCode = allSuccessful ? 200 : 207; // 207 Multi-Status for partial success
 
     return new Response(
       JSON.stringify({ 
-        success: true,
-        message: "Emails sent successfully" 
+        success: allSuccessful,
+        message: allSuccessful ? "Emails sent successfully" : "Some emails failed to send",
+        details: emails
       }),
       {
-        status: 200,
+        status: statusCode,
         headers: { "Content-Type": "application/json", ...corsHeaders },
       }
     );

@@ -51,6 +51,25 @@ const ContactForm = ({ className }: ContactFormProps) => {
         throw new Error(error.message || "Failed to send message");
       }
       
+      // Check the more detailed response from our updated function
+      if (data && data.success === false) {
+        console.warn("Some emails failed to send:", data.details);
+        
+        // Show warning if company email failed but user email succeeded
+        const userEmailSent = data.details.some(e => e.type === "user" && e.success);
+        const companyEmailFailed = data.details.some(e => e.type === "company" && !e.success);
+        
+        if (userEmailSent && companyEmailFailed) {
+          toast.warning("Your message was received but there might be a delay in our response", {
+            description: "Our notification system is experiencing issues. If you don't hear back within 48 hours, please contact us directly at information@cesiumcyber.com",
+          });
+          form.reset();
+          return;
+        }
+        
+        throw new Error("Failed to send one or more notification emails");
+      }
+      
       toast.success("Thank you for your message!", {
         description: `Your message has been sent to our team and a confirmation email has been sent to ${values.email}.`,
       });
