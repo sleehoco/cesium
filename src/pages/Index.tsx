@@ -1,3 +1,4 @@
+
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import HeroSection from "../components/sections/HeroSection";
@@ -8,7 +9,7 @@ import ContactSection from "../components/sections/ContactSection";
 import ScrollToTop from "../components/utils/ScrollToTop";
 import PageLoader from "../components/utils/PageLoader";
 import MetaTags from "../components/utils/MetaTags";
-import CyberSecurityNewsBox from "../components/CyberSecurityNewsBox";
+import CyberSecurityNewsBox from "../components/cyber-news/CyberSecurityNewsBox";
 
 const Index = () => {
   return (
