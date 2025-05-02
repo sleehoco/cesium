@@ -10,7 +10,11 @@ import ClientDashboard from "./pages/ClientDashboard";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/utils/ProtectedRoute";
 import BadgeRemover from "./components/utils/BadgeRemover";
+import GoogleAnalytics from "./components/utils/GoogleAnalytics";
 import { useState, useEffect } from "react";
+
+// Replace with your actual Google Analytics Measurement ID
+const GA_MEASUREMENT_ID = "G-MEASUREMENT_ID";
 
 const App = () => {
   // Create a client for React Query with default options
@@ -35,6 +39,7 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <BrowserRouter>
+          <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
           <BadgeRemover />
           <Routes>
             <Route path="/" element={<Index />} />
