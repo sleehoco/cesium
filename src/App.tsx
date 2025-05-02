@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,8 +12,8 @@ import BadgeRemover from "./components/utils/BadgeRemover";
 import GoogleAnalytics from "./components/utils/GoogleAnalytics";
 import { useState, useEffect } from "react";
 
-// Replace with your actual Google Analytics Measurement ID
-const GA_MEASUREMENT_ID = "G-MEASUREMENT_ID";
+// Updated Google Analytics Measurement ID
+const GA_MEASUREMENT_ID = "135-394-7148";
 
 const App = () => {
   // Create a client for React Query with default options
