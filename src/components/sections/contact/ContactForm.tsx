@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Send, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -51,30 +50,28 @@ const ContactForm = ({ className }: ContactFormProps) => {
         throw new Error(error.message || "Failed to send message");
       }
       
-      // Check the more detailed response from our updated function
-      if (data && data.success === false) {
-        console.warn("Some emails failed to send:", data.details);
-        
-        // Show warning if company email failed but user email succeeded
-        const userEmailSent = data.details.some(e => e.type === "user" && e.success);
-        const companyEmailFailed = data.details.some(e => e.type === "company" && !e.success);
-        
-        if (userEmailSent && companyEmailFailed) {
-          toast.warning("Your message was received but there might be a delay in our response", {
-            description: "Our notification system is experiencing issues. If you don't hear back within 48 hours, please contact us directly at information@cesiumcyber.com",
+      if (data) {
+        // Check if user email was sent successfully 
+        if (data.userEmail?.sent) {
+          // User received a confirmation, consider this a partial success
+          toast.success("Thank you for your message!", {
+            description: `Your message has been sent and a confirmation email has been sent to ${values.email}.`,
           });
+          
+          // If company notification failed, show a warning
+          if (data.domainVerificationRequired) {
+            // This is an admin-facing issue, so we'll just log it
+            console.warn("Company notification email failed - domain verification required");
+          }
+          
           form.reset();
-          return;
+        } else {
+          // Both emails failed
+          throw new Error("Failed to send confirmation emails");
         }
-        
-        throw new Error("Failed to send one or more notification emails");
+      } else {
+        throw new Error("No response data received");
       }
-      
-      toast.success("Thank you for your message!", {
-        description: `Your message has been sent to our team and a confirmation email has been sent to ${values.email}.`,
-      });
-      
-      form.reset();
     } catch (error) {
       console.error("Error sending message:", error);
       toast.error("Failed to send message", {

@@ -47,13 +47,13 @@ serve(async (req) => {
       );
     }
 
-    // Send notifications one at a time with better error handling
-    const emails = [];
+    // Send confirmation email to the user - this should work in free tier
+    console.log("Sending confirmation email to user:", email);
+    let userEmailSent = false;
+    let userEmailResponse;
     
     try {
-      console.log("Sending confirmation email to user:", email);
-      // Send confirmation email to the user
-      const userEmailResponse = await resend.emails.send({
+      userEmailResponse = await resend.emails.send({
         from: "Cesium Cyber <onboarding@resend.dev>",
         to: [email],
         subject: "We've received your message - Cesium Cyber",
@@ -68,17 +68,23 @@ serve(async (req) => {
         `,
       });
       console.log("User email response:", userEmailResponse);
-      emails.push({ type: "user", success: true, response: userEmailResponse });
+      userEmailSent = true;
     } catch (userEmailError) {
       console.error("Error sending user confirmation email:", userEmailError);
-      emails.push({ type: "user", success: false, error: userEmailError.message });
+      userEmailResponse = { error: userEmailError.message };
     }
-
+    
+    // Attempt to send notification email to company
+    // Note: This will only work if you've verified your domain with Resend
+    // and you're using a verified domain email as the "from" address
+    console.log("Attempting to send notification email to information@cesiumcyber.com");
+    let companyEmailSent = false;
+    let companyEmailResponse;
+    
     try {
-      console.log("Sending notification email to company at information@cesiumcyber.com");
-      // Send notification email to the company with explicit email address
-      const companyEmailResponse = await resend.emails.send({
-        from: "Contact Form <onboarding@resend.dev>",
+      // To fix this, you'll need to verify a domain and update this "from" address
+      companyEmailResponse = await resend.emails.send({
+        from: "Contact Form <onboarding@resend.dev>", // Update this after domain verification
         to: ["information@cesiumcyber.com"],
         subject: "New Contact Form Submission",
         html: `
@@ -92,22 +98,33 @@ serve(async (req) => {
         `,
       });
       console.log("Company email response:", companyEmailResponse);
-      emails.push({ type: "company", success: true, response: companyEmailResponse });
+      companyEmailSent = true;
     } catch (companyEmailError) {
       console.error("Error sending company notification email:", companyEmailError);
-      emails.push({ type: "company", success: false, error: companyEmailError.message });
+      companyEmailResponse = { error: companyEmailError.message };
     }
 
-    // Determine overall success based on email sending results
-    const allSuccessful = emails.every(email => email.success);
-    const statusCode = allSuccessful ? 200 : 207; // 207 Multi-Status for partial success
-
+    // Return appropriate response based on what succeeded
+    const responseData = {
+      userEmail: { 
+        sent: userEmailSent, 
+        details: userEmailResponse 
+      },
+      companyEmail: { 
+        sent: companyEmailSent, 
+        details: companyEmailResponse 
+      },
+      domainVerificationRequired: !companyEmailSent,
+      message: userEmailSent ? 
+        "Your message was received. For company notification emails to work, please verify your domain with Resend." : 
+        "Failed to send emails"
+    };
+    
+    // If at least the user email was sent, consider it partial success
+    const statusCode = userEmailSent ? (companyEmailSent ? 200 : 207) : 500; // 207 = Partial success
+    
     return new Response(
-      JSON.stringify({ 
-        success: allSuccessful,
-        message: allSuccessful ? "Emails sent successfully" : "Some emails failed to send",
-        details: emails
-      }),
+      JSON.stringify(responseData),
       {
         status: statusCode,
         headers: { "Content-Type": "application/json", ...corsHeaders },
