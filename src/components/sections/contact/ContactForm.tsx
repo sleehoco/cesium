@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Send, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -51,23 +52,21 @@ const ContactForm = ({ className }: ContactFormProps) => {
       }
       
       if (data) {
-        // Check if user email was sent successfully 
-        if (data.userEmail?.sent) {
-          // User received a confirmation, consider this a partial success
+        const userEmailSent = data.userEmail?.sent;
+        const companyEmailSent = data.companyEmail?.sent;
+        
+        if (userEmailSent && companyEmailSent) {
           toast.success("Thank you for your message!", {
-            description: `Your message has been sent and a confirmation email has been sent to ${values.email}.`,
+            description: "Your message has been sent and our team has been notified. We'll get back to you soon.",
           });
-          
-          // If company notification failed, show a warning
-          if (data.domainVerificationRequired) {
-            // This is an admin-facing issue, so we'll just log it
-            console.warn("Company notification email failed - domain verification required");
-          }
-          
+          form.reset();
+        } else if (userEmailSent) {
+          toast.success("Your message has been received", {
+            description: "You should receive a confirmation email shortly. There was an issue notifying our team, but we'll check your message soon.",
+          });
           form.reset();
         } else {
-          // Both emails failed
-          throw new Error("Failed to send confirmation emails");
+          throw new Error("Failed to send message");
         }
       } else {
         throw new Error("No response data received");

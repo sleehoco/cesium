@@ -54,7 +54,7 @@ serve(async (req) => {
     
     try {
       userEmailResponse = await resend.emails.send({
-        from: "Cesium Cyber <onboarding@resend.dev>",
+        from: "Cesium Cyber <no-reply@cesiumcyber.com>", // Updated to use verified domain
         to: [email],
         subject: "We've received your message - Cesium Cyber",
         html: `
@@ -74,17 +74,14 @@ serve(async (req) => {
       userEmailResponse = { error: userEmailError.message };
     }
     
-    // Attempt to send notification email to company
-    // Note: This will only work if you've verified your domain with Resend
-    // and you're using a verified domain email as the "from" address
-    console.log("Attempting to send notification email to information@cesiumcyber.com");
+    // Send notification email to company with verified domain
+    console.log("Sending notification email to information@cesiumcyber.com");
     let companyEmailSent = false;
     let companyEmailResponse;
     
     try {
-      // To fix this, you'll need to verify a domain and update this "from" address
       companyEmailResponse = await resend.emails.send({
-        from: "Contact Form <onboarding@resend.dev>", // Update this after domain verification
+        from: "Contact Form <no-reply@cesiumcyber.com>", // Updated to use verified domain
         to: ["information@cesiumcyber.com"],
         subject: "New Contact Form Submission",
         html: `
@@ -114,10 +111,9 @@ serve(async (req) => {
         sent: companyEmailSent, 
         details: companyEmailResponse 
       },
-      domainVerificationRequired: !companyEmailSent,
-      message: userEmailSent ? 
-        "Your message was received. For company notification emails to work, please verify your domain with Resend." : 
-        "Failed to send emails"
+      message: userEmailSent && companyEmailSent ? 
+        "Your message was received and our team has been notified." : 
+        (userEmailSent ? "Your message was received but there was an issue notifying our team." : "Failed to send emails")
     };
     
     // If at least the user email was sent, consider it partial success
