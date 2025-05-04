@@ -6,6 +6,9 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { toast } from "sonner";
 import { LogOut } from "lucide-react";
+import DashboardSecurity from "@/components/dashboard/DashboardSecurity";
+import ActivityFeed from "@/components/dashboard/ActivityFeed";
+import ProjectFiles from "@/components/dashboard/ProjectFiles";
 
 const ClientDashboard = () => {
   const navigate = useNavigate();
@@ -56,22 +59,24 @@ const ClientDashboard = () => {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-cyber-light rounded-md p-4 border border-cesium/10">
-              <h3 className="text-lg text-cesium mb-3">Project Status</h3>
-              <p className="text-gray-300">Your current project is in progress.</p>
-              <div className="mt-4 w-full bg-cyber h-2 rounded-full">
-                <div className="bg-cesium h-2 rounded-full" style={{ width: "65%" }}></div>
-              </div>
-              <p className="text-gray-400 text-sm mt-2">65% Complete</p>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div className="lg:col-span-2">
+              <DashboardSecurity />
             </div>
+            <div>
+              <ActivityFeed />
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <ProjectFiles />
             
             <div className="bg-cyber-light rounded-md p-4 border border-cesium/10">
               <h3 className="text-lg text-cesium mb-3">Next Meeting</h3>
               <p className="text-gray-300">Scheduled for April 20, 2025</p>
               <p className="text-gray-300">10:00 AM PST</p>
               <Button 
-                className="mt-4 bg-cesium hover:bg-cesium-dark text-cyber-dark"
+                className="mt-4 bg-cesium hover:bg-cesium/80 text-cyber-dark"
                 size="sm"
               >
                 Join Meeting
