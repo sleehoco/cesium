@@ -54,7 +54,7 @@ serve(async (req) => {
     
     try {
       userEmailResponse = await resend.emails.send({
-        from: "Cesium Cyber <no-reply@cesiumcyber.com>", // Updated to use verified domain
+        from: "Cesium Cyber <no-reply@cesiumcyber.com>", // Using verified domain
         to: [email],
         subject: "We've received your message - Cesium Cyber",
         html: `
@@ -80,9 +80,13 @@ serve(async (req) => {
     let companyEmailResponse;
     
     try {
+      // Make sure we're using the correct recipient email
+      const companyEmail = "information@cesiumcyber.com";
+      console.log(`Attempting to send notification to company email: ${companyEmail}`);
+      
       companyEmailResponse = await resend.emails.send({
-        from: "Contact Form <no-reply@cesiumcyber.com>", // Updated to use verified domain
-        to: ["information@cesiumcyber.com"],
+        from: "Contact Form <no-reply@cesiumcyber.com>", // Using verified domain
+        to: [companyEmail],
         subject: "New Contact Form Submission",
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
@@ -98,6 +102,7 @@ serve(async (req) => {
       companyEmailSent = true;
     } catch (companyEmailError) {
       console.error("Error sending company notification email:", companyEmailError);
+      console.error("Error details:", companyEmailError);
       companyEmailResponse = { error: companyEmailError.message };
     }
 
@@ -109,7 +114,8 @@ serve(async (req) => {
       },
       companyEmail: { 
         sent: companyEmailSent, 
-        details: companyEmailResponse 
+        details: companyEmailResponse,
+        sentTo: "information@cesiumcyber.com"
       },
       message: userEmailSent && companyEmailSent ? 
         "Your message was received and our team has been notified." : 

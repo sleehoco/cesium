@@ -52,12 +52,14 @@ const ContactForm = ({ className }: ContactFormProps) => {
       }
       
       if (data) {
+        console.log("Full response data:", data);
+        
         const userEmailSent = data.userEmail?.sent;
         const companyEmailSent = data.companyEmail?.sent;
         
         if (userEmailSent && companyEmailSent) {
           toast.success("Thank you for your message!", {
-            description: "Your message has been sent and our team has been notified. We'll get back to you soon.",
+            description: `Your message has been sent and our team at ${data.companyEmail?.sentTo || 'information@cesiumcyber.com'} has been notified.`,
           });
           form.reset();
         } else if (userEmailSent) {
