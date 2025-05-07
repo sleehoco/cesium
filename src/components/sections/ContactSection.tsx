@@ -22,7 +22,7 @@ const ContactSection = () => {
             <ContactForm />
           </ScrollAnimation>
           
-          <div>
+          <div className="space-y-8">
             <ContactInfo />
             
             <ScrollAnimation className="delay-200">

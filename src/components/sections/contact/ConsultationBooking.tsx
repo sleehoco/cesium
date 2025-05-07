@@ -20,6 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { createClient } from "@supabase/supabase-js";
 
 type ConsultationBookingProps = {
   className?: string;
@@ -47,25 +48,44 @@ const ConsultationBooking = ({ className }: ConsultationBookingProps) => {
     setIsSubmitting(true);
     
     try {
-      // In a real application, we would send this data to a backend
+      // Get Supabase client
+      const supabase = createClient(
+        import.meta.env.VITE_SUPABASE_URL || "",
+        import.meta.env.VITE_SUPABASE_ANON_KEY || ""
+      );
+      
       const bookingDetails = {
         name: values.bookingName,
         email: values.bookingEmail,
         date: format(values.bookingDate, "MMMM do, yyyy"),
-        time: values.bookingTime
+        time: values.bookingTime,
+        message: `Consultation Request: ${values.bookingName} has requested a consultation on ${format(values.bookingDate, "MMMM do, yyyy")} at ${values.bookingTime}.`
       };
 
-      console.log("Booking submitted:", bookingDetails);
+      // Send email using the send-contact-email edge function
+      const { data, error } = await supabase.functions.invoke("send-contact-email", {
+        body: {
+          name: values.bookingName,
+          email: values.bookingEmail,
+          message: `Consultation Request: I would like to schedule a consultation on ${format(values.bookingDate, "MMMM do, yyyy")} at ${values.bookingTime}.`
+        }
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      console.log("Consultation booking submitted:", bookingDetails);
+      console.log("Email function response:", data);
       
-      // Email would be sent from a backend service in a production app
-      // For this demo, we'll simulate success with a toast notification
       toast.success("Consultation booked successfully!", {
-        description: `Your appointment is scheduled for ${format(values.bookingDate, "MMMM do, yyyy")} at ${values.bookingTime}. A confirmation has been sent to ${values.bookingEmail} and information@cesiumcyber.com.`,
+        description: `Your appointment is scheduled for ${format(values.bookingDate, "MMMM do, yyyy")} at ${values.bookingTime}. A confirmation has been sent to your email.`,
       });
       
       form.reset();
       setIsOpenBooking(false);
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Failed to book consultation:", error);
       toast.error("Failed to book consultation", {
         description: "Please try again later or contact us directly.",
       });
