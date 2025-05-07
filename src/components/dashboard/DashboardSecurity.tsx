@@ -54,7 +54,7 @@ const DashboardSecurity = () => {
 
   useEffect(() => {
     // In a real app, this would fetch from an API
-    const securityData = [
+    const securityData: SecurityItemProps[] = [
       {
         title: "Firewall Status",
         status: "secure",
