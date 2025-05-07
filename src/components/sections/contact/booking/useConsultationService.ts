@@ -24,6 +24,7 @@ export const useConsultationService = () => {
       body: {
         name: values.bookingName,
         email: values.bookingEmail,
+        company: "Consultation Booking",
         message: `Consultation Request: I would like to schedule a consultation on ${format(values.bookingDate, "MMMM do, yyyy")} at ${values.bookingTime}.`
       }
     });
