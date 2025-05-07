@@ -1,16 +1,10 @@
 
 import { format } from "date-fns";
-import { createClient } from "@supabase/supabase-js";
+import { supabase } from "@/integrations/supabase/client";
 import { ConsultationBookingValues } from "./ConsultationBookingSchema";
 
 export const useConsultationService = () => {
   const submitConsultation = async (values: ConsultationBookingValues) => {
-    // Get Supabase client
-    const supabase = createClient(
-      import.meta.env.VITE_SUPABASE_URL || "",
-      import.meta.env.VITE_SUPABASE_ANON_KEY || ""
-    );
-    
     const bookingDetails = {
       name: values.bookingName,
       email: values.bookingEmail,
@@ -25,7 +19,8 @@ export const useConsultationService = () => {
         name: values.bookingName,
         email: values.bookingEmail,
         company: "Consultation Booking",
-        message: `Consultation Request: I would like to schedule a consultation on ${format(values.bookingDate, "MMMM do, yyyy")} at ${values.bookingTime}.`
+        message: `Consultation Request: I would like to schedule a consultation on ${format(values.bookingDate, "MMMM do, yyyy")} at ${values.bookingTime}.`,
+        recipient: "jmorrison@cesiumcyber.com" // Add recipient for the company email
       }
     });
 

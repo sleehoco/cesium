@@ -15,6 +15,7 @@ interface ContactFormData {
   email: string;
   company?: string;
   message: string;
+  recipient?: string; // Optional recipient email
 }
 
 serve(async (req) => {
@@ -34,7 +35,7 @@ serve(async (req) => {
     const formData: ContactFormData = JSON.parse(requestText);
     console.log("Parsed form data:", formData);
     
-    const { name, email, company, message } = formData;
+    const { name, email, company, message, recipient } = formData;
     
     if (!name || !email || !message) {
       console.log("Missing required fields:", { name, email, message });
@@ -75,13 +76,13 @@ serve(async (req) => {
     }
     
     // Send notification email to company with verified domain
-    console.log("Sending notification email to information@cesiumcyber.com");
+    console.log("Sending notification email to company");
     let companyEmailSent = false;
     let companyEmailResponse;
     
     try {
-      // Make sure we're using the correct recipient email
-      const companyEmail = "information@cesiumcyber.com";
+      // Use the provided recipient email or fall back to the default
+      const companyEmail = recipient || "information@cesiumcyber.com";
       console.log(`Attempting to send notification to company email: ${companyEmail}`);
       
       companyEmailResponse = await resend.emails.send({
@@ -115,7 +116,7 @@ serve(async (req) => {
       companyEmail: { 
         sent: companyEmailSent, 
         details: companyEmailResponse,
-        sentTo: "information@cesiumcyber.com"
+        sentTo: recipient || "information@cesiumcyber.com"
       },
       message: userEmailSent && companyEmailSent ? 
         "Your message was received and our team has been notified." : 
