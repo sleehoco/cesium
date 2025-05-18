@@ -34,7 +34,8 @@ export * from "./separator";
 export * from "./sheet";
 export * from "./skeleton";
 export * from "./slider";
-export * from "./sonner";
+// Export components from sonner but not the toast function to avoid name conflicts
+export { Toaster } from "./sonner";
 export * from "./switch";
 export * from "./table";
 export * from "./tabs";
