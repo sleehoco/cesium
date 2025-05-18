@@ -33,7 +33,7 @@ const ContactInfo = () => {
           </div>
           <div>
             <h4 className="text-white font-medium mb-1">Office</h4>
-            <p className="text-gray-400">8850 Cedar, Columbia, MD 21045</p>
+            <p className="text-gray-400">3500 Cedar Ave. Columbia, MD 21045</p>
           </div>
         </div>
       </div>

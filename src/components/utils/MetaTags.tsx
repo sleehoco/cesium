@@ -78,7 +78,7 @@ const MetaTags = ({
             },
             "address": {
               "@type": "PostalAddress",
-              "streetAddress": "8850 Cedar",
+              "streetAddress": "3500 Cedar Ave.",
               "addressLocality": "Columbia",
               "addressRegion": "MD",
               "postalCode": "21045",
