@@ -13,7 +13,14 @@ import MetaTags from "../components/utils/MetaTags";
 const Index = () => {
   return (
     <div id="top" className="bg-cyber min-h-screen">
-      <MetaTags />
+      <MetaTags 
+        title="CesiumCyber Security - Advanced Cybersecurity Solutions for Business"
+        description="Protect your digital assets with our comprehensive security solutions including penetration testing, vulnerability assessment, and incident response services."
+        keywords="cybersecurity, penetration testing, vulnerability assessment, security consulting, incident response, cloud security, data protection, GDPR compliance, HIPAA compliance, cybersecurity services"
+        url="https://cesiumcyber.com"
+        canonical="https://cesiumcyber.com"
+        modifiedTime={new Date().toISOString()}
+      />
       <PageLoader />
       <Navbar />
       <main>

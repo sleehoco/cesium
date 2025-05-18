@@ -1,5 +1,7 @@
+
 import { Shield, AlertTriangle, Clock, ArrowUpRight, Server, Lock, FileKey, Users, Factory } from "lucide-react";
 import ScrollAnimation from "../utils/ScrollAnimation";
+import { Helmet } from "react-helmet";
 
 const ServicesSection = () => {
   const services = [
@@ -68,8 +70,35 @@ const ServicesSection = () => {
     },
   ];
 
+  // Create structured data for services
+  const servicesStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": services.map((service, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "item": {
+        "@type": "Service",
+        "name": service.title,
+        "description": service.description,
+        "url": `https://cesiumcyber.com/#${service.id}`,
+        "provider": {
+          "@type": "Organization",
+          "name": "CesiumCyber Security"
+        }
+      }
+    }))
+  };
+
   return (
     <div id="services" className="bg-cyber py-20">
+      {/* Add structured data for search engines */}
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify(servicesStructuredData)}
+        </script>
+      </Helmet>
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-white">
