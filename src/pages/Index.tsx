@@ -9,7 +9,6 @@ import ContactSection from "../components/sections/ContactSection";
 import ScrollToTop from "../components/utils/ScrollToTop";
 import PageLoader from "../components/utils/PageLoader";
 import MetaTags from "../components/utils/MetaTags";
-import CyberSecurityNewsBox from "../components/cyber-news/CyberSecurityNewsBox";
 
 const Index = () => {
   return (
@@ -18,7 +17,6 @@ const Index = () => {
       <PageLoader />
       <Navbar />
       <main>
-        <CyberSecurityNewsBox />
         <HeroSection />
         <ServicesSection />
         <AboutSection />
