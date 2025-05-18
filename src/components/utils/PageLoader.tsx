@@ -1,20 +1,27 @@
-
 import { useEffect, useState } from "react";
 
 const PageLoader = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Use a very short timeout to ensure it doesn't block rendering
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 50);
+    // Use a requestAnimationFrame to ensure smoother state transition
+    const timer = requestAnimationFrame(() => {
+      // Check if the document is already loaded
+      if (document.readyState === 'complete') {
+        setLoading(false);
+      } else {
+        // Otherwise listen for the load event
+        const handleLoad = () => setLoading(false);
+        window.addEventListener('load', handleLoad);
+        return () => window.removeEventListener('load', handleLoad);
+      }
+    });
 
     // Log the page loader state
     console.log("PageLoader mounted");
 
     return () => {
-      clearTimeout(timer);
+      cancelAnimationFrame(timer);
       console.log("PageLoader unmounted");
     };
   }, []);
