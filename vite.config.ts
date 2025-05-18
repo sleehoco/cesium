@@ -29,7 +29,7 @@ export default defineConfig(({ mode }) => ({
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom', 'react-router-dom'],
-          ui: ['/src/components/ui'],
+          ui: ['/src/components/ui/button', '/src/components/ui/card', '/src/components/ui/input']
         }
       }
     },
