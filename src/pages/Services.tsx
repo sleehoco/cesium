@@ -1,4 +1,3 @@
-
 import React from "react";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
@@ -30,9 +29,9 @@ const Services = () => {
             const event = new Event('input', { bubbles: true });
             messageTextarea.dispatchEvent(event);
           }
-        }, 300);
+        }, 800); // Increased delay to ensure proper scrolling
       }
-    }, 100);
+    }, 200); // Increased initial delay
   };
 
   const services = [
