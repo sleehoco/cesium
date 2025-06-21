@@ -4,8 +4,22 @@ import Footer from "../components/layout/Footer";
 import MetaTags from "../components/utils/MetaTags";
 import ScrollAnimation from "../components/utils/ScrollAnimation";
 import { Shield, AlertTriangle, Clock, Server, Lock, FileKey, Users, Factory, ArrowRight, CheckCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Services = () => {
+  const navigate = useNavigate();
+
+  const handleContactNavigation = () => {
+    navigate('/', { replace: true });
+    // Small delay to ensure navigation completes before scrolling
+    setTimeout(() => {
+      const element = document.getElementById('contact');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
   const services = [
     {
       id: "vulnerability-assessment",
@@ -280,9 +294,7 @@ const Services = () => {
 
                           <div className="mt-8 pt-6 border-t border-cesium/20">
                             <button 
-                              onClick={() => {
-                                window.location.href = '/#contact';
-                              }}
+                              onClick={handleContactNavigation}
                               className={`inline-flex items-center px-6 py-3 rounded-lg font-medium transition-colors ${service.bgColor} ${service.color} hover:bg-opacity-20`}
                             >
                               Get Started with {service.title}
@@ -309,9 +321,7 @@ const Services = () => {
               Contact us today to discuss your cybersecurity needs and get a customized solution.
             </p>
             <button 
-              onClick={() => {
-                window.location.href = '/#contact';
-              }}
+              onClick={handleContactNavigation}
               className="bg-cesium hover:bg-cesium-light text-cyber-dark font-semibold px-8 py-4 rounded-lg transition-colors"
             >
               Contact Us Today
