@@ -1,9 +1,10 @@
+
 import React from "react";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import MetaTags from "../components/utils/MetaTags";
 import ScrollAnimation from "../components/utils/ScrollAnimation";
-import { Shield, AlertTriangle, Clock, Server, Lock, FileKey, Users, Factory, ArrowRight, CheckCircle } from "lucide-react";
+import { Shield, AlertTriangle, Clock, Server, Lock, FileKey, Users, Factory, ArrowRight, CheckCircle, Fingerprint } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Services = () => {
@@ -57,6 +58,28 @@ const Services = () => {
         "Validation of security controls",
         "Identification of critical vulnerabilities",
         "Enhanced incident response preparedness"
+      ]
+    },
+    {
+      id: "browser-fingerprinting-demo",
+      title: "Browser Fingerprinting Demo",
+      icon: Fingerprint,
+      color: "text-pink-400",
+      bgColor: "bg-pink-400/10",
+      borderColor: "border-pink-400/20",
+      what: "An interactive demonstration showing how much information your browser reveals about your device and identity, highlighting privacy and security implications.",
+      how: [
+        "Real-time analysis of browser characteristics",
+        "Canvas fingerprinting demonstration",
+        "Device and system information collection",
+        "Tracking prevention assessment",
+        "Privacy protection recommendations"
+      ],
+      benefits: [
+        "Understand your digital footprint",
+        "Learn about privacy risks",
+        "Discover tracking techniques",
+        "Get protection recommendations"
       ]
     },
     {
