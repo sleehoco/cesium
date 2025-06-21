@@ -10,28 +10,50 @@ const Services = () => {
   const navigate = useNavigate();
 
   const handleContactNavigation = (serviceName: string) => {
-    navigate('/', { replace: true });
-    // Small delay to ensure navigation completes before scrolling and focusing
+    // Navigate to home page without replace to ensure proper page loading
+    navigate('/');
+    
+    // Use longer delays and more robust checking
     setTimeout(() => {
-      const element = document.getElementById('contact');
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+      const contactElement = document.getElementById('contact');
+      console.log('Looking for contact element:', contactElement);
+      
+      if (contactElement) {
+        contactElement.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
         
-        // Additional delay to ensure scrolling completes before focusing
+        // Wait longer for scroll to complete and form to be ready
         setTimeout(() => {
-          const messageTextarea = document.querySelector('textarea[placeholder*="How can we help"]') as HTMLTextAreaElement;
+          // Try multiple selectors to find the textarea
+          const messageTextarea = document.querySelector('textarea[placeholder*="How can we help"]') ||
+                                 document.querySelector('textarea[name="message"]') ||
+                                 document.querySelector('#message') ||
+                                 document.querySelector('textarea');
+          
+          console.log('Found textarea:', messageTextarea);
+          
           if (messageTextarea) {
             messageTextarea.focus();
-            // Pre-fill with service-specific message
             const defaultMessage = `I'm interested in ${serviceName}. Please provide more information about your services.`;
             messageTextarea.value = defaultMessage;
-            // Trigger input event to update form state
-            const event = new Event('input', { bubbles: true });
-            messageTextarea.dispatchEvent(event);
+            
+            // Trigger multiple events to ensure the form state updates
+            const inputEvent = new Event('input', { bubbles: true });
+            const changeEvent = new Event('change', { bubbles: true });
+            messageTextarea.dispatchEvent(inputEvent);
+            messageTextarea.dispatchEvent(changeEvent);
+          } else {
+            console.log('Textarea not found, available textareas:', document.querySelectorAll('textarea'));
           }
-        }, 800); // Increased delay to ensure proper scrolling
+        }, 1500); // Increased delay significantly
+      } else {
+        console.log('Contact element not found');
+        // If contact section not found, try to scroll to bottom of page
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
       }
-    }, 200); // Increased initial delay
+    }, 500); // Increased initial delay
   };
 
   const services = [
