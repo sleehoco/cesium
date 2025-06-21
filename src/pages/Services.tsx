@@ -1,3 +1,4 @@
+
 import React from "react";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
@@ -9,13 +10,27 @@ import { useNavigate } from "react-router-dom";
 const Services = () => {
   const navigate = useNavigate();
 
-  const handleContactNavigation = () => {
+  const handleContactNavigation = (serviceName: string) => {
     navigate('/', { replace: true });
-    // Small delay to ensure navigation completes before scrolling
+    // Small delay to ensure navigation completes before scrolling and focusing
     setTimeout(() => {
       const element = document.getElementById('contact');
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
+        
+        // Additional delay to ensure scrolling completes before focusing
+        setTimeout(() => {
+          const messageTextarea = document.querySelector('textarea[placeholder*="How can we help"]') as HTMLTextAreaElement;
+          if (messageTextarea) {
+            messageTextarea.focus();
+            // Pre-fill with service-specific message
+            const defaultMessage = `I'm interested in ${serviceName}. Please provide more information about your services.`;
+            messageTextarea.value = defaultMessage;
+            // Trigger input event to update form state
+            const event = new Event('input', { bubbles: true });
+            messageTextarea.dispatchEvent(event);
+          }
+        }, 300);
       }
     }, 100);
   };
@@ -294,7 +309,7 @@ const Services = () => {
 
                           <div className="mt-8 pt-6 border-t border-cesium/20">
                             <button 
-                              onClick={handleContactNavigation}
+                              onClick={() => handleContactNavigation(service.title)}
                               className={`inline-flex items-center px-6 py-3 rounded-lg font-medium transition-colors ${service.bgColor} ${service.color} hover:bg-opacity-20`}
                             >
                               Get Started with {service.title}
@@ -321,7 +336,7 @@ const Services = () => {
               Contact us today to discuss your cybersecurity needs and get a customized solution.
             </p>
             <button 
-              onClick={handleContactNavigation}
+              onClick={() => handleContactNavigation("General Inquiry")}
               className="bg-cesium hover:bg-cesium-light text-cyber-dark font-semibold px-8 py-4 rounded-lg transition-colors"
             >
               Contact Us Today
