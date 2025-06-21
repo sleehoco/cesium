@@ -1,4 +1,3 @@
-
 import React from "react";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
@@ -282,12 +281,7 @@ const Services = () => {
                           <div className="mt-8 pt-6 border-t border-cesium/20">
                             <button 
                               onClick={() => {
-                                const element = document.getElementById('contact');
-                                if (element) {
-                                  element.scrollIntoView({ behavior: 'smooth' });
-                                } else {
-                                  window.location.href = '/#contact';
-                                }
+                                window.location.href = '/#contact';
                               }}
                               className={`inline-flex items-center px-6 py-3 rounded-lg font-medium transition-colors ${service.bgColor} ${service.color} hover:bg-opacity-20`}
                             >
@@ -316,12 +310,7 @@ const Services = () => {
             </p>
             <button 
               onClick={() => {
-                const element = document.getElementById('contact');
-                if (element) {
-                  element.scrollIntoView({ behavior: 'smooth' });
-                } else {
-                  window.location.href = '/#contact';
-                }
+                window.location.href = '/#contact';
               }}
               className="bg-cesium hover:bg-cesium-light text-cyber-dark font-semibold px-8 py-4 rounded-lg transition-colors"
             >
