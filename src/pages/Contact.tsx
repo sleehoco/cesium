@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
@@ -19,16 +18,22 @@ const Contact = () => {
       // Wait for the form to be rendered and then pre-fill it
       setTimeout(() => {
         const messageTextarea = document.querySelector('textarea[name="message"]') as HTMLTextAreaElement;
+        const nameInput = document.querySelector('input[name="name"]') as HTMLInputElement;
+        
         if (messageTextarea) {
           const defaultMessage = `I'm interested in ${serviceName}. Please provide more information about your services.`;
           messageTextarea.value = defaultMessage;
-          messageTextarea.focus();
           
           // Trigger events to update form state
           const inputEvent = new Event('input', { bubbles: true });
           const changeEvent = new Event('change', { bubbles: true });
           messageTextarea.dispatchEvent(inputEvent);
           messageTextarea.dispatchEvent(changeEvent);
+        }
+        
+        // Focus on the name field instead of the message field
+        if (nameInput) {
+          nameInput.focus();
         }
       }, 500);
     }
