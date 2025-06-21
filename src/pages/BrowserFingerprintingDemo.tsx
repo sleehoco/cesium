@@ -16,6 +16,9 @@ export interface FingerprintData {
     height: number;
     colorDepth: number;
     pixelDepth: number;
+    availWidth?: number;
+    availHeight?: number;
+    pixelRatio?: number;
   };
   timezone: string;
   language: string;
@@ -26,13 +29,14 @@ export interface FingerprintData {
   canvas: string;
   webgl: string;
   fonts: string[];
-  plugins: string[];
+  plugins: any[];
   touchSupport: boolean;
   hardwareConcurrency: number;
   deviceMemory: number | undefined;
   connection: any;
   battery: any;
   permissions: Record<string, string>;
+  additionalInfo?: Record<string, boolean>;
 }
 
 const BrowserFingerprintingDemo = () => {
@@ -78,22 +82,22 @@ const BrowserFingerprintingDemo = () => {
                 Browser <span className="text-pink-400">Fingerprinting</span> Demo
               </h1>
               <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-                Discover how much information your browser reveals about you. This interactive demo shows 
-                real-time data collection techniques used for tracking and identification.
+                Discover exactly what information your browser reveals about you. This real-time demo collects 
+                actual data from your device to show tracking techniques used across the web.
               </p>
               
               <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-400">
                 <div className="flex items-center">
                   <Eye className="h-4 w-4 mr-2 text-pink-400" />
-                  Real-time Analysis
+                  Real Browser Data
                 </div>
                 <div className="flex items-center">
                   <AlertTriangle className="h-4 w-4 mr-2 text-orange-400" />
-                  Privacy Awareness
+                  Privacy Analysis
                 </div>
                 <div className="flex items-center">
                   <Shield className="h-4 w-4 mr-2 text-green-400" />
-                  Protection Tips
+                  Protection Guide
                 </div>
               </div>
             </div>

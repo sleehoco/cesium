@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Play, Loader2, Fingerprint, RefreshCw } from "lucide-react";
 import { FingerprintData } from "../../pages/BrowserFingerprintingDemo";
@@ -19,20 +20,20 @@ const FingerprintCollector: React.FC<FingerprintCollectorProps> = ({
     onStartCollection();
     setProgress(0);
 
-    // Simulate collection progress
+    // Simulate collection progress with real steps
     const steps = [
-      "Analyzing browser information...",
-      "Collecting screen data...",
-      "Testing canvas fingerprinting...",
-      "Checking WebGL capabilities...",
-      "Detecting installed fonts...",
-      "Analyzing hardware specs...",
-      "Checking permissions...",
-      "Finalizing fingerprint..."
+      "Reading user agent...",
+      "Measuring screen properties...", 
+      "Generating canvas fingerprint...",
+      "Testing WebGL renderer...",
+      "Detecting available fonts...",
+      "Checking hardware capabilities...",
+      "Testing permissions...",
+      "Calculating uniqueness..."
     ];
 
     for (let i = 0; i < steps.length; i++) {
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 400));
       setProgress(((i + 1) / steps.length) * 100);
     }
 
@@ -42,35 +43,82 @@ const FingerprintCollector: React.FC<FingerprintCollectorProps> = ({
   };
 
   const gatherBrowserData = async (): Promise<FingerprintData> => {
+    // Canvas fingerprinting - create a more complex pattern
     const canvas = document.createElement('canvas');
+    canvas.width = 280;
+    canvas.height = 60;
     const ctx = canvas.getContext('2d');
     if (ctx) {
-      ctx.textBaseline = 'top';
-      ctx.font = '14px Arial';
-      ctx.fillText('Browser fingerprinting test', 2, 2);
+      // Text rendering test
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillStyle = '#f60';
+      ctx.fillRect(125, 1, 62, 20);
+      ctx.fillStyle = '#069';
+      ctx.font = '11pt Arial';
+      ctx.fillText('Fingerprint Test 🔍', 2, 15);
+      ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
+      ctx.font = '18pt Arial';
+      ctx.fillText('Canvas 1.0', 4, 45);
+      
+      // Geometric shapes
+      ctx.globalCompositeOperation = 'multiply';
+      ctx.fillStyle = 'rgb(255,0,255)';
+      ctx.beginPath();
+      ctx.arc(50, 50, 50, 0, Math.PI * 2, true);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = 'rgb(0,255,255)';
+      ctx.beginPath();
+      ctx.arc(100, 50, 50, 0, Math.PI * 2, true);
+      ctx.closePath();
+      ctx.fill();
     }
 
-    // WebGL fingerprinting with proper typing
+    // WebGL fingerprinting with detailed renderer info
     const webglCanvas = document.createElement('canvas');
     const gl = webglCanvas.getContext('webgl') as WebGLRenderingContext | null || 
                webglCanvas.getContext('experimental-webgl') as WebGLRenderingContext | null;
-    let webglInfo = 'Not supported';
+    let webglInfo = 'WebGL not supported';
     if (gl) {
       const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
       if (debugInfo) {
-        webglInfo = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+        const vendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
+        const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+        webglInfo = `${vendor} - ${renderer}`;
+      } else {
+        webglInfo = `${gl.getParameter(gl.VENDOR)} - ${gl.getParameter(gl.RENDERER)}`;
       }
     }
 
-    // Font detection (simplified)
-    const fonts = ['Arial', 'Helvetica', 'Times New Roman', 'Courier New', 'Verdana', 'Georgia', 'Palatino', 'Garamond', 'Bookman', 'Comic Sans MS', 'Trebuchet MS', 'Arial Black', 'Impact'];
+    // Comprehensive font detection
+    const testFonts = [
+      'Arial', 'Arial Black', 'Arial Narrow', 'Arial Rounded MT Bold',
+      'Helvetica', 'Helvetica Neue', 'Times', 'Times New Roman',
+      'Courier', 'Courier New', 'Verdana', 'Georgia', 'Palatino',
+      'Garamond', 'Bookman', 'Comic Sans MS', 'Trebuchet MS',
+      'Impact', 'Lucida Console', 'Lucida Sans Unicode', 'Tahoma',
+      'Calibri', 'Cambria', 'Segoe UI', 'Consolas', 'Monaco',
+      'Menlo', 'Ubuntu', 'Roboto', 'Open Sans', 'Source Sans Pro'
+    ];
     
-    // Plugin detection
-    const plugins = Array.from(navigator.plugins || []).map(plugin => plugin.name);
+    const detectedFonts = testFonts.filter(font => {
+      return document.fonts ? document.fonts.check(`12px "${font}"`) : true;
+    });
 
-    // Permission checks
+    // Plugin detection with more details
+    const plugins = Array.from(navigator.plugins || []).map(plugin => ({
+      name: plugin.name,
+      description: plugin.description,
+      filename: plugin.filename,
+      version: plugin.version || 'Unknown'
+    }));
+
+    // Comprehensive permission checks
     const permissions: Record<string, string> = {};
-    const permissionsToCheck = ['camera', 'microphone', 'geolocation', 'notifications'];
+    const permissionsToCheck = [
+      'camera', 'microphone', 'geolocation', 'notifications', 
+      'persistent-storage', 'push', 'midi', 'background-sync'
+    ];
     
     for (const permission of permissionsToCheck) {
       try {
@@ -79,22 +127,52 @@ const FingerprintCollector: React.FC<FingerprintCollectorProps> = ({
           permissions[permission] = result.state;
         }
       } catch (error) {
-        permissions[permission] = 'unknown';
+        permissions[permission] = 'not available';
       }
     }
 
-    // Battery API (if available)
+    // Battery API with full details
     let battery: any = null;
     try {
       if ('getBattery' in navigator) {
-        battery = await (navigator as any).getBattery();
+        const batteryInfo = await (navigator as any).getBattery();
+        battery = {
+          level: Math.round(batteryInfo.level * 100),
+          charging: batteryInfo.charging,
+          chargingTime: batteryInfo.chargingTime === Infinity ? 'Unknown' : `${Math.round(batteryInfo.chargingTime / 60)} minutes`,
+          dischargingTime: batteryInfo.dischargingTime === Infinity ? 'Unknown' : `${Math.round(batteryInfo.dischargingTime / 60)} minutes`
+        };
       }
     } catch (error) {
-      battery = 'not available';
+      battery = { error: 'Battery API not available' };
     }
 
-    // Network information
+    // Enhanced network information
     const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
+    let connectionInfo = null;
+    if (connection) {
+      connectionInfo = {
+        effectiveType: connection.effectiveType || 'Unknown',
+        downlink: connection.downlink ? `${connection.downlink} Mbps` : 'Unknown',
+        rtt: connection.rtt ? `${connection.rtt} ms` : 'Unknown',
+        type: connection.type || 'Unknown',
+        saveData: connection.saveData || false
+      };
+    }
+
+    // Additional browser capabilities
+    const additionalInfo = {
+      webRTC: !!(window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection),
+      webGL: !!gl,
+      webAssembly: typeof WebAssembly === 'object',
+      serviceWorker: 'serviceWorker' in navigator,
+      localStorage: typeof Storage !== 'undefined',
+      sessionStorage: typeof sessionStorage !== 'undefined',
+      indexedDB: 'indexedDB' in window,
+      webSpeech: 'speechSynthesis' in window,
+      geolocation: 'geolocation' in navigator,
+      vibration: 'vibrate' in navigator
+    };
 
     return {
       userAgent: navigator.userAgent,
@@ -102,7 +180,10 @@ const FingerprintCollector: React.FC<FingerprintCollectorProps> = ({
         width: screen.width,
         height: screen.height,
         colorDepth: screen.colorDepth,
-        pixelDepth: screen.pixelDepth
+        pixelDepth: screen.pixelDepth,
+        availWidth: screen.availWidth,
+        availHeight: screen.availHeight,
+        pixelRatio: window.devicePixelRatio || 1
       },
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       language: navigator.language,
@@ -112,21 +193,15 @@ const FingerprintCollector: React.FC<FingerprintCollectorProps> = ({
       doNotTrack: navigator.doNotTrack,
       canvas: canvas.toDataURL(),
       webgl: webglInfo,
-      fonts: fonts,
+      fonts: detectedFonts,
       plugins: plugins,
-      touchSupport: 'ontouchstart' in window,
-      hardwareConcurrency: navigator.hardwareConcurrency || 0,
+      touchSupport: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
+      hardwareConcurrency: navigator.hardwareConcurrency || 1,
       deviceMemory: (navigator as any).deviceMemory,
-      connection: connection ? {
-        effectiveType: connection.effectiveType,
-        downlink: connection.downlink,
-        rtt: connection.rtt
-      } : null,
-      battery: battery ? {
-        level: battery.level,
-        charging: battery.charging
-      } : null,
-      permissions
+      connection: connectionInfo,
+      battery: battery,
+      permissions: permissions,
+      additionalInfo: additionalInfo
     };
   };
 
@@ -137,22 +212,22 @@ const FingerprintCollector: React.FC<FingerprintCollectorProps> = ({
           <Fingerprint className="h-6 w-6 text-pink-400" />
         </div>
         <div>
-          <h3 className="text-xl font-semibold text-white">Fingerprint Scanner</h3>
-          <p className="text-gray-400 text-sm">Analyze your browser's unique signature</p>
+          <h3 className="text-xl font-semibold text-white">Real-Time Browser Scanner</h3>
+          <p className="text-gray-400 text-sm">Collect your actual browser fingerprint</p>
         </div>
       </div>
 
       <div className="space-y-4">
         <p className="text-gray-300 text-sm leading-relaxed">
-          Click the button below to start collecting your browser's fingerprint data. 
-          This process is completely safe and runs locally in your browser.
+          This scanner will collect real information from your browser and device. 
+          All data is processed locally and never leaves your browser.
         </p>
 
         {isCollecting && (
           <div className="space-y-3">
             <div className="flex items-center text-sm text-pink-400">
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              Collecting data... {Math.round(progress)}%
+              Scanning your browser... {Math.round(progress)}%
             </div>
             <div className="w-full bg-cyber-dark rounded-full h-2">
               <div 
@@ -176,15 +251,15 @@ const FingerprintCollector: React.FC<FingerprintCollectorProps> = ({
           ) : (
             <>
               <Play className="mr-2 h-4 w-4" />
-              Start Fingerprint Scan
+              Scan My Browser
             </>
           )}
         </button>
 
         <div className="text-xs text-gray-500 space-y-2">
-          <p>• No data leaves your browser</p>
-          <p>• Educational purposes only</p>
-          <p>• Safe and privacy-focused</p>
+          <p>• Real browser data collection</p>
+          <p>• 100% privacy-focused (local only)</p>
+          <p>• Educational demonstration</p>
         </div>
       </div>
     </div>
