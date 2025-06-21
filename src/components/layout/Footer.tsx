@@ -1,14 +1,30 @@
 
 import { Mail, Phone, MapPin } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const location = useLocation();
 
   // Function to handle smooth scrolling for anchor links
   const scrollToSection = (sectionId: string) => {
+    // If we're on the services page and trying to navigate to home sections
+    if (location.pathname === '/services' && ['top', 'about', 'approach', 'contact'].includes(sectionId)) {
+      window.location.href = `/#${sectionId}`;
+      return;
+    }
+    
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleServicesClick = () => {
+    if (location.pathname === '/') {
+      scrollToSection('services');
+    } else {
+      window.location.href = '/services';
     }
   };
 
@@ -18,13 +34,10 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="col-span-1 md:col-span-1">
-            <button 
-              onClick={() => scrollToSection('top')} 
-              className="flex items-start"
-            >
+            <Link to="/" className="flex items-start">
               <span className="text-cesium font-bold text-2xl">CesiumCyber</span>
               <span className="text-white font-light ml-2">Security</span>
-            </button>
+            </Link>
             <p className="mt-4 text-sm">
               Providing advanced cybersecurity solutions to protect your business from evolving threats.
             </p>
@@ -35,16 +48,13 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <button 
-                  onClick={() => scrollToSection('top')} 
-                  className="hover:text-cesium transition-colors"
-                >
+                <Link to="/" className="hover:text-cesium transition-colors">
                   Home
-                </button>
+                </Link>
               </li>
               <li>
                 <button 
-                  onClick={() => scrollToSection('services')} 
+                  onClick={handleServicesClick}
                   className="hover:text-cesium transition-colors"
                 >
                   Services
@@ -74,36 +84,36 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Services</h3>
             <ul className="space-y-2">
               <li>
-                <button 
-                  onClick={() => scrollToSection('services')} 
+                <Link 
+                  to="/services#vulnerability-assessment"
                   className="hover:text-cesium transition-colors"
                 >
                   Vulnerability Assessment
-                </button>
+                </Link>
               </li>
               <li>
-                <button 
-                  onClick={() => scrollToSection('services')} 
+                <Link 
+                  to="/services#penetration-testing"
                   className="hover:text-cesium transition-colors"
                 >
                   Penetration Testing
-                </button>
+                </Link>
               </li>
               <li>
-                <button 
-                  onClick={() => scrollToSection('services')} 
+                <Link 
+                  to="/services#security-consulting"
                   className="hover:text-cesium transition-colors"
                 >
                   Security Consulting
-                </button>
+                </Link>
               </li>
               <li>
-                <button 
-                  onClick={() => scrollToSection('services')} 
+                <Link 
+                  to="/services#incident-response"
                   className="hover:text-cesium transition-colors"
                 >
                   Incident Response
-                </button>
+                </Link>
               </li>
             </ul>
           </div>

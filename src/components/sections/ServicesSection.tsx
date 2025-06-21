@@ -2,6 +2,7 @@
 import { Shield, AlertTriangle, Clock, ArrowUpRight, Server, Lock, FileKey, Users, Factory } from "lucide-react";
 import ScrollAnimation from "../utils/ScrollAnimation";
 import { Helmet } from "react-helmet";
+import { Link } from "react-router-dom";
 
 const ServicesSection = () => {
   const services = [
@@ -125,16 +126,26 @@ const ServicesSection = () => {
               <p className="text-gray-400 mb-5">
                 {service.description}
               </p>
-              <a 
-                href={`#${service.id}`} 
+              <Link 
+                to={`/services#${service.id}`}
                 className="inline-flex items-center text-sm font-medium text-cesium hover:text-cesium-light"
               >
                 Learn more
                 <ArrowUpRight className="ml-1 h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </a>
+              </Link>
             </div>
             </ScrollAnimation>
           ))}
+        </div>
+
+        <div className="text-center mt-12">
+          <Link 
+            to="/services"
+            className="inline-flex items-center bg-cesium hover:bg-cesium-light text-cyber-dark font-semibold px-8 py-4 rounded-lg transition-colors"
+          >
+            View All Services in Detail
+            <ArrowUpRight className="ml-2 h-5 w-5" />
+          </Link>
         </div>
       </div>
     </div>
