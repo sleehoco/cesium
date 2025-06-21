@@ -1,4 +1,3 @@
-
 import React from "react";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
@@ -11,50 +10,8 @@ const Services = () => {
   const navigate = useNavigate();
 
   const handleContactNavigation = (serviceName: string) => {
-    // Navigate to home page without replace to ensure proper page loading
-    navigate('/');
-    
-    // Use longer delays and more robust checking
-    setTimeout(() => {
-      const contactElement = document.getElementById('contact');
-      console.log('Looking for contact element:', contactElement);
-      
-      if (contactElement) {
-        contactElement.scrollIntoView({ 
-          behavior: 'smooth',
-          block: 'start'
-        });
-        
-        // Wait longer for scroll to complete and form to be ready
-        setTimeout(() => {
-          // Try multiple selectors to find the textarea and properly cast it
-          const messageTextarea = (document.querySelector('textarea[placeholder*="How can we help"]') ||
-                                 document.querySelector('textarea[name="message"]') ||
-                                 document.querySelector('#message') ||
-                                 document.querySelector('textarea')) as HTMLTextAreaElement;
-          
-          console.log('Found textarea:', messageTextarea);
-          
-          if (messageTextarea) {
-            messageTextarea.focus();
-            const defaultMessage = `I'm interested in ${serviceName}. Please provide more information about your services.`;
-            messageTextarea.value = defaultMessage;
-            
-            // Trigger multiple events to ensure the form state updates
-            const inputEvent = new Event('input', { bubbles: true });
-            const changeEvent = new Event('change', { bubbles: true });
-            messageTextarea.dispatchEvent(inputEvent);
-            messageTextarea.dispatchEvent(changeEvent);
-          } else {
-            console.log('Textarea not found, available textareas:', document.querySelectorAll('textarea'));
-          }
-        }, 1500); // Increased delay significantly
-      } else {
-        console.log('Contact element not found');
-        // If contact section not found, try to scroll to bottom of page
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-      }
-    }, 500); // Increased initial delay
+    // Navigate to the contact page with the service name in state
+    navigate('/contact', { state: { serviceName } });
   };
 
   const services = [
