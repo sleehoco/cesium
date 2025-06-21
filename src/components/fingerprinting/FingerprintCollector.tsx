@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Play, Loader2, Fingerprint, RefreshCw } from "lucide-react";
 import { FingerprintData } from "../../pages/BrowserFingerprintingDemo";
@@ -51,9 +50,10 @@ const FingerprintCollector: React.FC<FingerprintCollectorProps> = ({
       ctx.fillText('Browser fingerprinting test', 2, 2);
     }
 
-    // WebGL fingerprinting
+    // WebGL fingerprinting with proper typing
     const webglCanvas = document.createElement('canvas');
-    const gl = webglCanvas.getContext('webgl') || webglCanvas.getContext('experimental-webgl');
+    const gl = webglCanvas.getContext('webgl') as WebGLRenderingContext | null || 
+               webglCanvas.getContext('experimental-webgl') as WebGLRenderingContext | null;
     let webglInfo = 'Not supported';
     if (gl) {
       const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
