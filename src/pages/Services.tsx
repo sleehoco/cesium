@@ -1,3 +1,4 @@
+
 import React from "react";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
@@ -26,11 +27,11 @@ const Services = () => {
         
         // Wait longer for scroll to complete and form to be ready
         setTimeout(() => {
-          // Try multiple selectors to find the textarea
-          const messageTextarea = document.querySelector('textarea[placeholder*="How can we help"]') ||
+          // Try multiple selectors to find the textarea and properly cast it
+          const messageTextarea = (document.querySelector('textarea[placeholder*="How can we help"]') ||
                                  document.querySelector('textarea[name="message"]') ||
                                  document.querySelector('#message') ||
-                                 document.querySelector('textarea');
+                                 document.querySelector('textarea')) as HTMLTextAreaElement;
           
           console.log('Found textarea:', messageTextarea);
           
