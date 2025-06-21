@@ -9,6 +9,7 @@ import Services from "./pages/Services";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import ClientDashboard from "./pages/ClientDashboard";
+import BrowserFingerprintingDemo from "./pages/BrowserFingerprintingDemo";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/utils/ProtectedRoute";
 import BadgeRemover from "./components/utils/BadgeRemover";
@@ -47,6 +48,7 @@ const App = () => {
             <Route path="/" element={<Index />} />
             <Route path="/services" element={<Services />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/browser-fingerprinting-demo" element={<BrowserFingerprintingDemo />} />
             <Route path="/login" element={<Login />} />
             <Route 
               path="/client-dashboard" 

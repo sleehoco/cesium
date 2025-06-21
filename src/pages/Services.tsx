@@ -1,4 +1,3 @@
-
 import React from "react";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
@@ -13,6 +12,10 @@ const Services = () => {
   const handleContactNavigation = (serviceName: string) => {
     // Navigate to the contact page with the service name in state
     navigate('/contact', { state: { serviceName } });
+  };
+
+  const handleDemoNavigation = () => {
+    navigate('/browser-fingerprinting-demo');
   };
 
   const services = [
@@ -310,13 +313,23 @@ const Services = () => {
                           </div>
 
                           <div className="mt-8 pt-6 border-t border-cesium/20">
-                            <button 
-                              onClick={() => handleContactNavigation(service.title)}
-                              className={`inline-flex items-center px-6 py-3 rounded-lg font-medium transition-colors ${service.bgColor} ${service.color} hover:bg-opacity-20`}
-                            >
-                              Get Started with {service.title}
-                              <ArrowRight className="ml-2 h-4 w-4" />
-                            </button>
+                            {service.id === "browser-fingerprinting-demo" ? (
+                              <button 
+                                onClick={handleDemoNavigation}
+                                className={`inline-flex items-center px-6 py-3 rounded-lg font-medium transition-colors ${service.bgColor} ${service.color} hover:bg-opacity-20`}
+                              >
+                                Try Interactive Demo
+                                <ArrowRight className="ml-2 h-4 w-4" />
+                              </button>
+                            ) : (
+                              <button 
+                                onClick={() => handleContactNavigation(service.title)}
+                                className={`inline-flex items-center px-6 py-3 rounded-lg font-medium transition-colors ${service.bgColor} ${service.color} hover:bg-opacity-20`}
+                              >
+                                Get Started with {service.title}
+                                <ArrowRight className="ml-2 h-4 w-4" />
+                              </button>
+                            )}
                           </div>
                         </div>
                       </div>
