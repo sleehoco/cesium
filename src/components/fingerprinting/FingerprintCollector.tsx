@@ -105,12 +105,12 @@ const FingerprintCollector: React.FC<FingerprintCollectorProps> = ({
       return document.fonts ? document.fonts.check(`12px "${font}"`) : true;
     });
 
-    // Plugin detection with more details
+    // Plugin detection with more details - fix version property access
     const plugins = Array.from(navigator.plugins || []).map(plugin => ({
       name: plugin.name,
       description: plugin.description,
       filename: plugin.filename,
-      version: plugin.version || 'Unknown'
+      version: (plugin as any).version || 'Unknown' // Use type assertion for optional version property
     }));
 
     // Comprehensive permission checks
@@ -160,9 +160,10 @@ const FingerprintCollector: React.FC<FingerprintCollectorProps> = ({
       };
     }
 
-    // Additional browser capabilities
+    // Additional browser capabilities - fix RTC property access
+    const windowWithRTC = window as any;
     const additionalInfo = {
-      webRTC: !!(window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection),
+      webRTC: !!(window.RTCPeerConnection || windowWithRTC.webkitRTCPeerConnection || windowWithRTC.mozRTCPeerConnection),
       webGL: !!gl,
       webAssembly: typeof WebAssembly === 'object',
       serviceWorker: 'serviceWorker' in navigator,
