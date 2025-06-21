@@ -316,7 +316,7 @@ const Services = () => {
                             {service.id === "browser-fingerprinting-demo" ? (
                               <button 
                                 onClick={handleDemoNavigation}
-                                className={`inline-flex items-center px-6 py-3 rounded-lg font-medium transition-colors ${service.bgColor} ${service.color} hover:bg-opacity-20`}
+                                className="inline-flex items-center px-6 py-3 rounded-lg font-medium transition-colors bg-pink-400 hover:bg-pink-500 text-white"
                               >
                                 Try Interactive Demo
                                 <ArrowRight className="ml-2 h-4 w-4" />
