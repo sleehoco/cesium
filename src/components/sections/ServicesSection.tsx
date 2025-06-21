@@ -1,10 +1,16 @@
 
-import { Shield, AlertTriangle, Clock, ArrowUpRight, Server, Lock, FileKey, Users, Factory } from "lucide-react";
+import { Shield, AlertTriangle, Clock, ArrowUpRight, Server, Lock, FileKey, Users, Factory, Fingerprint } from "lucide-react";
 import ScrollAnimation from "../utils/ScrollAnimation";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ServicesSection = () => {
+  const navigate = useNavigate();
+
+  const handleDemoNavigation = () => {
+    navigate('/browser-fingerprinting-demo');
+  };
+
   const services = [
     {
       id: "vulnerability-assessment",
@@ -23,6 +29,15 @@ const ServicesSection = () => {
       color: "text-cesium",
       bgColor: "bg-cesium/10",
       borderColor: "border-cesium/20"
+    },
+    {
+      id: "browser-fingerprinting-demo",
+      title: "Browser Fingerprinting Demo",
+      description: "Interactive demonstration showing how browsers can be tracked and fingerprinted for privacy awareness.",
+      icon: Fingerprint,
+      color: "text-pink-400",
+      bgColor: "bg-pink-400/10",
+      borderColor: "border-pink-400/20"
     },
     {
       id: "security-consulting",
@@ -126,13 +141,23 @@ const ServicesSection = () => {
               <p className="text-gray-400 mb-5">
                 {service.description}
               </p>
-              <Link 
-                to={`/services#${service.id}`}
-                className="inline-flex items-center text-sm font-medium text-cesium hover:text-cesium-light"
-              >
-                Learn more
-                <ArrowUpRight className="ml-1 h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </Link>
+              {service.id === "browser-fingerprinting-demo" ? (
+                <button 
+                  onClick={handleDemoNavigation}
+                  className="inline-flex items-center text-sm font-medium text-pink-400 hover:text-pink-300"
+                >
+                  Try Interactive Demo
+                  <ArrowUpRight className="ml-1 h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </button>
+              ) : (
+                <Link 
+                  to={`/services#${service.id}`}
+                  className="inline-flex items-center text-sm font-medium text-cesium hover:text-cesium-light"
+                >
+                  Learn more
+                  <ArrowUpRight className="ml-1 h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </Link>
+              )}
             </div>
             </ScrollAnimation>
           ))}
