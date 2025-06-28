@@ -119,6 +119,42 @@
   .animation-delay-4000 {
     animation-delay: 4s;
   }
+
+  /* Smooth hover transitions */
+  .hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.15);
+  }
+
+  /* Stagger animations */
+  .stagger-1 {
+    animation-delay: 0.1s;
+  }
+  
+  .stagger-2 {
+    animation-delay: 0.2s;
+  }
+  
+  .stagger-3 {
+    animation-delay: 0.3s;
+  }
+  
+  .stagger-4 {
+    animation-delay: 0.4s;
+  }
+
+  /* Interactive elements */
+  .interactive-glow {
+    transition: all 0.3s ease;
+  }
+  
+  .interactive-glow:hover {
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  }
 }
 
 @keyframes blob {
@@ -154,4 +190,24 @@
   right: 0;
   bottom: 0;
   left: 0;
+}
+
+/* Smooth scrolling for all elements */
+* {
+  scroll-behavior: smooth;
+}
+
+/* Enhanced button animations */
+button {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
