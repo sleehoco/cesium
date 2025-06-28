@@ -1,5 +1,5 @@
 
-import { ArrowRight, Shield, CheckCircle } from "lucide-react";
+import { ArrowRight, Shield, Lock, Server } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const HeroSection = () => {
@@ -11,99 +11,93 @@ const HeroSection = () => {
   };
 
   const scrollToConsult = () => {
-    const consultSection = document.getElementById('contact');
+    const consultSection = document.getElementById('consult');
     if (consultSection) {
       consultSection.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   return (
-    <div className="relative bg-white pt-20 pb-32 overflow-hidden">
-      {/* Clean background pattern */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-white"></div>
+    <div className="relative bg-cyber-dark pt-28 pb-20 overflow-hidden">
+      {/* Enhanced Background pattern */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMyMjIiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djZoNnYtNmgtNnptMCAwdjZoNnYtNmgtNnoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-10"></div>
+      
+      {/* New vivid animated blobs */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-20 -left-20 w-96 h-96 bg-cesium/10 rounded-full mix-blend-screen filter blur-3xl opacity-70 animate-blob"></div>
+        <div className="absolute top-40 -right-20 w-96 h-96 bg-[#F97316]/10 rounded-full mix-blend-screen filter blur-3xl opacity-70 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-20 left-40 w-96 h-96 bg-[#8B5CF6]/10 rounded-full mix-blend-screen filter blur-3xl opacity-70 animate-blob animation-delay-4000"></div>
+      </div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Hero Content */}
-          <div className="animate-fade-in">
-            <div className="inline-flex items-center px-4 py-2 bg-blue-50 rounded-full text-blue-700 text-sm font-medium mb-6">
-              <Shield className="h-4 w-4 mr-2" />
-              Trusted Cybersecurity Partner
-            </div>
-            
-            <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Secure Your Digital
-              <span className="text-blue-600 block">Future Today</span>
+          <div>
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Advanced <span className="text-cesium">Cybersecurity</span> for the Modern Enterprise
             </h1>
-            
-            <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-              Comprehensive cybersecurity solutions designed to protect your business from evolving threats. 
-              Expert guidance, advanced security, and peace of mind.
+            <p className="text-xl text-gray-300 mb-8">
+              Protect your business with cutting-edge security solutions tailored to defend against today's evolving threats.
             </p>
-            
-            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-12">
+            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
               <button
                 onClick={scrollToConsult}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-lg transition-colors flex items-center justify-center shadow-lg"
+                className="bg-cesium hover:bg-cesium-dark text-cyber-dark font-medium px-6 py-3 rounded-md transition-colors flex items-center justify-center"
               >
-                Get Free Consultation
+                Get a Free Consultation
                 <ArrowRight className="ml-2 h-5 w-5" />
               </button>
               <button
                 onClick={scrollToServices}
-                className="border-2 border-gray-300 text-gray-700 hover:border-blue-600 hover:text-blue-600 font-semibold px-8 py-4 rounded-lg transition-colors flex items-center justify-center"
+                className="border border-cesium/50 text-cesium hover:bg-cesium/10 font-medium px-6 py-3 rounded-md transition-colors flex items-center justify-center"
               >
-                View Our Services
+                Explore Our Services
               </button>
             </div>
             
-            {/* Trust indicators */}
-            <div className="space-y-3">
-              {[
-                "100+ Businesses Protected",
-                "24/7 Security Monitoring",
-                "Expert Threat Response Team"
-              ].map((item, index) => (
-                <div key={index} className="flex items-center text-gray-600">
-                  <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                  <span>{item}</span>
-                </div>
-              ))}
+            {/* Stats */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-12">
+              <div className="bg-cyber border border-cesium/20 rounded-lg p-4 backdrop-blur-sm bg-black/30">
+                <p className="text-cesium text-2xl font-bold">100+</p>
+                <p className="text-gray-400 text-sm">Clients Protected</p>
+              </div>
+              <div className="bg-cyber border border-cesium/20 rounded-lg p-4 backdrop-blur-sm bg-black/30">
+                <p className="text-cesium text-2xl font-bold">1000+</p>
+                <p className="text-gray-400 text-sm">Threats Mitigated</p>
+              </div>
+              <div className="bg-cyber border border-cesium/20 rounded-lg p-4 backdrop-blur-sm bg-black/30">
+                <p className="text-cesium text-2xl font-bold">99.9%</p>
+                <p className="text-gray-400 text-sm">Success Rate</p>
+              </div>
             </div>
           </div>
           
-          {/* Hero Visual */}
-          <div className="flex justify-center relative animate-slide-up">
+          {/* Hero Image/Graphics with enhanced glow */}
+          <div className="flex justify-center relative">
             <div className="relative w-full max-w-lg">
-              {/* Main card */}
-              <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
-                <div className="text-center mb-6">
-                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Shield className="h-8 w-8 text-blue-600" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Enterprise Security</h3>
-                  <p className="text-gray-600">Advanced protection for your business</p>
-                </div>
-                
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                    <span className="text-sm font-medium text-green-800">Threat Detection</span>
-                    <span className="text-xs text-green-600 font-semibold">ACTIVE</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                    <span className="text-sm font-medium text-blue-800">Network Security</span>
-                    <span className="text-xs text-blue-600 font-semibold">PROTECTED</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
-                    <span className="text-sm font-medium text-purple-800">Data Encryption</span>
-                    <span className="text-xs text-purple-600 font-semibold">SECURED</span>
+              {/* Enhanced glowing effects */}
+              <div className="absolute top-0 -left-4 w-72 h-72 bg-cesium/30 rounded-full mix-blend-screen filter blur-xl opacity-50 animate-blob"></div>
+              <div className="absolute -bottom-8 right-20 w-72 h-72 bg-[#D946EF]/30 rounded-full mix-blend-screen filter blur-xl opacity-50 animate-blob animation-delay-4000"></div>
+              
+              {/* Core graphic */}
+              <div className="relative">
+                <div className="bg-cyber rounded-2xl border border-cesium/30 shadow-xl p-8 relative z-10 backdrop-blur-sm bg-black/30">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-4 bg-cyber-dark rounded-lg flex flex-col items-center justify-center border border-cesium/10 hover:border-cesium/30 transition-colors">
+                      <Shield className="h-10 w-10 text-cesium mb-2" />
+                      <h3 className="text-white text-center">Threat Protection</h3>
+                    </div>
+                    <div className="p-4 bg-cyber-dark rounded-lg flex flex-col items-center justify-center border border-cesium/10 hover:border-cesium/30 transition-colors">
+                      <Lock className="h-10 w-10 text-cesium mb-2" />
+                      <h3 className="text-white text-center">Data Security</h3>
+                    </div>
+                    <div className="p-4 bg-cyber-dark rounded-lg flex flex-col items-center justify-center border border-cesium/10 hover:border-cesium/30 transition-colors">
+                      <Server className="h-10 w-10 text-cesium mb-2" />
+                      <h3 className="text-white text-center">Infrastructure</h3>
+                    </div>
                   </div>
                 </div>
               </div>
-              
-              {/* Floating elements */}
-              <div className="absolute -top-4 -right-4 w-20 h-20 bg-blue-600 rounded-lg opacity-10 rotate-12"></div>
-              <div className="absolute -bottom-6 -left-6 w-16 h-16 bg-green-500 rounded-full opacity-10"></div>
             </div>
           </div>
         </div>

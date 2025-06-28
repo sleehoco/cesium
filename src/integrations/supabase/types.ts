@@ -349,7 +349,6 @@ export type Database = {
           first_name: string | null
           id: string
           last_name: string | null
-          role: Database["public"]["Enums"]["app_role"] | null
           subscription_tier: string | null
           updated_at: string
         }
@@ -360,7 +359,6 @@ export type Database = {
           first_name?: string | null
           id: string
           last_name?: string | null
-          role?: Database["public"]["Enums"]["app_role"] | null
           subscription_tier?: string | null
           updated_at?: string
         }
@@ -371,7 +369,6 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
-          role?: Database["public"]["Enums"]["app_role"] | null
           subscription_tier?: string | null
           updated_at?: string
         }
@@ -486,27 +483,6 @@ export type Database = {
         }
         Relationships: []
       }
-      user_roles: {
-        Row: {
-          created_at: string | null
-          id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
-        }
-        Relationships: []
-      }
     }
     Views: {
       [_ in never]: never
@@ -516,20 +492,8 @@ export type Database = {
         Args: { text_content: string; voice_id: string }
         Returns: string
       }
-      get_current_user_role: {
-        Args: Record<PropertyKey, never>
-        Returns: Database["public"]["Enums"]["app_role"]
-      }
-      has_role: {
-        Args: {
-          _user_id: string
-          _role: Database["public"]["Enums"]["app_role"]
-        }
-        Returns: boolean
-      }
     }
     Enums: {
-      app_role: "admin" | "user" | "moderator"
       automation_status: "pending" | "in_progress" | "completed" | "failed"
       removal_request_status: "pending" | "in_progress" | "completed" | "failed"
     }
@@ -647,7 +611,6 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "user", "moderator"],
       automation_status: ["pending", "in_progress", "completed", "failed"],
       removal_request_status: ["pending", "in_progress", "completed", "failed"],
     },
