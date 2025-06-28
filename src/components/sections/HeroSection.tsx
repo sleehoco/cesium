@@ -1,8 +1,8 @@
-
 import { ArrowRight, Shield, Lock, Server } from "lucide-react";
 import { Link } from "react-router-dom";
 import FadeInSection from "../utils/FadeInSection";
 import AnimatedCounter from "../utils/AnimatedCounter";
+import BackgroundAnimations from "../utils/BackgroundAnimations";
 
 const HeroSection = () => {
   const scrollToServices = () => {
@@ -21,15 +21,16 @@ const HeroSection = () => {
 
   return (
     <div className="relative bg-cyber-dark pt-28 pb-20 overflow-hidden">
-      {/* Enhanced Background pattern */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMyMjIiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djZoNnYtNmgtNnptMCAwdjZoNnYtNmgtNnoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-10"></div>
+      {/* New comprehensive background animations */}
+      <BackgroundAnimations 
+        includeParticles={true}
+        includeGradients={true}
+        includeInteractive={true}
+        particleCount={60}
+      />
       
-      {/* New vivid animated blobs */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-20 -left-20 w-96 h-96 bg-cesium/10 rounded-full mix-blend-screen filter blur-3xl opacity-70 animate-blob"></div>
-        <div className="absolute top-40 -right-20 w-96 h-96 bg-[#F97316]/10 rounded-full mix-blend-screen filter blur-3xl opacity-70 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-20 left-40 w-96 h-96 bg-[#8B5CF6]/10 rounded-full mix-blend-screen filter blur-3xl opacity-70 animate-blob animation-delay-4000"></div>
-      </div>
+      {/* Enhanced Background pattern with animation */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMyMjIiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djZoNnYtNmgtNnptMCAwdjZoNnYtNmgtNnoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-10 animate-pulse"></div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -90,17 +91,13 @@ const HeroSection = () => {
             </FadeInSection>
           </div>
           
-          {/* Hero Image/Graphics with enhanced glow */}
+          {/* Hero Image/Graphics with enhanced effects */}
           <FadeInSection delay={300} direction="left">
             <div className="flex justify-center relative">
               <div className="relative w-full max-w-lg">
-                {/* Enhanced glowing effects */}
-                <div className="absolute top-0 -left-4 w-72 h-72 bg-cesium/30 rounded-full mix-blend-screen filter blur-xl opacity-50 animate-blob"></div>
-                <div className="absolute -bottom-8 right-20 w-72 h-72 bg-[#D946EF]/30 rounded-full mix-blend-screen filter blur-xl opacity-50 animate-blob animation-delay-4000"></div>
-                
-                {/* Core graphic */}
+                {/* Core graphic with enhanced animations */}
                 <div className="relative">
-                  <div className="bg-cyber rounded-2xl border border-cesium/30 shadow-xl p-8 relative z-10 backdrop-blur-sm bg-black/30 hover:border-cesium/50 transition-all duration-500">
+                  <div className="bg-cyber rounded-2xl border border-cesium/30 shadow-xl p-8 relative z-10 backdrop-blur-sm bg-black/30 hover:border-cesium/50 transition-all duration-500 hover:shadow-2xl hover:shadow-cesium/20">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="p-4 bg-cyber-dark rounded-lg flex flex-col items-center justify-center border border-cesium/10 hover:border-cesium/30 transition-all duration-300 hover:scale-105 group">
                         <Shield className="h-10 w-10 text-cesium mb-2 group-hover:animate-pulse" />
@@ -113,6 +110,12 @@ const HeroSection = () => {
                       <div className="p-4 bg-cyber-dark rounded-lg flex flex-col items-center justify-center border border-cesium/10 hover:border-cesium/30 transition-all duration-300 hover:scale-105 group">
                         <Server className="h-10 w-10 text-cesium mb-2 group-hover:animate-pulse" />
                         <h3 className="text-white text-center">Infrastructure</h3>
+                      </div>
+                      <div className="p-4 bg-cyber-dark rounded-lg flex flex-col items-center justify-center border border-cesium/10 hover:border-cesium/30 transition-all duration-300 hover:scale-105 group">
+                        <div className="h-10 w-10 bg-cesium/20 rounded-full flex items-center justify-center mb-2">
+                          <div className="h-4 w-4 bg-cesium rounded-full animate-ping"></div>
+                        </div>
+                        <h3 className="text-white text-center">24/7 Monitoring</h3>
                       </div>
                     </div>
                   </div>

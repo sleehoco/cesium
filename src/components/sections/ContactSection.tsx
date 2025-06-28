@@ -4,15 +4,18 @@ import FadeInSection from "../utils/FadeInSection";
 import ContactForm from "./contact/ContactForm";
 import ContactInfo from "./contact/ContactInfo";
 import ConsultationBooking from "./contact/ConsultationBooking";
+import BackgroundAnimations from "../utils/BackgroundAnimations";
 
 const ContactSection = () => {
   return (
     <div id="contact" className="bg-cyber py-20 relative overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-20 right-20 w-64 h-64 bg-cesium/5 rounded-full blur-3xl animate-blob"></div>
-        <div className="absolute bottom-20 left-20 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
-      </div>
+      {/* Enhanced background animations */}
+      <BackgroundAnimations 
+        includeParticles={true}
+        includeGradients={false}
+        includeInteractive={true}
+        particleCount={30}
+      />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">

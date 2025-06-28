@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -54,24 +53,24 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				cesium: {
-					DEFAULT: '#D4AF37', // Classic gold
-					dark: '#B78727',    // Darker gold for contrast
-					light: '#FFD700',   // Brighter gold for highlights
+					DEFAULT: '#D4AF37',
+					dark: '#B78727',
+					light: '#FFD700',
 				},
 				cyber: {
-					dark: '#0A0A0A',     // Black instead of dark blue
-					DEFAULT: '#1A1A1A',  // Slightly lighter black
-					light: '#2A2A2A',    // Even lighter black
+					dark: '#0A0A0A',
+					DEFAULT: '#1A1A1A',
+					light: '#2A2A2A',
 				},
 				gold: {
-					DEFAULT: '#D4AF37', // Classic gold
-					dark: '#B78727',    // Darker gold for contrast
-					light: '#FFD700',   // Brighter gold for highlights
+					DEFAULT: '#D4AF37',
+					dark: '#B78727',
+					light: '#FFD700',
 				},
 				black: {
-					DEFAULT: '#0A0A0A',  // Deep black
-					dark: '#000000',     // Absolute black
-					light: '#1A1A1A',    // Slightly lighter black
+					DEFAULT: '#0A0A0A',
+					dark: '#000000',
+					light: '#1A1A1A',
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
@@ -180,6 +179,14 @@ export default {
             transform: 'translateY(0)',
             animationTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)'
           }
+        },
+        'shimmer': {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' }
+        },
+        'glow': {
+          '0%, 100%': { boxShadow: '0 0 20px rgba(212, 175, 55, 0.5)' },
+          '50%': { boxShadow: '0 0 40px rgba(212, 175, 55, 0.8)' }
         }
 			},
 			animation: {
@@ -193,7 +200,9 @@ export default {
 				'slide-up': 'slide-up 0.5s ease-out',
 				'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
 				'float': 'float 3s ease-in-out infinite',
-				'bounce-slow': 'bounce-slow 2s infinite'
+				'bounce-slow': 'bounce-slow 2s infinite',
+				'shimmer': 'shimmer 2s linear infinite',
+				'glow': 'glow 2s ease-in-out infinite alternate'
 			}
 		}
 	},
