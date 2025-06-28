@@ -16,12 +16,12 @@ const ContactSection = lazy(() => import("../components/sections/ContactSection"
 
 // Simple fallback for lazy loaded components
 const SectionFallback = () => (
-  <div className="w-full h-64 bg-cyber-light/5 animate-pulse"></div>
+  <div className="w-full h-64 bg-gray-50 animate-pulse rounded-lg"></div>
 );
 
 const Index = () => {
   return (
-    <div id="top" className="bg-cyber min-h-screen">
+    <div id="top" className="bg-white min-h-screen">
       <MetaTags 
         title="CesiumCyber Security - Advanced Cybersecurity Solutions for Business"
         description="Protect your digital assets with our comprehensive security solutions including penetration testing, vulnerability assessment, and incident response services."
