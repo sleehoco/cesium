@@ -8,7 +8,7 @@ interface InteractiveBackgroundProps {
 
 const InteractiveBackground = ({ 
   className = "", 
-  intensity = 0.3 
+  intensity = 0.1 
 }: InteractiveBackgroundProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -38,8 +38,8 @@ const InteractiveBackground = ({
 
   const style = {
     background: `radial-gradient(circle at ${mousePosition.x * 100}% ${mousePosition.y * 100}%, 
-      rgba(212, 175, 55, ${intensity}) 0%, 
-      rgba(212, 175, 55, ${intensity * 0.5}) 25%, 
+      rgba(139, 92, 246, ${intensity}) 0%, 
+      rgba(99, 102, 241, ${intensity * 0.5}) 25%, 
       transparent 50%)`,
   };
 

@@ -9,7 +9,7 @@ interface DynamicGradientProps {
 
 const DynamicGradient = ({ 
   className = "", 
-  colors = ['#D4AF37', '#FFD700', '#B78727', '#FFA500', '#8B5CF6'],
+  colors = ['#1A1A1A', '#2A2A2A', '#0A0A0A', '#1F2937', '#374151'],
   speed = 0.002
 }: DynamicGradientProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -37,10 +37,10 @@ const DynamicGradient = ({
         canvas.height + Math.cos(timeRef.current) * 200
       );
 
-      // Create dynamic gradient stops
+      // Create dynamic gradient stops with subtle colors
       colors.forEach((color, index) => {
         const stop = (index / (colors.length - 1)) + Math.sin(timeRef.current + index) * 0.1;
-        gradient.addColorStop(Math.max(0, Math.min(1, stop)), color + '20');
+        gradient.addColorStop(Math.max(0, Math.min(1, stop)), color + '10');
       });
 
       ctx.fillStyle = gradient;

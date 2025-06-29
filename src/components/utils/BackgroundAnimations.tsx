@@ -21,7 +21,7 @@ const BackgroundAnimations = ({
   return (
     <div className={`absolute inset-0 overflow-hidden ${className}`}>
       {includeGradients && (
-        <DynamicGradient colors={['#D4AF37', '#FFD700', '#B78727', '#8B5CF6', '#F97316']} />
+        <DynamicGradient colors={['#1A1A1A', '#2A2A2A', '#0A0A0A', '#8B5CF6', '#4338CA']} />
       )}
       
       {includeParticles && (
@@ -29,13 +29,13 @@ const BackgroundAnimations = ({
       )}
       
       {includeInteractive && (
-        <InteractiveBackground intensity={0.2} />
+        <InteractiveBackground intensity={0.1} />
       )}
       
-      {/* Additional animated elements */}
-      <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-cesium/5 rounded-full blur-3xl animate-blob" />
-      <div className="absolute top-3/4 right-1/4 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl animate-blob animation-delay-2000" />
-      <div className="absolute top-1/2 left-3/4 w-64 h-64 bg-orange-500/5 rounded-full blur-3xl animate-blob animation-delay-4000" />
+      {/* Additional animated elements with reduced opacity */}
+      <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gray-800/10 rounded-full blur-3xl animate-blob" />
+      <div className="absolute top-3/4 right-1/4 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl animate-blob animation-delay-2000" />
+      <div className="absolute top-1/2 left-3/4 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl animate-blob animation-delay-4000" />
     </div>
   );
 };

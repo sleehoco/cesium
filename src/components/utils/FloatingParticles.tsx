@@ -35,16 +35,16 @@ const FloatingParticles = ({ count = 50, className = "" }: FloatingParticlesProp
 
     const createParticles = () => {
       particlesRef.current = [];
-      const colors = ['#D4AF37', '#FFD700', '#B78727', '#FFA500'];
+      const colors = ['#8B5CF6', '#6366F1', '#4F46E5', '#3B82F6'];
       
       for (let i = 0; i < count; i++) {
         particlesRef.current.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          size: Math.random() * 3 + 1,
+          size: Math.random() * 2 + 0.5,
           speedX: (Math.random() - 0.5) * 0.5,
           speedY: (Math.random() - 0.5) * 0.5,
-          opacity: Math.random() * 0.5 + 0.1,
+          opacity: Math.random() * 0.3 + 0.1,
           color: colors[Math.floor(Math.random() * colors.length)]
         });
       }
@@ -82,7 +82,7 @@ const FloatingParticles = ({ count = 50, className = "" }: FloatingParticlesProp
             ctx.moveTo(particle.x, particle.y);
             ctx.lineTo(otherParticle.x, otherParticle.y);
             ctx.strokeStyle = particle.color;
-            ctx.globalAlpha = (100 - distance) / 100 * 0.1;
+            ctx.globalAlpha = (100 - distance) / 100 * 0.05;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
