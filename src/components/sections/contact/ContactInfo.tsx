@@ -1,5 +1,5 @@
 
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, Instagram } from "lucide-react";
 
 const ContactInfo = () => {
   return (
@@ -34,6 +34,23 @@ const ContactInfo = () => {
           <div>
             <h4 className="text-white font-medium mb-1">Office</h4>
             <p className="text-gray-400">3500 Cedar Ave. Columbia, MD 21045</p>
+          </div>
+        </div>
+
+        <div className="flex items-start">
+          <div className="bg-cesium/10 rounded-full p-3 mr-4">
+            <Instagram className="h-6 w-6 text-cesium" />
+          </div>
+          <div>
+            <h4 className="text-white font-medium mb-1">Instagram</h4>
+            <a 
+              href="https://instagram.com/cesiumcyber" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-cesium transition-colors"
+            >
+              @cesiumcyber
+            </a>
           </div>
         </div>
       </div>

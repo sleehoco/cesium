@@ -1,5 +1,5 @@
 
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, Instagram } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const Footer = () => {
@@ -133,6 +133,17 @@ const Footer = () => {
               <li className="flex items-center">
                 <Mail className="h-5 w-5 text-cesium mr-2" />
                 <span>information@cesiumcyber.com</span>
+              </li>
+              <li className="flex items-center">
+                <Instagram className="h-5 w-5 text-cesium mr-2" />
+                <a 
+                  href="https://instagram.com/cesiumcyber" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-cesium transition-colors"
+                >
+                  @cesiumcyber
+                </a>
               </li>
             </ul>
           </div>
