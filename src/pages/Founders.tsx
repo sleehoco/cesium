@@ -42,7 +42,7 @@ const Founders = () => {
                   <div className="relative inline-block">
                     <div className="absolute inset-0 bg-cesium/20 rounded-2xl blur-xl"></div>
                     <ImageOptimizer
-                      src="/lovable-uploads/b24b90f5-8a07-4589-821e-d614e2703fa9.png"
+                      src="/lovable-uploads/57ca5107-42ac-47dc-8986-6eae8ee54711.png"
                       alt="Julia Morrison - Co-Founder & CEO of CesiumCyber Security"
                       className="relative rounded-2xl w-48 h-48 object-cover border-2 border-cesium/30 mx-auto"
                       priority={true}
