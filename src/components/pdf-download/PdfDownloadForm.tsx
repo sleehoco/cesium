@@ -1,29 +1,19 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Download } from 'lucide-react';
-
-const formSchema = z.object({
-  firstName: z.string().min(2, { message: "First name must be at least 2 characters" }),
-  lastName: z.string().min(2, { message: "Last name must be at least 2 characters" }),
-  email: z.string().email({ message: "Please enter a valid email address" }),
-  company: z.string().optional(),
-  phone: z.string().optional(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+import { Form } from '@/components/ui/form';
+import { formSchema, FormValues } from './form/PdfDownloadFormSchema';
+import { usePdfDownloadSubmission } from './form/usePdfDownloadSubmission';
+import PdfDownloadFormFields from './form/PdfDownloadFormFields';
+import PdfDownloadSubmitButton from './form/PdfDownloadSubmitButton';
 
 interface PdfDownloadFormProps {
   onSubmitSuccess: () => void;
 }
 
 const PdfDownloadForm = ({ onSubmitSuccess }: PdfDownloadFormProps) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const { submitForm, isLoading } = usePdfDownloadSubmission(onSubmitSuccess);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -36,76 +26,6 @@ const PdfDownloadForm = ({ onSubmitSuccess }: PdfDownloadFormProps) => {
     },
   });
 
-  const onSubmit = async (values: FormValues) => {
-    setIsLoading(true);
-    
-    try {
-      // Store form submission in localStorage
-      const submissions = JSON.parse(localStorage.getItem('pdfDownloads') || '[]');
-      const newSubmission = {
-        ...values,
-        timestamp: new Date().toISOString(),
-        id: Date.now().toString(),
-      };
-      submissions.push(newSubmission);
-      localStorage.setItem('pdfDownloads', JSON.stringify(submissions));
-
-      // Send email notification with form details
-      try {
-        const emailData = {
-          name: `${values.firstName} ${values.lastName}`,
-          email: values.email,
-          company: values.company || 'Not provided',
-          message: `PDF Download Request - AI Meets Quantum Computing Research Paper
-
-Contact Details:
-- Name: ${values.firstName} ${values.lastName}
-- Email: ${values.email}
-- Company: ${values.company || 'Not provided'}
-- Phone: ${values.phone || 'Not provided'}
-- Download Time: ${new Date().toLocaleString()}
-
-This person has requested to download the AI Meets Quantum Computing Business Review research paper.`,
-          recipient: 'jmorrison@cesiumcyber.com'
-        };
-
-        console.log('Sending email notification with data:', emailData);
-
-        const emailResponse = await fetch('https://rxlpulfotwjizohyfulc.supabase.co/functions/v1/send-contact-email', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(emailData),
-        });
-
-        const emailResult = await emailResponse.json();
-        console.log('Email notification result:', emailResult);
-      } catch (emailError) {
-        console.error('Failed to send email notification:', emailError);
-        // Don't block the download if email fails
-      }
-
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      // Trigger PDF download using your Google Drive file
-      const link = document.createElement('a');
-      link.href = 'https://drive.google.com/uc?export=download&id=1PFcwDCMNh0yMXgWfD321zHcXuSBoadRT';
-      link.download = 'AI-Quantum-Computing-Business-Review.pdf';
-      link.target = '_blank'; // Open in new tab as fallback
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      onSubmitSuccess();
-    } catch (error) {
-      console.error('Submission failed:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div className="max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8">
       <div className="text-center mb-6">
@@ -114,118 +34,9 @@ This person has requested to download the AI Meets Quantum Computing Business Re
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="firstName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-gray-700">First Name *</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="John" 
-                      {...field}
-                      className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="lastName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-gray-700">Last Name *</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="Doe" 
-                      {...field}
-                      className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-gray-700">Email Address *</FormLabel>
-                <FormControl>
-                  <Input 
-                    type="email"
-                    placeholder="john@company.com" 
-                    {...field}
-                    className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="company"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-gray-700">Company Name</FormLabel>
-                <FormControl>
-                  <Input 
-                    placeholder="Your Company" 
-                    {...field}
-                    className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-gray-700">Phone Number</FormLabel>
-                <FormControl>
-                  <Input 
-                    type="tel"
-                    placeholder="+1 (555) 123-4567" 
-                    {...field}
-                    className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button 
-            type="submit" 
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg font-semibold"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <div className="flex items-center justify-center">
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                Processing...
-              </div>
-            ) : (
-              <div className="flex items-center justify-center">
-                <Download className="h-5 w-5 mr-2" />
-                Get Research Paper
-              </div>
-            )}
-          </Button>
+        <form onSubmit={form.handleSubmit(submitForm)} className="space-y-4">
+          <PdfDownloadFormFields control={form.control} />
+          <PdfDownloadSubmitButton isLoading={isLoading} />
         </form>
       </Form>
 
