@@ -8,7 +8,7 @@ import Index from "./pages/Index";
 import Services from "./pages/Services";
 import Contact from "./pages/Contact";
 import PdfDownload from "./pages/PdfDownload";
-import JuliaMorrison from "./pages/JuliaMorrison";
+import Founders from "./pages/Founders";
 import Login from "./pages/Login";
 import ClientDashboard from "./pages/ClientDashboard";
 import BrowserFingerprintingDemo from "./pages/BrowserFingerprintingDemo";
@@ -51,7 +51,7 @@ const App = () => {
             <Route path="/services" element={<Services />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/pdf-download" element={<PdfDownload />} />
-            <Route path="/julia-morrison" element={<JuliaMorrison />} />
+            <Route path="/founders" element={<Founders />} />
             <Route path="/browser-fingerprinting-demo" element={<BrowserFingerprintingDemo />} />
             <Route path="/login" element={<Login />} />
             <Route 

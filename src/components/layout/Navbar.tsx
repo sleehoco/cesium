@@ -85,10 +85,10 @@ const Navbar = () => {
               About
             </button>
             <Link 
-              to="/julia-morrison"
+              to="/founders"
               className="text-white hover:text-cesium transition-colors"
             >
-              Julia Morrison
+              Founders
             </Link>
             <Link 
               to="/pdf-download"
@@ -157,11 +157,11 @@ const Navbar = () => {
                 About
               </button>
               <Link 
-                to="/julia-morrison"
+                to="/founders"
                 className="block px-3 py-2 text-white hover:text-cesium transition-colors"
                 onClick={() => setIsOpen(false)}
               >
-                Julia Morrison
+                Founders
               </Link>
               <Link 
                 to="/pdf-download"
