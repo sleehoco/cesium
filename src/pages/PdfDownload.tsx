@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -51,10 +50,11 @@ const PdfDownload = () => {
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1500));
 
-      // Trigger PDF download
+      // Trigger PDF download using a publicly available sample PDF
       const link = document.createElement('a');
-      link.href = '/ai-quantum-computing-business-review.pdf'; // Updated PDF path
+      link.href = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
       link.download = 'AI-Quantum-Computing-Business-Review.pdf';
+      link.target = '_blank'; // Open in new tab as fallback
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
