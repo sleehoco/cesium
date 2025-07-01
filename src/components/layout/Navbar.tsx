@@ -85,6 +85,12 @@ const Navbar = () => {
               About
             </button>
             <Link 
+              to="/julia-morrison"
+              className="text-white hover:text-cesium transition-colors"
+            >
+              Julia Morrison
+            </Link>
+            <Link 
               to="/pdf-download"
               className="text-white hover:text-cesium transition-colors"
             >
@@ -150,6 +156,13 @@ const Navbar = () => {
               >
                 About
               </button>
+              <Link 
+                to="/julia-morrison"
+                className="block px-3 py-2 text-white hover:text-cesium transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                Julia Morrison
+              </Link>
               <Link 
                 to="/pdf-download"
                 className="block px-3 py-2 text-white hover:text-cesium transition-colors"
