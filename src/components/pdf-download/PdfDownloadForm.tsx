@@ -53,9 +53,9 @@ const PdfDownloadForm = ({ onSubmitSuccess }: PdfDownloadFormProps) => {
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1500));
 
-      // Trigger PDF download using a publicly available sample PDF
+      // Trigger PDF download using your Google Drive file
       const link = document.createElement('a');
-      link.href = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
+      link.href = 'https://drive.google.com/uc?export=download&id=1PFcwDCMNh0yMXgWfD321zHcXuSBoadRT';
       link.download = 'AI-Quantum-Computing-Business-Review.pdf';
       link.target = '_blank'; // Open in new tab as fallback
       document.body.appendChild(link);
