@@ -58,9 +58,9 @@ This person has requested to download the AI Meets Quantum Computing Business Re
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1500));
 
-      // Trigger PDF download using your Google Drive file
+      // Trigger PDF download using your new Google Drive file
       const link = document.createElement('a');
-      link.href = 'https://drive.google.com/uc?export=download&id=1PFcwDCMNh0yMXgWfD321zHcXuSBoadRT';
+      link.href = 'https://drive.google.com/uc?export=download&id=1aFFBdGVn8IE646hRzTiEhJ2ovDAm5Wx3';
       link.download = 'AI-Quantum-Computing-Business-Review.pdf';
       link.target = '_blank'; // Open in new tab as fallback
       document.body.appendChild(link);
