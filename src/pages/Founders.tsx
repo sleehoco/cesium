@@ -78,9 +78,11 @@ const Founders = () => {
                 <div className="text-center mb-6">
                   <div className="relative inline-block">
                     <div className="absolute inset-0 bg-cesium/20 rounded-2xl blur-xl"></div>
-                    <div className="relative rounded-2xl w-48 h-48 bg-cyber-light/20 border-2 border-cesium/30 mx-auto flex items-center justify-center">
-                      <UserRound className="w-24 h-24 text-cesium/60" />
-                    </div>
+                    <img
+                      src="/lovable-uploads/57ca5107-42ac-47dc-8986-6eae8ee54711.png"
+                      alt="Co-Founder of CesiumCyber Security"
+                      className="relative rounded-2xl w-48 h-48 object-cover border-2 border-cesium/30 mx-auto"
+                    />
                   </div>
                 </div>
                 <div className="text-center">
