@@ -19,7 +19,7 @@ const SendAdminEmail = () => {
       
       const { data, error } = await supabase.functions.invoke('create-admin-account', {
         body: {
-          email: 'slee@hocomd.com',
+          email: 'slee@noahella.com',
           firstName: 'Admin',
           lastName: 'User'
         }
@@ -33,7 +33,7 @@ const SendAdminEmail = () => {
 
       if (data?.success) {
         setStatus('success');
-        setMessage('Admin account created and email sent successfully to slee@hocomd.com');
+        setMessage('Admin account created and email sent successfully to slee@noahella.com');
       } else {
         throw new Error(data?.error || 'Unknown error occurred');
       }
@@ -55,7 +55,7 @@ const SendAdminEmail = () => {
     <div className="max-w-md mx-auto p-6 space-y-4">
       <div className="text-center">
         <h2 className="text-xl font-semibold mb-2">Sending Admin Account Email</h2>
-        <p className="text-muted-foreground">Creating admin account for slee@hocomd.com</p>
+        <p className="text-muted-foreground">Creating admin account for slee@noahella.com</p>
       </div>
 
       {status === 'success' && (
