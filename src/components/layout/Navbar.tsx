@@ -31,6 +31,14 @@ const Navbar = () => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // If element not found (maybe lazy loaded), try again after a short delay
+      setTimeout(() => {
+        const retryElement = document.getElementById(sectionId);
+        if (retryElement) {
+          retryElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
     }
   };
 
