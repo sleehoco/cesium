@@ -15,6 +15,7 @@ import SendAdminEmail from '@/components/admin/SendAdminEmail';
 
 const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isResetPassword, setIsResetPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -23,7 +24,7 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
-  const { signIn, signUp, user } = useAuth();
+  const { signIn, signUp, resetPassword, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -40,7 +41,20 @@ const Auth = () => {
     setError('');
 
     try {
-      if (isSignUp) {
+      if (isResetPassword) {
+        const { error } = await resetPassword(email);
+        
+        if (error) {
+          setError(error.message);
+        } else {
+          toast({
+            title: "Password reset email sent!",
+            description: "Please check your email for password reset instructions.",
+          });
+          setIsResetPassword(false);
+          setEmail('');
+        }
+      } else if (isSignUp) {
         const { error } = await signUp(email, password, firstName, lastName);
         
         if (error) {
@@ -105,12 +119,14 @@ const Auth = () => {
               </span>
             </div>
             <CardTitle className="text-2xl">
-              {isSignUp ? 'Create Account' : 'Welcome Back'}
+              {isResetPassword ? 'Reset Password' : (isSignUp ? 'Create Account' : 'Welcome Back')}
             </CardTitle>
             <CardDescription>
-              {isSignUp 
-                ? 'Join CesiumCyber to access advanced security tools' 
-                : 'Sign in to your CesiumCyber account'
+              {isResetPassword
+                ? 'Enter your email address and we\'ll send you a password reset link'
+                : (isSignUp 
+                  ? 'Join CesiumCyber to access advanced security tools' 
+                  : 'Sign in to your CesiumCyber account')
               }
             </CardDescription>
           </CardHeader>
@@ -123,7 +139,7 @@ const Auth = () => {
                 </Alert>
               )}
               
-              {isSignUp && (
+              {!isResetPassword && isSignUp && (
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="firstName">First Name</Label>
@@ -175,56 +191,82 @@ const Auth = () => {
                 </div>
               </div>
               
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder={isSignUp ? 'Create a strong password' : 'Enter your password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 pr-10"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
+              {!isResetPassword && (
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="password"
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder={isSignUp ? 'Create a strong password' : 'Enter your password'}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="pl-10 pr-10"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                  {isSignUp && (
+                    <p className="text-xs text-muted-foreground">
+                      Password should be at least 6 characters long
+                    </p>
+                  )}
                 </div>
-                {isSignUp && (
-                  <p className="text-xs text-muted-foreground">
-                    Password should be at least 6 characters long
-                  </p>
-                )}
-              </div>
+              )}
               
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Please wait...' : (isSignUp ? 'Create Account' : 'Sign In')}
+                {loading ? 'Please wait...' : (
+                  isResetPassword ? 'Send Reset Link' : (isSignUp ? 'Create Account' : 'Sign In')
+                )}
               </Button>
+              
+              {!isResetPassword && !isSignUp && (
+                <div className="text-center">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsResetPassword(true);
+                      setError('');
+                    }}
+                    className="text-sm text-primary hover:underline"
+                  >
+                    Forgot your password?
+                  </button>
+                </div>
+              )}
             </form>
             
             <div className="mt-6">
               <Separator />
               <div className="mt-6 text-center">
                 <p className="text-sm text-muted-foreground">
-                  {isSignUp ? 'Already have an account?' : "Don't have an account?"}
+                  {isResetPassword ? 'Remember your password?' : (isSignUp ? 'Already have an account?' : "Don't have an account?")}
                   {' '}
                   <button
                     type="button"
                     onClick={() => {
-                      setIsSignUp(!isSignUp);
+                      if (isResetPassword) {
+                        setIsResetPassword(false);
+                        setIsSignUp(false);
+                      } else {
+                        setIsSignUp(!isSignUp);
+                      }
                       setError('');
                       setFirstName('');
                       setLastName('');
+                      setEmail('');
+                      setPassword('');
                     }}
                     className="text-primary hover:underline font-medium"
                   >
-                    {isSignUp ? 'Sign in' : 'Sign up'}
+                    {isResetPassword ? 'Sign in' : (isSignUp ? 'Sign in' : 'Sign up')}
                   </button>
                 </p>
               </div>
