@@ -33,10 +33,13 @@ const SendAdminEmail = () => {
 
       if (data?.success) {
         setStatus('success');
-        setMessage('Admin account created and email sent successfully to rock@noahella.com');
-      } else if (data?.userExists) {
-        setStatus('error');
-        setMessage(`User rock@noahella.com already exists. Please use a different email or check if they already have admin access.`);
+        if (data?.alreadyAdmin) {
+          setMessage(`User rock@noahella.com already has admin access.`);
+        } else if (data?.grantedAccess) {
+          setMessage(`Existing user rock@noahella.com has been granted admin access.`);
+        } else {
+          setMessage('Admin account created and email sent successfully to rock@noahella.com');
+        }
       } else {
         throw new Error(data?.error || 'Unknown error occurred');
       }

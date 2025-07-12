@@ -54,13 +54,68 @@ const handler = async (req: Request): Promise<Response> => {
     if (authError) {
       console.error("Error creating user:", authError);
       
-      // If user already exists, return a specific message
+      // If user already exists, check if they have admin role
       if (authError.message.includes('already been registered')) {
+        console.log(`User ${email} already exists, checking admin role...`);
+        
+        // Get all users to find the existing one
+        const { data: users, error: listError } = await supabaseAdmin.auth.admin.listUsers();
+        
+        if (listError) {
+          throw new Error(`Failed to check existing users: ${listError.message}`);
+        }
+        
+        const existingUser = users.users.find(user => user.email === email);
+        
+        if (!existingUser) {
+          throw new Error(`User ${email} should exist but was not found`);
+        }
+        
+        // Check if user already has admin role
+        const { data: existingRole } = await supabaseAdmin
+          .from('user_roles')
+          .select('*')
+          .eq('user_id', existingUser.id)
+          .eq('role', 'admin')
+          .maybeSingle();
+
+        if (existingRole) {
+          return new Response(
+            JSON.stringify({
+              success: true,
+              message: `User ${email} already has admin access.`,
+              userExists: true,
+              alreadyAdmin: true
+            }),
+            {
+              status: 200,
+              headers: { "Content-Type": "application/json", ...corsHeaders },
+            }
+          );
+        }
+        
+        // User exists but doesn't have admin role, grant it
+        const { error: roleError } = await supabaseAdmin
+          .from('user_roles')
+          .insert({
+            user_id: existingUser.id,
+            role: 'admin'
+          });
+
+        if (roleError) {
+          console.error("Error assigning admin role to existing user:", roleError);
+          throw new Error(`Failed to assign admin role: ${roleError.message}`);
+        }
+
+        console.log("Admin role assigned to existing user successfully");
+
         return new Response(
           JSON.stringify({
-            success: false,
-            error: `User ${email} already exists. Please use a different email or reset their password.`,
-            userExists: true
+            success: true,
+            message: `Existing user ${email} has been granted admin access.`,
+            userId: existingUser.id,
+            email: email,
+            grantedAccess: true
           }),
           {
             status: 200,
