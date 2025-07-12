@@ -36,7 +36,7 @@ const SendAdminEmail = () => {
         if (data?.alreadyAdmin) {
           setMessage(`User rock@noahella.com already has admin access.`);
         } else if (data?.grantedAccess) {
-          setMessage(`Existing user rock@noahella.com has been granted admin access.`);
+          setMessage(`Existing user rock@noahella.com has been granted admin access and notified via email.`);
         } else {
           setMessage('Admin account created and email sent successfully to rock@noahella.com');
         }

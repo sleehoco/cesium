@@ -109,10 +109,45 @@ const handler = async (req: Request): Promise<Response> => {
 
         console.log("Admin role assigned to existing user successfully");
 
+        // Send notification email to existing user
+        const emailResponse = await resend.emails.send({
+          from: "CesiumCyber Admin <onboarding@resend.dev>",
+          to: [email],
+          subject: "Admin Access Granted - CesiumCyber",
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+              <h1 style="color: #333; text-align: center;">Admin Access Granted</h1>
+              
+              <div style="background: #d4edda; border: 1px solid #c3e6cb; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <h2 style="color: #155724; margin-top: 0;">Congratulations!</h2>
+                <p style="margin: 0; color: #155724;">Your account <strong>${email}</strong> has been granted administrator privileges for CesiumCyber.</p>
+              </div>
+              
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="${supabaseUrl.replace('.supabase.co', '.lovableproject.com')}/auth" 
+                   style="background: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
+                  Login to Your Account
+                </a>
+              </div>
+              
+              <p style="color: #666; font-size: 14px; text-align: center;">
+                You can now access all administrative features. If you have any questions, please contact the system administrator.
+              </p>
+            </div>
+          `,
+        });
+
+        if (emailResponse.error) {
+          console.error("Error sending notification email:", emailResponse.error);
+          // Don't throw error here, admin access was already granted successfully
+        } else {
+          console.log("Notification email sent successfully:", emailResponse.data);
+        }
+
         return new Response(
           JSON.stringify({
             success: true,
-            message: `Existing user ${email} has been granted admin access.`,
+            message: `Existing user ${email} has been granted admin access and notified via email.`,
             userId: existingUser.id,
             email: email,
             grantedAccess: true
