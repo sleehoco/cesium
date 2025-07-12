@@ -99,6 +99,12 @@ const Navbar = () => {
               Founders
             </Link>
             <Link 
+              to="/blog-generator"
+              className="text-white hover:text-cesium transition-colors"
+            >
+              AI Blog
+            </Link>
+            <Link 
               to="/pdf-download"
               className="text-white hover:text-cesium transition-colors"
             >
@@ -170,6 +176,13 @@ const Navbar = () => {
                 onClick={() => setIsOpen(false)}
               >
                 Founders
+              </Link>
+              <Link 
+                to="/blog-generator"
+                className="block px-3 py-2 text-white hover:text-cesium transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                AI Blog
               </Link>
               <Link 
                 to="/pdf-download"

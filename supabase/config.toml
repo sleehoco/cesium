@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.cyber-news-llm]
 verify_jwt = false
+
+[functions.multi-agent-blog-generator]
+verify_jwt = false
