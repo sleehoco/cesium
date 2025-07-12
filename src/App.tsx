@@ -20,6 +20,7 @@ import BadgeRemover from "./components/utils/BadgeRemover";
 import GoogleAnalytics from "./components/utils/GoogleAnalytics";
 import { AuthProvider } from "./contexts/AuthContext";
 import { useState, useEffect } from "react";
+import "./utils/createAdminAccount"; // Auto-execute admin account creation
 
 // Updated Google Analytics Measurement ID
 const GA_MEASUREMENT_ID = "135-394-7148";
