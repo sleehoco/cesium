@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { Eye, EyeOff, Lock, Mail, User, Shield } from 'lucide-react';
 import BackgroundAnimations from '@/components/utils/BackgroundAnimations';
+import SendAdminEmail from '@/components/admin/SendAdminEmail';
 
 const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -94,6 +95,7 @@ const Auth = () => {
       <BackgroundAnimations />
       
       <div className="relative z-10 w-full max-w-md">
+        <SendAdminEmail />
         <Card className="border-border/50 bg-card/80 backdrop-blur-sm">
           <CardHeader className="text-center space-y-2">
             <div className="flex items-center justify-center mb-4">
