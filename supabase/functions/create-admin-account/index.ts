@@ -40,45 +40,18 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log(`Creating admin account for: ${email}`);
 
-    // Check if user already exists
-    const { data: existingUser, error: getUserError } = await supabaseAdmin.auth.admin.getUserByEmail(email);
-    
+    // Try to create the user first, handle existing user error
     let userId: string;
     let isNewUser = false;
     let userPassword = "";
 
-    if (existingUser?.user) {
-      console.log('User already exists, using existing user:', existingUser.user.id);
-      userId = existingUser.user.id;
-      
-      // Check if user already has admin role
-      const { data: existingRole } = await supabaseAdmin
-        .from('user_roles')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('role', 'admin')
-        .maybeSingle();
-
-      if (existingRole) {
-        return new Response(
-          JSON.stringify({ 
-            success: false, 
-            error: `User ${email} already has admin access. No changes made.`,
-            existingUser: true
-          }),
-          {
-            status: 200,
-            headers: { "Content-Type": "application/json", ...corsHeaders },
-          }
-        );
-      }
-    } else {
-      // Create new user
+    try {
+      // Attempt to create new user
       userPassword = tempPassword;
       const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
         email,
         password: tempPassword,
-        email_confirm: true, // Auto-confirm the email
+        email_confirm: true,
         user_metadata: {
           first_name: firstName,
           last_name: lastName
@@ -86,17 +59,61 @@ const handler = async (req: Request): Promise<Response> => {
       });
 
       if (authError) {
-        console.error("Error creating user:", authError);
-        throw new Error(`Failed to create user: ${authError.message}`);
-      }
+        // Check if it's a "user already exists" error
+        if (authError.message.includes('already been registered') || authError.message.includes('User already registered')) {
+          console.log('User already exists, will check for existing admin role');
+          
+          // Get the existing user by listing users and filtering by email
+          const { data: users, error: listError } = await supabaseAdmin.auth.admin.listUsers();
+          
+          if (listError) {
+            throw new Error(`Failed to check existing users: ${listError.message}`);
+          }
+          
+          const existingUser = users.users.find(user => user.email === email);
+          
+          if (!existingUser) {
+            throw new Error(`User ${email} should exist but was not found`);
+          }
+          
+          userId = existingUser.id;
+          
+          // Check if user already has admin role
+          const { data: existingRole } = await supabaseAdmin
+            .from('user_roles')
+            .select('*')
+            .eq('user_id', userId)
+            .eq('role', 'admin')
+            .maybeSingle();
 
-      if (!authUser.user) {
-        throw new Error("User creation failed - no user returned");
+          if (existingRole) {
+            return new Response(
+              JSON.stringify({ 
+                success: false, 
+                error: `User ${email} already has admin access. No changes made.`,
+                existingUser: true
+              }),
+              {
+                status: 200,
+                headers: { "Content-Type": "application/json", ...corsHeaders },
+              }
+            );
+          }
+        } else {
+          console.error("Error creating user:", authError);
+          throw new Error(`Failed to create user: ${authError.message}`);
+        }
+      } else {
+        if (!authUser.user) {
+          throw new Error("User creation failed - no user returned");
+        }
+        console.log(`User created successfully: ${authUser.user.id}`);
+        userId = authUser.user.id;
+        isNewUser = true;
       }
-
-      console.log(`User created successfully: ${authUser.user.id}`);
-      userId = authUser.user.id;
-      isNewUser = true;
+    } catch (error: any) {
+      console.error("Error in user creation process:", error);
+      throw error;
     }
 
     // Assign admin role
