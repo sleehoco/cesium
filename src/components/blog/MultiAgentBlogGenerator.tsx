@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2, Bot, Users, Zap, FileText, Search } from 'lucide-react';
 
@@ -36,6 +37,7 @@ interface BlogGenerationResult {
 
 const MultiAgentBlogGenerator: React.FC = () => {
   const { toast } = useToast();
+  const { user } = useAuth();
   const [topic, setTopic] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -72,8 +74,8 @@ const MultiAgentBlogGenerator: React.FC = () => {
       const { data, error } = await supabase.functions.invoke('multi-agent-blog-generator', {
         body: {
           topic: topic || undefined,
-          save_to_db: false, // We'll handle saving separately
-          author_id: null // Would need auth for this
+          save_to_db: false,
+          author_id: user?.id || null
         }
       });
 
@@ -107,12 +109,11 @@ const MultiAgentBlogGenerator: React.FC = () => {
     if (!result?.final_post) return;
 
     try {
-      // In a real app, you'd get the author_id from auth
       const { data, error } = await supabase.functions.invoke('multi-agent-blog-generator', {
         body: {
           ...result.final_post,
           save_to_db: true,
-          author_id: 'temp-author-id' // Replace with actual auth
+          author_id: user?.id
         }
       });
 

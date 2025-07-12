@@ -10,6 +10,7 @@ import Contact from "./pages/Contact";
 import PdfDownload from "./pages/PdfDownload";
 import Founders from "./pages/Founders";
 import BlogGenerator from "./pages/BlogGenerator";
+import Auth from "./pages/Auth";
 import Login from "./pages/Login";
 import ClientDashboard from "./pages/ClientDashboard";
 import BrowserFingerprintingDemo from "./pages/BrowserFingerprintingDemo";
@@ -17,6 +18,7 @@ import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/utils/ProtectedRoute";
 import BadgeRemover from "./components/utils/BadgeRemover";
 import GoogleAnalytics from "./components/utils/GoogleAnalytics";
+import { AuthProvider } from "./contexts/AuthContext";
 import { useState, useEffect } from "react";
 
 // Updated Google Analytics Measurement ID
@@ -44,9 +46,10 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <BrowserRouter>
-          <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
-          <BadgeRemover />
+        <AuthProvider>
+          <BrowserRouter>
+            <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
+            <BadgeRemover />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/services" element={<Services />} />
@@ -54,6 +57,7 @@ const App = () => {
             <Route path="/pdf-download" element={<PdfDownload />} />
             <Route path="/founders" element={<Founders />} />
             <Route path="/blog-generator" element={<BlogGenerator />} />
+            <Route path="/auth" element={<Auth />} />
             <Route path="/browser-fingerprinting-demo" element={<BrowserFingerprintingDemo />} />
             <Route path="/login" element={<Login />} />
             <Route 
@@ -65,8 +69,9 @@ const App = () => {
               } 
             />
             <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
         <Toaster />
         <Sonner />
       </TooltipProvider>

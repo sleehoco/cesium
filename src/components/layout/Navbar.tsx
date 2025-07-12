@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
+import { LogOut, User, Shield } from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showBorder, setShowBorder] = useState(false);
+  const { user, isAdmin, signOut } = useAuth();
   const location = useLocation();
 
   useEffect(() => {
@@ -58,6 +62,12 @@ const Navbar = () => {
     }
   };
 
+  const handleSignOut = async () => {
+    await signOut();
+  };
+
+  const isAuthPage = location.pathname === '/auth';
+
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       showBorder ? 'bg-cyber border-b border-cesium/20 backdrop-blur-sm' : 'bg-transparent'
@@ -98,24 +108,60 @@ const Navbar = () => {
             >
               Founders
             </Link>
-            <Link 
-              to="/blog-generator"
-              className="text-white hover:text-cesium transition-colors"
-            >
-              AI Blog
-            </Link>
+            {isAdmin && (
+              <Link 
+                to="/blog-generator"
+                className="text-white hover:text-cesium transition-colors flex items-center gap-1"
+              >
+                <Shield className="h-4 w-4" />
+                AI Blog
+              </Link>
+            )}
             <Link 
               to="/pdf-download"
               className="text-white hover:text-cesium transition-colors"
             >
               Free Guide
             </Link>
-            <button 
-              onClick={handleContactClick}
-              className="bg-cesium text-black px-4 py-2 rounded-md hover:bg-cesium/80 transition-colors font-medium"
-            >
-              Contact Us
-            </button>
+            {user ? (
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 text-white">
+                  <User className="h-4 w-4" />
+                  <span className="text-sm">{user.email}</span>
+                  {isAdmin && <Shield className="h-4 w-4 text-cesium" />}
+                </div>
+                <Button 
+                  onClick={handleSignOut}
+                  variant="outline"
+                  size="sm"
+                  className="border-white text-white hover:bg-white hover:text-black"
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sign Out
+                </Button>
+              </div>
+            ) : !isAuthPage ? (
+              <div className="flex items-center gap-2">
+                <Link to="/auth">
+                  <Button variant="outline" size="sm" className="border-white text-white hover:bg-white hover:text-black">
+                    Sign In
+                  </Button>
+                </Link>
+                <button 
+                  onClick={handleContactClick}
+                  className="bg-cesium text-black px-4 py-2 rounded-md hover:bg-cesium/80 transition-colors font-medium"
+                >
+                  Contact Us
+                </button>
+              </div>
+            ) : (
+              <button 
+                onClick={handleContactClick}
+                className="bg-cesium text-black px-4 py-2 rounded-md hover:bg-cesium/80 transition-colors font-medium"
+              >
+                Contact Us
+              </button>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -177,13 +223,16 @@ const Navbar = () => {
               >
                 Founders
               </Link>
-              <Link 
-                to="/blog-generator"
-                className="block px-3 py-2 text-white hover:text-cesium transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                AI Blog
-              </Link>
+              {isAdmin && (
+                <Link 
+                  to="/blog-generator"
+                  className="block px-3 py-2 text-white hover:text-cesium transition-colors flex items-center gap-2"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <Shield className="h-4 w-4" />
+                  AI Blog
+                </Link>
+              )}
               <Link 
                 to="/pdf-download"
                 className="block px-3 py-2 text-white hover:text-cesium transition-colors"
@@ -191,15 +240,55 @@ const Navbar = () => {
               >
                 Free Guide
               </Link>
-              <button 
-                onClick={() => {
-                  handleContactClick();
-                  setIsOpen(false);
-                }}
-                className="block w-full text-left px-3 py-2 bg-cesium text-black rounded-md hover:bg-cesium/80 transition-colors font-medium mx-3 mt-2"
-              >
-                Contact Us
-              </button>
+              
+              {user ? (
+                <div className="px-3 py-2 border-t border-cesium/20 mt-2">
+                  <div className="flex items-center gap-2 text-white mb-3">
+                    <User className="h-4 w-4" />
+                    <span className="text-sm">{user.email}</span>
+                    {isAdmin && <Shield className="h-4 w-4 text-cesium" />}
+                  </div>
+                  <button 
+                    onClick={() => {
+                      handleSignOut();
+                      setIsOpen(false);
+                    }}
+                    className="w-full text-left px-3 py-2 bg-white/10 text-white rounded-md hover:bg-white/20 transition-colors font-medium flex items-center gap-2"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Sign Out
+                  </button>
+                </div>
+              ) : !isAuthPage ? (
+                <div className="px-3 py-2 border-t border-cesium/20 mt-2 space-y-2">
+                  <Link 
+                    to="/auth"
+                    className="block w-full text-center px-3 py-2 bg-white/10 text-white rounded-md hover:bg-white/20 transition-colors font-medium"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Sign In
+                  </Link>
+                  <button 
+                    onClick={() => {
+                      handleContactClick();
+                      setIsOpen(false);
+                    }}
+                    className="block w-full text-left px-3 py-2 bg-cesium text-black rounded-md hover:bg-cesium/80 transition-colors font-medium"
+                  >
+                    Contact Us
+                  </button>
+                </div>
+              ) : (
+                <button 
+                  onClick={() => {
+                    handleContactClick();
+                    setIsOpen(false);
+                  }}
+                  className="block w-full text-left px-3 py-2 bg-cesium text-black rounded-md hover:bg-cesium/80 transition-colors font-medium mx-3 mt-2"
+                >
+                  Contact Us
+                </button>
+              )}
             </div>
           </div>
         )}
