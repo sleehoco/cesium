@@ -40,91 +40,138 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log(`Creating admin account for: ${email}`);
 
-    // Create the user with admin client
-    const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
-      email,
-      password: tempPassword,
-      email_confirm: true, // Auto-confirm the email
-      user_metadata: {
-        first_name: firstName,
-        last_name: lastName
+    // Check if user already exists
+    const { data: existingUser, error: getUserError } = await supabaseAdmin.auth.admin.getUserByEmail(email);
+    
+    let userId: string;
+    let isNewUser = false;
+    let userPassword = "";
+
+    if (existingUser?.user) {
+      console.log('User already exists, using existing user:', existingUser.user.id);
+      userId = existingUser.user.id;
+      
+      // Check if user already has admin role
+      const { data: existingRole } = await supabaseAdmin
+        .from('user_roles')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('role', 'admin')
+        .maybeSingle();
+
+      if (existingRole) {
+        return new Response(
+          JSON.stringify({ 
+            success: false, 
+            error: `User ${email} already has admin access. No changes made.`,
+            existingUser: true
+          }),
+          {
+            status: 200,
+            headers: { "Content-Type": "application/json", ...corsHeaders },
+          }
+        );
       }
-    });
+    } else {
+      // Create new user
+      userPassword = tempPassword;
+      const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
+        email,
+        password: tempPassword,
+        email_confirm: true, // Auto-confirm the email
+        user_metadata: {
+          first_name: firstName,
+          last_name: lastName
+        }
+      });
 
-    if (authError) {
-      console.error("Error creating user:", authError);
-      throw new Error(`Failed to create user: ${authError.message}`);
+      if (authError) {
+        console.error("Error creating user:", authError);
+        throw new Error(`Failed to create user: ${authError.message}`);
+      }
+
+      if (!authUser.user) {
+        throw new Error("User creation failed - no user returned");
+      }
+
+      console.log(`User created successfully: ${authUser.user.id}`);
+      userId = authUser.user.id;
+      isNewUser = true;
     }
-
-    if (!authUser.user) {
-      throw new Error("User creation failed - no user returned");
-    }
-
-    console.log(`User created successfully: ${authUser.user.id}`);
 
     // Assign admin role
     const { error: roleError } = await supabaseAdmin
       .from('user_roles')
       .insert({
-        user_id: authUser.user.id,
+        user_id: userId,
         role: 'admin'
       });
 
     if (roleError) {
       console.error("Error assigning admin role:", roleError);
-      // Try to clean up the user if role assignment fails
-      await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);
+      // Try to clean up the user if role assignment fails and it's a new user
+      if (isNewUser) {
+        await supabaseAdmin.auth.admin.deleteUser(userId);
+      }
       throw new Error(`Failed to assign admin role: ${roleError.message}`);
     }
 
     console.log("Admin role assigned successfully");
 
-    // Send email with credentials
-    const emailResponse = await resend.emails.send({
-      from: "CesiumCyber Admin <onboarding@resend.dev>",
-      to: [email],
-      subject: "Your CesiumCyber Admin Account",
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <h1 style="color: #333; text-align: center;">Welcome to CesiumCyber</h1>
-          
-          <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h2 style="color: #333; margin-top: 0;">Your Admin Account Details</h2>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Temporary Password:</strong> <code style="background: #e9ecef; padding: 4px 8px; border-radius: 4px;">${tempPassword}</code></p>
+    // Send email with credentials (only for new users)
+    let emailResponse = null;
+    if (isNewUser) {
+      emailResponse = await resend.emails.send({
+        from: "CesiumCyber Admin <onboarding@resend.dev>",
+        to: [email],
+        subject: "Your CesiumCyber Admin Account",
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <h1 style="color: #333; text-align: center;">Welcome to CesiumCyber</h1>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h2 style="color: #333; margin-top: 0;">Your Admin Account Details</h2>
+              <p><strong>Email:</strong> ${email}</p>
+              <p><strong>Temporary Password:</strong> <code style="background: #e9ecef; padding: 4px 8px; border-radius: 4px;">${userPassword}</code></p>
+            </div>
+            
+            <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin: 20px 0;">
+              <p style="margin: 0; color: #856404;"><strong>Important:</strong> Please change your password immediately after logging in for security purposes.</p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${supabaseUrl.replace('.supabase.co', '.lovableproject.com')}/auth" 
+                 style="background: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
+                Login to Your Account
+              </a>
+            </div>
+            
+            <p style="color: #666; font-size: 14px; text-align: center;">
+              If you have any questions, please contact the system administrator.
+            </p>
           </div>
-          
-          <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin: 20px 0;">
-            <p style="margin: 0; color: #856404;"><strong>Important:</strong> Please change your password immediately after logging in for security purposes.</p>
-          </div>
-          
-          <div style="text-align: center; margin: 30px 0;">
-            <a href="${supabaseUrl.replace('.supabase.co', '.lovableproject.com')}/auth" 
-               style="background: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
-              Login to Your Account
-            </a>
-          </div>
-          
-          <p style="color: #666; font-size: 14px; text-align: center;">
-            If you have any questions, please contact the system administrator.
-          </p>
-        </div>
-      `,
-    });
+        `,
+      });
 
-    if (emailResponse.error) {
-      console.error("Error sending email:", emailResponse.error);
-      throw new Error(`Failed to send email: ${emailResponse.error.message}`);
+      if (emailResponse.error) {
+        console.error("Error sending email:", emailResponse.error);
+        throw new Error(`Failed to send email: ${emailResponse.error.message}`);
+      }
+
+      console.log("Email sent successfully:", emailResponse.data);
+    } else {
+      console.log("Existing user granted admin access, no email sent with credentials");
     }
-
-    console.log("Email sent successfully:", emailResponse.data);
 
     return new Response(
       JSON.stringify({
         success: true,
-        message: "Admin account created and credentials sent via email",
-        userId: authUser.user.id,
-        email: email
+        message: isNewUser 
+          ? "Admin account created and credentials sent via email"
+          : `Existing user ${email} granted admin access`,
+        userId: userId,
+        email: email,
+        isNewUser
       }), 
       {
         status: 200,
