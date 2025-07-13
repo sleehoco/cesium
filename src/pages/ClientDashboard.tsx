@@ -9,29 +9,42 @@ import { LogOut } from "lucide-react";
 import DashboardSecurity from "@/components/dashboard/DashboardSecurity";
 import ActivityFeed from "@/components/dashboard/ActivityFeed";
 import ProjectFiles from "@/components/dashboard/ProjectFiles";
+import { useAuth } from "@/contexts/AuthContext";
 
 const ClientDashboard = () => {
   const navigate = useNavigate();
+  const { user, signOut, isLoading } = useAuth();
 
   // Check if user is authenticated
   useEffect(() => {
-    const auth = localStorage.getItem("clientAuth");
-    if (!auth || !JSON.parse(auth).isAuthenticated) {
+    if (!isLoading && !user) {
       navigate("/login");
     }
-  }, [navigate]);
+  }, [user, isLoading, navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("clientAuth");
-    toast.success("Logged out successfully");
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      toast.success("Logged out successfully");
+      navigate("/login");
+    } catch (error) {
+      toast.error("Error logging out");
+    }
   };
 
-  // Get username from localStorage
-  const getUsername = () => {
-    const auth = localStorage.getItem("clientAuth");
-    return auth ? JSON.parse(auth).username : "";
-  };
+  // Show loading state while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-cyber">
+        <div className="text-cesium">Loading...</div>
+      </div>
+    );
+  }
+
+  // Don't render if not authenticated
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="bg-cyber min-h-screen">
@@ -51,7 +64,7 @@ const ClientDashboard = () => {
           
           <div className="mb-8">
             <div className="bg-cyber-light rounded-md p-4 border border-cesium/10">
-              <h2 className="text-xl text-white mb-2">Welcome, {getUsername()}</h2>
+              <h2 className="text-xl text-white mb-2">Welcome, {user.email}</h2>
               <p className="text-gray-300">
                 This is your secure client dashboard. Here you can access your project information
                 and communicate with our team.

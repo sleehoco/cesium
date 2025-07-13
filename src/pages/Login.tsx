@@ -1,41 +1,45 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Lock } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { signIn, user } = useAuth();
 
-  const handleLogin = (e: React.FormEvent) => {
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (user) {
+      navigate("/client-dashboard");
+    }
+  }, [user, navigate]);
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // In a real application, you'd want to hash these values or use a more secure approach
-    // This is a simple client-side only implementation
-    const correctUsername = "client";
-    const correctPassword = "securepassword";
-
-    setTimeout(() => {
-      if (username === correctUsername && password === correctPassword) {
-        // Store authentication in localStorage
-        localStorage.setItem("clientAuth", JSON.stringify({
-          isAuthenticated: true,
-          username
-        }));
+    try {
+      const { error } = await signIn(email, password);
+      
+      if (error) {
+        toast.error(error.message);
+      } else {
         toast.success("Login successful");
         navigate("/client-dashboard");
-      } else {
-        toast.error("Invalid username or password");
       }
+    } catch (error) {
+      toast.error("An unexpected error occurred");
+    } finally {
       setIsLoading(false);
-    }, 1000); // Simulate network request
+    }
   };
 
   return (
@@ -57,15 +61,16 @@ const Login = () => {
             <form onSubmit={handleLogin}>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <label htmlFor="username" className="text-sm font-medium text-gray-300">
-                    Username
+                  <label htmlFor="email" className="text-sm font-medium text-gray-300">
+                    Email
                   </label>
                   <Input
-                    id="username"
-                    placeholder="Enter your username"
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
                     required
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="bg-cyber-light text-white border-cesium/20"
                   />
                 </div>

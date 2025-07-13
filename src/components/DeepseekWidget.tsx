@@ -9,8 +9,6 @@ const DeepseekWidget = () => {
   const [prompt, setPrompt] = useState("");
   const [response, setResponse] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [apiKey, setApiKey] = useState("");
-  const [showApiKeyInput, setShowApiKeyInput] = useState(true);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,67 +17,19 @@ const DeepseekWidget = () => {
       toast.error("Please enter a prompt");
       return;
     }
-    
-    if (!apiKey.trim()) {
-      toast.error("Please enter your Deepseek API key");
-      return;
-    }
-    
+
     setIsLoading(true);
     
     try {
-      const response = await fetch("https://api.deepseek.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-          model: "deepseek-chat",
-          messages: [
-            {
-              role: "user",
-              content: prompt
-            }
-          ],
-          temperature: 0.7,
-          max_tokens: 1000
-        })
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error?.message || "Failed to get response from Deepseek API");
-      }
-      
-      const data = await response.json();
-      setResponse(data.choices[0]?.message?.content || "No response received");
-      
-      // Save API key to localStorage if successful
-      localStorage.setItem("deepseekApiKey", apiKey);
-      setShowApiKeyInput(false);
+      // This component has been secured - no more client-side API key storage
+      toast.error("This feature requires secure server-side implementation. Please contact support.");
       
     } catch (error) {
-      console.error("Error calling Deepseek API:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to get response from Deepseek API");
+      console.error("Error:", error);
+      toast.error("An error occurred");
     } finally {
       setIsLoading(false);
     }
-  };
-  
-  // Check for saved API key on component mount
-  useState(() => {
-    const savedApiKey = localStorage.getItem("deepseekApiKey");
-    if (savedApiKey) {
-      setApiKey(savedApiKey);
-      setShowApiKeyInput(false);
-    }
-  });
-  
-  const resetApiKey = () => {
-    localStorage.removeItem("deepseekApiKey");
-    setApiKey("");
-    setShowApiKeyInput(true);
   };
 
   return (
@@ -89,40 +39,14 @@ const DeepseekWidget = () => {
         Ask a question to the Deepseek R1 large language model and get an instant response.
       </p>
       
+      <div className="mb-4 p-4 bg-yellow-900/20 border border-yellow-600/30 rounded-md">
+        <p className="text-yellow-400 text-sm">
+          <strong>Security Notice:</strong> This component has been disabled as it was storing API keys in the browser, 
+          which is a security vulnerability. All API calls should be made through secure server-side endpoints.
+        </p>
+      </div>
+      
       <form onSubmit={handleSubmit}>
-        {showApiKeyInput && (
-          <div className="mb-4">
-            <label htmlFor="apiKey" className="block text-sm font-medium text-gray-300 mb-1">
-              Deepseek API Key
-            </label>
-            <input
-              type="password"
-              id="apiKey"
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              className="w-full px-4 py-3 rounded-md bg-cyber border border-cesium/30 text-white focus:border-cesium focus:ring-1 focus:ring-cesium outline-none transition-colors"
-              placeholder="Enter your Deepseek API key"
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              Your API key is stored locally and never sent to our servers.
-            </p>
-          </div>
-        )}
-        
-        {!showApiKeyInput && (
-          <div className="mb-4 flex justify-between items-center">
-            <span className="text-sm text-gray-300">API Key saved</span>
-            <Button 
-              type="button" 
-              variant="outline" 
-              size="sm" 
-              onClick={resetApiKey}
-              className="text-xs"
-            >
-              Reset API Key
-            </Button>
-          </div>
-        )}
         
         <div className="mb-4">
           <label htmlFor="prompt" className="block text-sm font-medium text-gray-300 mb-1">
@@ -140,20 +64,10 @@ const DeepseekWidget = () => {
         
         <Button
           type="submit"
-          className="w-full bg-cesium hover:bg-cesium-dark text-cyber-dark font-medium px-4 py-3 rounded-md transition-colors flex items-center justify-center"
-          disabled={isLoading}
+          className="w-full bg-gray-600 text-gray-300 font-medium px-4 py-3 rounded-md transition-colors flex items-center justify-center"
+          disabled={true}
         >
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Processing...
-            </>
-          ) : (
-            <>
-              Submit to Deepseek
-              <Send className="ml-2 h-4 w-4" />
-            </>
-          )}
+          Feature Disabled for Security
         </Button>
       </form>
       

@@ -9,15 +9,8 @@ export const usePdfDownloadSubmission = (onSubmitSuccess: () => void) => {
     setIsLoading(true);
     
     try {
-      // Store form submission in localStorage
-      const submissions = JSON.parse(localStorage.getItem('pdfDownloads') || '[]');
-      const newSubmission = {
-        ...values,
-        timestamp: new Date().toISOString(),
-        id: Date.now().toString(),
-      };
-      submissions.push(newSubmission);
-      localStorage.setItem('pdfDownloads', JSON.stringify(submissions));
+      // SECURITY: Removed localStorage storage of form data for privacy/security
+      // Form data should only be stored server-side with proper security controls
 
       // Send email notification with form details
       try {

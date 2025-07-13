@@ -11,14 +11,17 @@ import PdfDownload from "./pages/PdfDownload";
 import Founders from "./pages/Founders";
 import BlogGenerator from "./pages/BlogGenerator";
 import Auth from "./pages/Auth";
-import Login from "./pages/Login";
 import ClientDashboard from "./pages/ClientDashboard";
 import BrowserFingerprintingDemo from "./pages/BrowserFingerprintingDemo";
+import AdminSecurity from "./pages/AdminSecurity";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/utils/ProtectedRoute";
+import AdminRoute from "./components/auth/AdminRoute";
+import AdminRoleManagement from "./components/admin/AdminRoleManagement";
 import BadgeRemover from "./components/utils/BadgeRemover";
 import GoogleAnalytics from "./components/utils/GoogleAnalytics";
 import { AuthProvider } from "./contexts/AuthContext";
+import { Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import "./utils/createAdminAccount"; // Auto-execute admin account creation
 
@@ -60,7 +63,8 @@ const App = () => {
             <Route path="/blog-generator" element={<BlogGenerator />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/browser-fingerprinting-demo" element={<BrowserFingerprintingDemo />} />
-            <Route path="/login" element={<Login />} />
+            {/* Redirect old insecure login route to secure auth */}
+            <Route path="/login" element={<Navigate to="/auth" replace />} />
             <Route 
               path="/client-dashboard" 
               element={
@@ -68,6 +72,18 @@ const App = () => {
                   <ClientDashboard />
                 </ProtectedRoute>
               } 
+            />
+            <Route 
+              path="/admin/roles" 
+              element={
+                <AdminRoute>
+                  <AdminRoleManagement />
+                </AdminRoute>
+              } 
+            />
+            <Route 
+              path="/admin/security" 
+              element={<AdminSecurity />} 
             />
             <Route path="*" element={<NotFound />} />
             </Routes>

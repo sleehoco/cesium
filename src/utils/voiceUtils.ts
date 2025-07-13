@@ -26,30 +26,21 @@ export const ELEVEN_LABS_MODELS = {
   TURBO_V2: "eleven_turbo_v2",
 };
 
-// Get API key from secure storage - Legacy method, kept for backward compatibility
+// SECURITY: These methods have been removed as they stored API keys client-side
+// API keys should only be stored securely on the server side
+
 export const getApiKey = (): string => {
-  const storedKey = sessionStorage.getItem('elevenLabsApiKey') || '';
-  
-  // Optional: Add runtime validation if needed
-  return storedKey.startsWith('sk_') ? storedKey : '';
+  console.warn("Client-side API key storage has been disabled for security reasons");
+  return '';
 };
 
-// Securely save API key to session storage - Legacy method, kept for backward compatibility
 export const saveApiKey = (apiKey: string): boolean => {
-  // Basic API key format validation (ElevenLabs typically starts with 'sk_')
-  const isValidKey = apiKey.startsWith('sk_') && apiKey.length > 10;
-  
-  if (isValidKey) {
-    sessionStorage.setItem('elevenLabsApiKey', apiKey);
-    return true;
-  }
-  
+  console.warn("Client-side API key storage has been disabled for security reasons");
   return false;
 };
 
-// Clear API key from session storage - Legacy method, kept for backward compatibility
 export const clearApiKey = (): void => {
-  sessionStorage.removeItem('elevenLabsApiKey');
+  console.warn("Client-side API key storage has been disabled for security reasons");
 };
 
 /**
