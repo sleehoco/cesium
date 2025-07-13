@@ -213,6 +213,76 @@ const MultiAgentBlogGenerator: React.FC = () => {
     }
   };
 
+  const publishSampleBlog = async () => {
+    try {
+      const sampleBlogData = {
+        title: 'Getting Started with Cybersecurity: A Comprehensive Guide',
+        content: `# Getting Started with Cybersecurity: A Comprehensive Guide
+
+## Introduction
+
+Cybersecurity has become one of the most critical concerns for businesses and individuals alike. With cyber threats evolving rapidly, understanding the fundamentals of cybersecurity is essential for protecting digital assets.
+
+## Key Cybersecurity Principles
+
+### 1. Defense in Depth
+Implementing multiple layers of security controls to protect against various types of attacks.
+
+### 2. Least Privilege Access
+Granting users only the minimum access rights needed to perform their job functions.
+
+### 3. Regular Updates and Patches
+Keeping all software and systems up to date with the latest security patches.
+
+## Common Threats
+
+- **Phishing Attacks**: Deceptive emails designed to steal credentials
+- **Malware**: Malicious software that can damage or compromise systems
+- **Social Engineering**: Manipulating people to divulge confidential information
+
+## Best Practices
+
+1. Use strong, unique passwords for all accounts
+2. Enable two-factor authentication wherever possible
+3. Keep software updated
+4. Be cautious with email attachments and links
+5. Regular security training for employees
+
+## Conclusion
+
+Cybersecurity is an ongoing process that requires constant vigilance and adaptation. By implementing these fundamental practices, organizations can significantly reduce their risk of cyber attacks.`,
+        meta_description: 'Learn the essential cybersecurity principles and best practices to protect your digital assets. A comprehensive guide covering threats, defense strategies, and implementation tips.',
+        meta_title: 'Getting Started with Cybersecurity: A Comprehensive Guide',
+        ai_keywords: ["cybersecurity", "digital security", "cyber threats", "data protection", "security best practices"],
+        ai_seo_score: 85,
+        author_id: user?.id,
+        status: 'published',
+        published_at: new Date().toISOString(),
+        slug: 'getting-started-with-cybersecurity-comprehensive-guide'
+      };
+
+      const { data: blogPost, error } = await supabase
+        .from('blog_posts')
+        .insert(sampleBlogData)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      toast({
+        title: "Sample Blog Published!",
+        description: `Blog post "${blogPost.title}" has been published successfully.`,
+      });
+    } catch (error) {
+      console.error('Error publishing sample blog:', error);
+      toast({
+        title: "Publish Failed",
+        description: error instanceof Error ? error.message : "Failed to publish sample blog post",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-6">
       <div className="text-center space-y-4">
@@ -293,6 +363,15 @@ const MultiAgentBlogGenerator: React.FC = () => {
             ) : (
               'Generate Blog Post'
             )}
+          </Button>
+          
+          <Button 
+            onClick={publishSampleBlog} 
+            variant="outline"
+            className="w-full"
+          >
+            <Globe className="mr-2 h-4 w-4" />
+            Publish Sample Blog Post
           </Button>
         </CardContent>
       </Card>
