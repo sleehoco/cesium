@@ -9,9 +9,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { Eye, EyeOff, Lock, Mail, User, Shield } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, Shield } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import BackgroundAnimations from '@/components/utils/BackgroundAnimations';
 
 const Auth = () => {
   const [isResetPassword, setIsResetPassword] = useState(false);
@@ -118,7 +117,6 @@ const Auth = () => {
         <meta name="description" content="Access your CesiumCyber Security account to manage your cybersecurity services." />
       </Helmet>
       
-      <BackgroundAnimations />
       
       <div className="relative z-10 w-full max-w-md">
         <Card className="border-border/50 bg-card/80 backdrop-blur-sm">
