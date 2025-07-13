@@ -28,21 +28,27 @@ const Auth = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  // Check for password reset confirmation
+  // Check for password reset confirmation FIRST (before redirect logic)
   useEffect(() => {
     const type = searchParams.get('type');
-    if (type === 'recovery') {
+    const accessToken = searchParams.get('access_token');
+    
+    if (type === 'recovery' && accessToken) {
       setIsSetNewPassword(true);
       setIsResetPassword(false);
     }
   }, [searchParams]);
 
-  // Redirect if already logged in
+  // Redirect if already logged in (but NOT during password reset)
   useEffect(() => {
-    if (user && !isSetNewPassword) {
+    const type = searchParams.get('type');
+    const accessToken = searchParams.get('access_token');
+    const isPasswordReset = type === 'recovery' && accessToken;
+    
+    if (user && !isPasswordReset && !isSetNewPassword) {
       navigate('/');
     }
-  }, [user, navigate, isSetNewPassword]);
+  }, [user, navigate, isSetNewPassword, searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
