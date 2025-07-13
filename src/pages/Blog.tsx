@@ -8,7 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { Search, Calendar, User, Eye, Bot, Plus, BarChart3 } from 'lucide-react';
+import { Search, Calendar, User, Eye, Bot, Plus, BarChart3, Trash2, Edit } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface BlogPost {
@@ -52,6 +52,27 @@ const Blog = () => {
       toast.error('Failed to load blog posts');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeletePost = async (e: React.MouseEvent, postId: string, postTitle: string) => {
+    e.stopPropagation(); // Prevent navigation to post
+    
+    if (window.confirm(`Are you sure you want to delete "${postTitle}"? This action cannot be undone.`)) {
+      try {
+        const { error } = await supabase
+          .from('blog_posts')
+          .delete()
+          .eq('id', postId);
+
+        if (error) throw error;
+
+        toast.success('Blog post deleted successfully');
+        fetchBlogPosts(); // Refresh the list
+      } catch (error) {
+        console.error('Error deleting blog post:', error);
+        toast.error('Failed to delete blog post');
+      }
     }
   };
 
@@ -100,6 +121,14 @@ const Blog = () => {
             
             {user && (
               <div className="flex gap-2">
+                <Button
+                  onClick={() => navigate('/create-blog')}
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
+                  <Plus className="h-4 w-4" />
+                  Create Blog
+                </Button>
                 <Button
                   onClick={() => navigate('/blog-generator')}
                   className="flex items-center gap-2"
@@ -150,10 +179,16 @@ const Blog = () => {
               {searchTerm ? 'Try adjusting your search terms' : 'Be the first to create a blog post!'}
             </p>
             {user && (
-              <Button onClick={() => navigate('/blog-generator')}>
-                <Plus className="mr-2 h-4 w-4" />
-                Create First Post
-              </Button>
+              <div className="flex gap-2 justify-center">
+                <Button onClick={() => navigate('/create-blog')}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Create Blog Post
+                </Button>
+                <Button onClick={() => navigate('/blog-generator')} variant="outline">
+                  <Bot className="mr-2 h-4 w-4" />
+                  AI Generator
+                </Button>
+              </div>
             )}
           </div>
         ) : (
@@ -177,6 +212,16 @@ const Blog = () => {
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <CardTitle className="text-lg line-clamp-2">{post.title}</CardTitle>
+                    {(user?.id === post.author_id || isAdmin) && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={(e) => handleDeletePost(e, post.id, post.title)}
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
                   </div>
                   <p className="text-sm text-muted-foreground line-clamp-3">
                     {post.meta_description || post.excerpt}

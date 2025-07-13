@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { ArrowLeft, Calendar, Eye, User } from 'lucide-react';
+import { ArrowLeft, Calendar, Eye, User, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface BlogPost {
   id: string;
@@ -27,6 +28,7 @@ interface BlogPost {
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const { user, isAdmin } = useAuth();
   const [blogPost, setBlogPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -64,6 +66,27 @@ const BlogPost = () => {
       navigate('/blog');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeletePost = async () => {
+    if (!blogPost) return;
+    
+    if (window.confirm(`Are you sure you want to delete "${blogPost.title}"? This action cannot be undone.`)) {
+      try {
+        const { error } = await supabase
+          .from('blog_posts')
+          .delete()
+          .eq('id', blogPost.id);
+
+        if (error) throw error;
+
+        toast.success('Blog post deleted successfully');
+        navigate('/blog');
+      } catch (error) {
+        console.error('Error deleting blog post:', error);
+        toast.error('Failed to delete blog post');
+      }
     }
   };
 
@@ -118,14 +141,26 @@ const BlogPost = () => {
       
       <div className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
         {/* Back Button */}
-        <Button 
-          variant="ghost" 
-          onClick={() => navigate('/blog')}
-          className="mb-8"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Blog
-        </Button>
+        <div className="flex items-center justify-between mb-8">
+          <Button 
+            variant="ghost" 
+            onClick={() => navigate('/blog')}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Blog
+          </Button>
+          
+          {blogPost && (user?.id === blogPost.author_id || isAdmin) && (
+            <Button
+              variant="destructive"
+              onClick={handleDeletePost}
+              className="flex items-center gap-2"
+            >
+              <Trash2 className="h-4 w-4" />
+              Delete Post
+            </Button>
+          )}
+        </div>
 
         <article>
           {/* Featured Image */}
