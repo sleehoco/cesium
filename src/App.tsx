@@ -11,6 +11,7 @@ import PdfDownload from "./pages/PdfDownload";
 import Founders from "./pages/Founders";
 import BlogGenerator from "./pages/BlogGenerator";
 import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import Auth from "./pages/Auth";
 import ClientDashboard from "./pages/ClientDashboard";
 import BrowserFingerprintingDemo from "./pages/BrowserFingerprintingDemo";
@@ -62,6 +63,7 @@ const App = () => {
             <Route path="/pdf-download" element={<PdfDownload />} />
             <Route path="/founders" element={<Founders />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/blog-generator" element={<BlogGenerator />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/browser-fingerprinting-demo" element={<BrowserFingerprintingDemo />} />
