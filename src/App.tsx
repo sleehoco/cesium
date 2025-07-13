@@ -12,6 +12,7 @@ import Founders from "./pages/Founders";
 import BlogGenerator from "./pages/BlogGenerator";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
+import ImageGeneratorPage from "./pages/ImageGenerator";
 import CreateBlog from "./pages/CreateBlog";
 import NewsletterManager from "./pages/NewsletterManager";
 import Auth from "./pages/Auth";
@@ -65,6 +66,7 @@ const App = () => {
             <Route path="/pdf-download" element={<PdfDownload />} />
             <Route path="/founders" element={<Founders />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/image-generator" element={<ImageGeneratorPage />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/create-blog" element={<CreateBlog />} />
             <Route path="/newsletter-manager" element={<NewsletterManager />} />
