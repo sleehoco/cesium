@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,7 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import NewsletterSignup from '@/components/newsletter/NewsletterSignup';
-import { Search, Calendar, User, Eye, Bot, Plus, BarChart3, Trash2, Edit, Mail } from 'lucide-react';
+import { Search, Bot, Plus, BarChart3, Trash2, Mail } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface BlogPost {
@@ -26,12 +25,22 @@ interface BlogPost {
   status: string;
 }
 
+const categories = [
+  { name: 'All', value: '' },
+  { name: 'Cybersecurity', value: 'cybersecurity' },
+  { name: 'Technology', value: 'technology' },
+  { name: 'Privacy', value: 'privacy' },
+  { name: 'Software', value: 'software' },
+  { name: 'AI', value: 'ai' },
+];
+
 const Blog = () => {
   const navigate = useNavigate();
   const { user, isAdmin } = useAuth();
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   useEffect(() => {
     fetchBlogPosts();
@@ -77,10 +86,19 @@ const Blog = () => {
     }
   };
 
-  const filteredPosts = blogPosts.filter(post =>
-    post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    post.meta_description?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredPosts = blogPosts.filter(post => {
+    const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.meta_description?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesCategory = selectedCategory === '' || 
+      post.title.toLowerCase().includes(selectedCategory.toLowerCase()) ||
+      (post.ai_keywords && Array.isArray(post.ai_keywords) && 
+       post.ai_keywords.some((keyword: string) => 
+         keyword.toLowerCase().includes(selectedCategory.toLowerCase())
+       ));
+    
+    return matchesSearch && matchesCategory;
+  });
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -101,15 +119,29 @@ const Blog = () => {
       <div className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent mb-4">
-            CesiumCyber Blog
+          <h1 className="text-4xl font-bold text-foreground mb-4">
+            Blog
           </h1>
-          <p className="text-xl text-muted-foreground mb-8">
-            Insights on cybersecurity, technology, and digital privacy
-          </p>
           
-          {/* Actions */}
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+          {/* Category Filter */}
+          <div className="flex flex-wrap justify-center gap-3 mb-8">
+            {categories.map((category) => (
+              <button
+                key={category.value}
+                onClick={() => setSelectedCategory(category.value)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                  selectedCategory === category.value
+                    ? 'bg-foreground text-background'
+                    : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                }`}
+              >
+                {category.name}
+              </button>
+            ))}
+          </div>
+          
+          {/* Search and Admin Actions */}
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mb-8">
             <div className="relative w-full max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -121,41 +153,45 @@ const Blog = () => {
             </div>
             
             {user && (
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap justify-center">
                 <Button
                   onClick={() => navigate('/create-blog')}
                   variant="outline"
+                  size="sm"
                   className="flex items-center gap-2"
                 >
                   <Plus className="h-4 w-4" />
-                  Create Blog
+                  Create
                 </Button>
                 <Button
                   onClick={() => navigate('/blog-generator')}
+                  size="sm"
                   className="flex items-center gap-2"
                 >
                   <Bot className="h-4 w-4" />
-                  AI Blog Generator
+                  AI Generator
                 </Button>
                 {isAdmin && (
-                  <Button
-                    variant="outline"
-                    onClick={() => navigate('/admin/blog-analytics')}
-                    className="flex items-center gap-2"
-                  >
-                    <BarChart3 className="h-4 w-4" />
-                    Analytics
-                  </Button>
-                )}
-                {isAdmin && (
-                  <Button
-                    variant="outline"
-                    onClick={() => navigate('/newsletter-manager')}
-                    className="flex items-center gap-2"
-                  >
-                    <Mail className="h-4 w-4" />
-                    Newsletter
-                  </Button>
+                  <>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate('/admin/blog-analytics')}
+                      className="flex items-center gap-2"
+                    >
+                      <BarChart3 className="h-4 w-4" />
+                      Analytics
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate('/newsletter-manager')}
+                      className="flex items-center gap-2"
+                    >
+                      <Mail className="h-4 w-4" />
+                      Newsletter
+                    </Button>
+                  </>
                 )}
               </div>
             )}
@@ -166,20 +202,21 @@ const Blog = () => {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <Card key={i} className="animate-pulse">
-                <div className="h-48 bg-muted rounded-t-lg"></div>
-                <CardHeader>
-                  <div className="h-6 bg-muted rounded"></div>
-                  <div className="h-4 bg-muted rounded w-3/4"></div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="h-3 bg-muted rounded"></div>
-                    <div className="h-3 bg-muted rounded"></div>
-                    <div className="h-3 bg-muted rounded w-1/2"></div>
+              <div key={i} className="animate-pulse">
+                <div className="bg-card rounded-lg overflow-hidden border">
+                  <div className="h-64 bg-muted"></div>
+                  <div className="p-6">
+                    <div className="space-y-3">
+                      <div className="flex gap-2">
+                        <div className="h-4 bg-muted rounded w-16"></div>
+                        <div className="h-4 bg-muted rounded w-16"></div>
+                      </div>
+                      <div className="h-6 bg-muted rounded"></div>
+                      <div className="h-4 bg-muted rounded w-20"></div>
+                    </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             ))}
           </div>
         ) : filteredPosts.length === 0 ? (
@@ -187,7 +224,7 @@ const Blog = () => {
             <Bot className="h-24 w-24 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-2xl font-semibold mb-2">No blog posts found</h3>
             <p className="text-muted-foreground mb-6">
-              {searchTerm ? 'Try adjusting your search terms' : 'Be the first to create a blog post!'}
+              {searchTerm || selectedCategory ? 'Try adjusting your filters' : 'Be the first to create a blog post!'}
             </p>
             {user && (
               <div className="flex gap-2 justify-center">
@@ -205,65 +242,66 @@ const Blog = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredPosts.map((post) => (
-              <Card 
+              <article 
                 key={post.id} 
-                className="cursor-pointer hover:shadow-lg transition-shadow duration-200"
+                className="group cursor-pointer"
                 onClick={() => handlePostClick(post.slug)}
               >
-                {post.featured_image_url && (
-                  <div className="h-48 overflow-hidden rounded-t-lg">
-                    <img
-                      src={post.featured_image_url}
-                      alt={post.title}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
-                    />
-                  </div>
-                )}
-                
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <CardTitle className="text-lg line-clamp-2">{post.title}</CardTitle>
+                <div className="bg-card rounded-lg overflow-hidden border hover:shadow-lg transition-all duration-300">
+                  {/* Featured Image */}
+                  <div className="relative h-64 overflow-hidden">
+                    {post.featured_image_url ? (
+                      <img
+                        src={post.featured_image_url}
+                        alt={post.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+                        <Bot className="h-12 w-12 text-muted-foreground" />
+                      </div>
+                    )}
+                    
+                    {/* Delete button for admins/authors */}
                     {(user?.id === post.author_id || isAdmin) && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
+                      <button
                         onClick={(e) => handleDeletePost(e, post.id, post.title)}
-                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                        className="absolute top-3 right-3 p-2 bg-destructive/80 text-destructive-foreground rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive"
                       >
                         <Trash2 className="h-4 w-4" />
-                      </Button>
+                      </button>
                     )}
                   </div>
-                  <p className="text-sm text-muted-foreground line-clamp-3">
-                    {post.meta_description || post.excerpt}
-                  </p>
-                </CardHeader>
-
-                <CardContent>
-                  <div className="flex items-center justify-between text-sm text-muted-foreground mb-3">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
-                      {formatDate(post.published_at)}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Eye className="h-4 w-4" />
-                      {post.view_count || 0} views
-                    </div>
-                  </div>
-
-                  {post.ai_keywords && (
-                    <div className="flex flex-wrap gap-1">
-                      {(Array.isArray(post.ai_keywords) ? post.ai_keywords : [post.ai_keywords])
-                        .slice(0, 3)
-                        .map((keyword: string, index: number) => (
-                          <Badge key={index} variant="secondary" className="text-xs">
+                  
+                  {/* Content */}
+                  <div className="p-6">
+                    {/* Categories/Tags */}
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {post.ai_keywords && Array.isArray(post.ai_keywords) && (
+                        post.ai_keywords.slice(0, 2).map((keyword: string, index: number) => (
+                          <Badge 
+                            key={index} 
+                            variant="secondary" 
+                            className="text-xs px-2 py-1"
+                          >
                             {keyword}
                           </Badge>
-                        ))}
+                        ))
+                      )}
                     </div>
-                  )}
-                </CardContent>
-              </Card>
+                    
+                    {/* Title */}
+                    <h2 className="font-bold text-xl mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                      {post.title}
+                    </h2>
+                    
+                    {/* Date */}
+                    <time className="text-sm text-muted-foreground">
+                      {formatDate(post.published_at)}
+                    </time>
+                  </div>
+                </div>
+              </article>
             ))}
           </div>
         )}
