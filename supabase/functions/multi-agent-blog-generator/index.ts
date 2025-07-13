@@ -63,7 +63,7 @@ const agents: Agent[] = [
     
     Write in markdown format and include relevant mermaid diagrams where appropriate for technical concepts.
     Use mermaid syntax: \`\`\`mermaid ... \`\`\` for flowcharts, network diagrams, and process flows.
-    Return the complete blog post content with embedded diagrams.\`
+    Return the complete blog post content with embedded diagrams.`
   },
   {
     name: "editor_agent",
