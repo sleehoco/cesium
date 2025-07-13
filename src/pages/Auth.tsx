@@ -12,23 +12,19 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Eye, EyeOff, Lock, Mail, User, Shield } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import BackgroundAnimations from '@/components/utils/BackgroundAnimations';
-import SendAdminEmail from '@/components/admin/SendAdminEmail';
 
 const Auth = () => {
-  const [isSignUp, setIsSignUp] = useState(false);
   const [isResetPassword, setIsResetPassword] = useState(false);
   const [isSetNewPassword, setIsSetNewPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
-  const { signIn, signUp, resetPassword, user } = useAuth();
+  const { signIn, resetPassword, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -39,7 +35,6 @@ const Auth = () => {
     if (type === 'recovery') {
       setIsSetNewPassword(true);
       setIsResetPassword(false);
-      setIsSignUp(false);
     }
   }, [searchParams]);
 
@@ -92,27 +87,6 @@ const Auth = () => {
           setIsResetPassword(false);
           setEmail('');
         }
-      } else if (isSignUp) {
-        const { error } = await signUp(email, password, firstName, lastName);
-        
-        if (error) {
-          if (error.message.includes('User already registered')) {
-            setError('An account with this email already exists. Please sign in instead.');
-          } else if (error.message.includes('Password should be at least')) {
-            setError('Password should be at least 6 characters long.');
-          } else {
-            setError(error.message);
-          }
-        } else {
-          toast({
-            title: "Account created successfully!",
-            description: "Please check your email to verify your account.",
-          });
-          // Switch to sign in after successful signup
-          setIsSignUp(false);
-          setFirstName('');
-          setLastName('');
-        }
       } else {
         const { error } = await signIn(email, password);
         
@@ -140,14 +114,13 @@ const Auth = () => {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <Helmet>
-        <title>{isSignUp ? 'Sign Up' : 'Sign In'} - CesiumCyber Security</title>
+        <title>Sign In - CesiumCyber Security</title>
         <meta name="description" content="Access your CesiumCyber Security account to manage your cybersecurity services." />
       </Helmet>
       
       <BackgroundAnimations />
       
       <div className="relative z-10 w-full max-w-md">
-        <SendAdminEmail />
         <Card className="border-border/50 bg-card/80 backdrop-blur-sm">
           <CardHeader className="text-center space-y-2">
             <div className="flex items-center justify-center mb-4">
@@ -157,16 +130,14 @@ const Auth = () => {
               </span>
             </div>
             <CardTitle className="text-2xl">
-              {isSetNewPassword ? 'Set New Password' : (isResetPassword ? 'Reset Password' : (isSignUp ? 'Create Account' : 'Welcome Back'))}
+              {isSetNewPassword ? 'Set New Password' : (isResetPassword ? 'Reset Password' : 'Welcome Back')}
             </CardTitle>
             <CardDescription>
               {isSetNewPassword
                 ? 'Enter your new password below'
                 : (isResetPassword
                   ? 'Enter your email address and we\'ll send you a password reset link'
-                  : (isSignUp 
-                    ? 'Join CesiumCyber to access advanced security tools' 
-                    : 'Sign in to your CesiumCyber account'))
+                  : 'Sign in to your CesiumCyber account')
               }
             </CardDescription>
           </CardHeader>
@@ -177,42 +148,6 @@ const Auth = () => {
                 <Alert variant="destructive">
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
-              )}
-              
-              {!isResetPassword && !isSetNewPassword && isSignUp && (
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName">First Name</Label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="firstName"
-                        type="text"
-                        placeholder="John"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
-                        className="pl-10"
-                        required={isSignUp}
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName">Last Name</Label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="lastName"
-                        type="text"
-                        placeholder="Doe"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                        className="pl-10"
-                        required={isSignUp}
-                      />
-                    </div>
-                  </div>
-                </div>
               )}
               
               {!isSetNewPassword && (
@@ -241,7 +176,7 @@ const Auth = () => {
                     <Input
                       id="password"
                       type={showPassword ? 'text' : 'password'}
-                      placeholder={isSetNewPassword ? 'Enter your new password' : (isSignUp ? 'Create a strong password' : 'Enter your password')}
+                      placeholder={isSetNewPassword ? 'Enter your new password' : 'Enter your password'}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="pl-10 pr-10"
@@ -255,7 +190,7 @@ const Auth = () => {
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
-                  {(isSignUp || isSetNewPassword) && (
+                  {isSetNewPassword && (
                     <p className="text-xs text-muted-foreground">
                       Password should be at least 6 characters long
                     </p>
@@ -290,11 +225,11 @@ const Auth = () => {
               
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? 'Please wait...' : (
-                  isSetNewPassword ? 'Update Password' : (isResetPassword ? 'Send Reset Link' : (isSignUp ? 'Create Account' : 'Sign In'))
+                  isSetNewPassword ? 'Update Password' : (isResetPassword ? 'Send Reset Link' : 'Sign In')
                 )}
               </Button>
               
-              {!isResetPassword && !isSignUp && !isSetNewPassword && (
+              {!isResetPassword && !isSetNewPassword && (
                 <div className="text-center">
                   <button
                     type="button"
@@ -315,27 +250,20 @@ const Auth = () => {
               {!isSetNewPassword && (
                 <div className="mt-6 text-center">
                   <p className="text-sm text-muted-foreground">
-                    {isResetPassword ? 'Remember your password?' : (isSignUp ? 'Already have an account?' : "Don't have an account?")}
+                    {isResetPassword ? 'Remember your password?' : "Forgot your password?"}
                     {' '}
                     <button
                       type="button"
                       onClick={() => {
-                        if (isResetPassword) {
-                          setIsResetPassword(false);
-                          setIsSignUp(false);
-                        } else {
-                          setIsSignUp(!isSignUp);
-                        }
+                        setIsResetPassword(!isResetPassword);
                         setError('');
-                        setFirstName('');
-                        setLastName('');
                         setEmail('');
                         setPassword('');
                         setConfirmPassword('');
                       }}
                       className="text-primary hover:underline font-medium"
                     >
-                      {isResetPassword ? 'Sign in' : (isSignUp ? 'Sign in' : 'Sign up')}
+                      {isResetPassword ? 'Sign in' : 'Reset password'}
                     </button>
                   </p>
                 </div>
