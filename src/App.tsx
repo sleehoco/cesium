@@ -10,6 +10,7 @@ import Contact from "./pages/Contact";
 import PdfDownload from "./pages/PdfDownload";
 import Founders from "./pages/Founders";
 import BlogGenerator from "./pages/BlogGenerator";
+import Blog from "./pages/Blog";
 import Auth from "./pages/Auth";
 import ClientDashboard from "./pages/ClientDashboard";
 import BrowserFingerprintingDemo from "./pages/BrowserFingerprintingDemo";
@@ -60,6 +61,7 @@ const App = () => {
             <Route path="/contact" element={<Contact />} />
             <Route path="/pdf-download" element={<PdfDownload />} />
             <Route path="/founders" element={<Founders />} />
+            <Route path="/blog" element={<Blog />} />
             <Route path="/blog-generator" element={<BlogGenerator />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/browser-fingerprinting-demo" element={<BrowserFingerprintingDemo />} />

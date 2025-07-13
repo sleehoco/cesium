@@ -61,7 +61,9 @@ const agents: Agent[] = [
     3. Include actionable insights and practical advice
     4. Structure content for readability and engagement
     
-    Write in markdown format and return the complete blog post content.`
+    Write in markdown format and include relevant mermaid diagrams where appropriate for technical concepts.
+    Use mermaid syntax: ```mermaid ... ``` for flowcharts, network diagrams, and process flows.
+    Return the complete blog post content with embedded diagrams.`
   },
   {
     name: "editor_agent",
@@ -225,7 +227,7 @@ serve(async (req) => {
   }
 
   try {
-    const { topic, save_to_db = false, author_id } = await req.json();
+    const { topic, save_to_db = false, author_id, include_images = false, include_diagrams = false } = await req.json();
 
     console.log("Starting multi-agent blog generation process...");
     

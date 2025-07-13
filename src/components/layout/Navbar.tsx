@@ -102,6 +102,9 @@ const Navbar = () => {
             >
               About
             </button>
+            <Link to="/blog" className="text-white hover:text-cesium transition-colors">
+              Blog
+            </Link>
             <Link 
               to="/founders"
               className="text-white hover:text-cesium transition-colors"

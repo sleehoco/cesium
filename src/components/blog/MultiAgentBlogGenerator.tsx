@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, Bot, Users, Zap, FileText, Search } from 'lucide-react';
+import { Loader2, Bot, Users, Zap, FileText, Search, Image, BarChart3, Save, Eye, Globe } from 'lucide-react';
 
 interface Agent {
   name: string;
@@ -31,8 +31,15 @@ interface BlogGenerationResult {
     meta_description: string;
     keywords: any;
     seo_score: number;
+    featured_image_url?: string;
+    diagrams?: string[];
   };
   agents_used?: Agent[];
+  generated_images?: Array<{
+    url: string;
+    prompt: string;
+    section: string;
+  }>;
 }
 
 const MultiAgentBlogGenerator: React.FC = () => {
@@ -43,6 +50,8 @@ const MultiAgentBlogGenerator: React.FC = () => {
   const [progress, setProgress] = useState(0);
   const [result, setResult] = useState<BlogGenerationResult | null>(null);
   const [currentAgent, setCurrentAgent] = useState('');
+  const [isGeneratingImages, setIsGeneratingImages] = useState(false);
+  const [publishedBlogId, setPublishedBlogId] = useState<string | null>(null);
 
   const agents = [
     { name: 'Research Agent', icon: Search, description: 'Finds trending topics and data' },
@@ -50,6 +59,8 @@ const MultiAgentBlogGenerator: React.FC = () => {
     { name: 'Content Writer', icon: FileText, description: 'Creates engaging blog content' },
     { name: 'Content Editor', icon: Bot, description: 'Refines and polishes content' },
     { name: 'SEO Specialist', icon: Zap, description: 'Optimizes for search engines' },
+    { name: 'Image Generator', icon: Image, description: 'Creates relevant images' },
+    { name: 'Diagram Creator', icon: BarChart3, description: 'Adds technical diagrams' },
   ];
 
   const generateBlog = async () => {
@@ -75,7 +86,9 @@ const MultiAgentBlogGenerator: React.FC = () => {
         body: {
           topic: topic || undefined,
           save_to_db: false,
-          author_id: user?.id || null
+          author_id: user?.id || null,
+          include_images: true,
+          include_diagrams: true
         }
       });
 
@@ -105,7 +118,57 @@ const MultiAgentBlogGenerator: React.FC = () => {
     }
   };
 
-  const saveBlogPost = async () => {
+  const generateImages = async () => {
+    if (!result?.final_post) return;
+
+    setIsGeneratingImages(true);
+    try {
+      // Generate hero image
+      const heroPrompt = `Professional, modern illustration for a blog post titled "${result.final_post.title}". Cybersecurity theme, high-tech, blue and purple color scheme, clean and corporate style.`;
+      
+      const { data: heroImage } = await supabase.functions.invoke('blog-image-generator', {
+        body: {
+          prompt: heroPrompt,
+          size: "1536x1024",
+          quality: "high"
+        }
+      });
+
+      if (heroImage?.success) {
+        // Update the result with the generated image
+        setResult(prev => ({
+          ...prev!,
+          final_post: {
+            ...prev!.final_post!,
+            featured_image_url: heroImage.image_url
+          },
+          generated_images: [
+            ...(prev?.generated_images || []),
+            {
+              url: heroImage.image_url,
+              prompt: heroPrompt,
+              section: 'hero'
+            }
+          ]
+        }));
+
+        toast({
+          title: "Images Generated",
+          description: "Hero image has been created for your blog post.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Image Generation Failed",
+        description: "Failed to generate images for the blog post",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGeneratingImages(false);
+    }
+  };
+
+  const publishBlog = async () => {
     if (!result?.final_post) return;
 
     try {
@@ -113,20 +176,24 @@ const MultiAgentBlogGenerator: React.FC = () => {
         body: {
           ...result.final_post,
           save_to_db: true,
-          author_id: user?.id
+          author_id: user?.id,
+          status: 'published',
+          published_at: new Date().toISOString()
         }
       });
 
       if (error) throw error;
 
+      setPublishedBlogId(data.saved_post?.id);
+      
       toast({
-        title: "Blog Post Saved",
-        description: "Your blog post has been saved to the database.",
+        title: "Blog Published!",
+        description: "Your blog post is now live on the website.",
       });
     } catch (error) {
       toast({
-        title: "Save Failed",
-        description: "Failed to save blog post to database",
+        title: "Publish Failed",
+        description: "Failed to publish blog post",
         variant: "destructive",
       });
     }
@@ -144,7 +211,7 @@ const MultiAgentBlogGenerator: React.FC = () => {
       </div>
 
       {/* Agent Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
         {agents.map((agent, index) => {
           const Icon = agent.icon;
           return (
@@ -251,13 +318,42 @@ const MultiAgentBlogGenerator: React.FC = () => {
                     <Badge variant="outline">
                       SEO Score: {result.final_post.seo_score}/100
                     </Badge>
-                    <Button onClick={saveBlogPost} size="sm">
-                      Save to Database
+                    {!result.final_post.featured_image_url && (
+                      <Button onClick={generateImages} size="sm" disabled={isGeneratingImages}>
+                        {isGeneratingImages ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Generating Images
+                          </>
+                        ) : (
+                          <>
+                            <Image className="mr-2 h-4 w-4" />
+                            Generate Images
+                          </>
+                        )}
+                      </Button>
+                    )}
+                    <Button onClick={publishBlog} size="sm" variant="default">
+                      <Globe className="mr-2 h-4 w-4" />
+                      Publish Live
                     </Button>
                   </div>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                {result.final_post.featured_image_url && (
+                  <div>
+                    <Label>Featured Image</Label>
+                    <div className="mt-2">
+                      <img 
+                        src={result.final_post.featured_image_url} 
+                        alt={result.final_post.title}
+                        className="w-full max-w-2xl h-64 object-cover rounded-lg border"
+                      />
+                    </div>
+                  </div>
+                )}
+
                 <div>
                   <Label>Title</Label>
                   <Input value={result.final_post.title} readOnly />
@@ -281,14 +377,31 @@ const MultiAgentBlogGenerator: React.FC = () => {
                 </div>
 
                 <div>
-                  <Label>Content Preview</Label>
-                  <Textarea 
-                    value={result.final_post.content.substring(0, 500) + '...'} 
-                    readOnly 
-                    rows={10}
-                    className="font-mono text-sm"
-                  />
+                  <Label>Content Preview (with Mermaid Diagrams)</Label>
+                  <div className="mt-2 p-4 border rounded-lg bg-muted">
+                    <div className="prose prose-sm max-w-none">
+                      <div dangerouslySetInnerHTML={{ 
+                        __html: result.final_post.content
+                          .substring(0, 1000)
+                          .replace(/```mermaid\n([\s\S]*?)\n```/g, 
+                            '<div class="bg-blue-50 p-4 border-l-4 border-blue-400 my-4"><strong>Mermaid Diagram:</strong> <code>$1</code></div>'
+                          ) + '...'
+                      }} />
+                    </div>
+                  </div>
                 </div>
+
+                {publishedBlogId && (
+                  <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <Globe className="h-5 w-5 text-green-600" />
+                      <span className="font-medium text-green-800">Blog Published Successfully!</span>
+                    </div>
+                    <p className="text-sm text-green-700 mt-1">
+                      Your blog post is now live and can be viewed on the website.
+                    </p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}
