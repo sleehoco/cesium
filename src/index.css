@@ -5,10 +5,10 @@
 
 @layer base {
   :root {
-    /* Dark black */
+    /* Dark black background */
     --background: 0 0% 6%;
-    /* Gold foreground */
-    --foreground: 44 100% 70%;
+    /* White foreground text */
+    --foreground: 0 0% 98%;
     
     --card: 222 47% 11%;
     --card-foreground: 210 40% 98%;
