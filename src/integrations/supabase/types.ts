@@ -451,6 +451,138 @@ export type Database = {
           },
         ]
       }
+      newsletter_sends: {
+        Row: {
+          bounced_at: string | null
+          clicked_at: string | null
+          id: string
+          newsletter_id: string
+          opened_at: string | null
+          sent_at: string
+          subscriber_id: string
+          unsubscribed_at: string | null
+        }
+        Insert: {
+          bounced_at?: string | null
+          clicked_at?: string | null
+          id?: string
+          newsletter_id: string
+          opened_at?: string | null
+          sent_at?: string
+          subscriber_id: string
+          unsubscribed_at?: string | null
+        }
+        Update: {
+          bounced_at?: string | null
+          clicked_at?: string | null
+          id?: string
+          newsletter_id?: string
+          opened_at?: string | null
+          sent_at?: string
+          subscriber_id?: string
+          unsubscribed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "newsletter_sends_newsletter_id_fkey"
+            columns: ["newsletter_id"]
+            isOneToOne: false
+            referencedRelation: "newsletters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "newsletter_sends_subscriber_id_fkey"
+            columns: ["subscriber_id"]
+            isOneToOne: false
+            referencedRelation: "newsletter_subscribers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      newsletter_subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string | null
+          preferences: Json | null
+          status: string
+          subscribed_at: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          name?: string | null
+          preferences?: Json | null
+          status?: string
+          subscribed_at?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string | null
+          preferences?: Json | null
+          status?: string
+          subscribed_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      newsletters: {
+        Row: {
+          click_count: number | null
+          content: string
+          created_at: string
+          created_by: string | null
+          html_content: string | null
+          id: string
+          open_count: number | null
+          scheduled_at: string | null
+          sent_at: string | null
+          status: string
+          subject: string
+          subscriber_count: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          click_count?: number | null
+          content: string
+          created_at?: string
+          created_by?: string | null
+          html_content?: string | null
+          id?: string
+          open_count?: number | null
+          scheduled_at?: string | null
+          sent_at?: string | null
+          status?: string
+          subject: string
+          subscriber_count?: number | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          click_count?: number | null
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          html_content?: string | null
+          id?: string
+          open_count?: number | null
+          scheduled_at?: string | null
+          sent_at?: string | null
+          status?: string
+          subject?: string
+          subscriber_count?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       personal_information: {
         Row: {
           created_at: string

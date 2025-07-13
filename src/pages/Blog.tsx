@@ -8,7 +8,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { Search, Calendar, User, Eye, Bot, Plus, BarChart3, Trash2, Edit } from 'lucide-react';
+import NewsletterSignup from '@/components/newsletter/NewsletterSignup';
+import { Search, Calendar, User, Eye, Bot, Plus, BarChart3, Trash2, Edit, Mail } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface BlogPost {
@@ -146,6 +147,16 @@ const Blog = () => {
                     Analytics
                   </Button>
                 )}
+                {isAdmin && (
+                  <Button
+                    variant="outline"
+                    onClick={() => navigate('/newsletter-manager')}
+                    className="flex items-center gap-2"
+                  >
+                    <Mail className="h-4 w-4" />
+                    Newsletter
+                  </Button>
+                )}
               </div>
             )}
           </div>
@@ -256,6 +267,11 @@ const Blog = () => {
             ))}
           </div>
         )}
+      </div>
+
+      {/* Newsletter Signup Section */}
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <NewsletterSignup />
       </div>
       
       <Footer />
