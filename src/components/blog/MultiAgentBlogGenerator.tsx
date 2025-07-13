@@ -172,28 +172,42 @@ const MultiAgentBlogGenerator: React.FC = () => {
     if (!result?.final_post) return;
 
     try {
-      const { data, error } = await supabase.functions.invoke('multi-agent-blog-generator', {
-        body: {
-          ...result.final_post,
-          save_to_db: true,
-          author_id: user?.id,
-          status: 'published',
-          published_at: new Date().toISOString()
-        }
-      });
+      // Save directly to the blog_posts table
+      const blogPostData = {
+        title: result.final_post.title,
+        content: result.final_post.content,
+        meta_description: result.final_post.meta_description,
+        meta_title: result.final_post.title,
+        ai_keywords: result.final_post.keywords,
+        ai_seo_score: result.final_post.seo_score,
+        featured_image_url: result.final_post.featured_image_url,
+        author_id: user?.id,
+        status: 'published',
+        published_at: new Date().toISOString(),
+        slug: result.final_post.title.toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '')
+      };
+
+      const { data: blogPost, error } = await supabase
+        .from('blog_posts')
+        .insert(blogPostData)
+        .select()
+        .single();
 
       if (error) throw error;
 
-      setPublishedBlogId(data.saved_post?.id);
+      setPublishedBlogId(blogPost.id);
       
       toast({
         title: "Blog Published!",
         description: "Your blog post is now live on the website.",
       });
     } catch (error) {
+      console.error('Error publishing blog:', error);
       toast({
         title: "Publish Failed",
-        description: "Failed to publish blog post",
+        description: error instanceof Error ? error.message : "Failed to publish blog post",
         variant: "destructive",
       });
     }
