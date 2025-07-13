@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Separator } from '@/components/ui/separator';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { Eye, EyeOff, Lock, Mail, Shield } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, Chrome } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
 const Auth = () => {
@@ -20,6 +19,7 @@ const Auth = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
@@ -117,173 +117,250 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className="min-h-screen flex">
       <Helmet>
-        <title>Sign In - CesiumCyber Security</title>
+        <title>
+          {isSetNewPassword ? 'Set New Password' : (isResetPassword ? 'Reset Password' : 'Sign In')} - CesiumCyber Security
+        </title>
         <meta name="description" content="Access your CesiumCyber Security account to manage your cybersecurity services." />
       </Helmet>
       
-      
-      <div className="relative z-10 w-full max-w-md">
-        <Card className="border-border/50 bg-card/80 backdrop-blur-sm">
-          <CardHeader className="text-center space-y-2">
-            <div className="flex items-center justify-center mb-4">
-              <Shield className="h-8 w-8 text-primary mr-2" />
-              <span className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                CesiumCyber
-              </span>
+      {/* Left Panel - Hero Section */}
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-pink-600 to-blue-600 opacity-90">
+          {/* Animated waves */}
+          <div className="absolute inset-0">
+            <div className="absolute top-20 left-10 w-96 h-96 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-float"></div>
+            <div className="absolute top-40 right-10 w-80 h-80 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-float animation-delay-2000"></div>
+            <div className="absolute bottom-20 left-20 w-72 h-72 bg-gradient-to-r from-purple-600 to-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-float animation-delay-4000"></div>
+          </div>
+        </div>
+        
+        <div className="relative z-10 flex flex-col justify-center p-16 text-white">
+          <div className="mb-8">
+            <span className="inline-block px-4 py-2 text-sm font-medium bg-white/20 rounded-full backdrop-blur-sm border border-white/30">
+              A WISE CHOICE
+            </span>
+          </div>
+          
+          <h1 className="text-6xl font-bold leading-tight mb-6">
+            Get<br />
+            Everything<br />
+            You Want
+          </h1>
+          
+          <p className="text-xl text-white/80 mb-8 max-w-md">
+            Secure your digital world with enterprise-grade cybersecurity solutions designed for the modern business.
+          </p>
+          
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+              <span className="text-2xl">🛡️</span>
             </div>
-            <CardTitle className="text-2xl">
+            <div>
+              <p className="font-medium">Advanced Protection</p>
+              <p className="text-sm text-white/70">24/7 Security Monitoring</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Panel - Auth Form */}
+      <div className="flex-1 flex items-center justify-center p-8 bg-white">
+        <div className="w-full max-w-md">
+          {/* Logo */}
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center mb-6">
+              <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                <span className="text-xl">🔒</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Form Header */}
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">
               {isSetNewPassword ? 'Set New Password' : (isResetPassword ? 'Reset Password' : 'Welcome Back')}
-            </CardTitle>
-            <CardDescription>
+            </h2>
+            <p className="text-gray-600">
               {isSetNewPassword
                 ? 'Enter your new password below'
                 : (isResetPassword
                   ? 'Enter your email address and we\'ll send you a password reset link'
-                  : 'Sign in to your CesiumCyber account')
+                  : 'Enter your email and password to access your account')
               }
-            </CardDescription>
-          </CardHeader>
-          
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {error && (
-                <Alert variant="destructive">
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-              
-              {!isSetNewPassword && (
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="john@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="pl-10"
-                      required
-                    />
-                  </div>
-                </div>
-              )}
-              
-              {(!isResetPassword || isSetNewPassword) && (
-                <div className="space-y-2">
-                  <Label htmlFor="password">{isSetNewPassword ? 'New Password' : 'Password'}</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="password"
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder={isSetNewPassword ? 'Enter your new password' : 'Enter your password'}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="pl-10 pr-10"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
-                    >
-                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
-                  </div>
-                  {isSetNewPassword && (
-                    <p className="text-xs text-muted-foreground">
-                      Password should be at least 6 characters long
-                    </p>
-                  )}
-                </div>
-              )}
+            </p>
+          </div>
 
-              {isSetNewPassword && (
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm New Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="confirmPassword"
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      placeholder="Confirm your new password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="pl-10 pr-10"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
-                    >
-                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
-                  </div>
-                </div>
-              )}
-              
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Please wait...' : (
-                  isSetNewPassword ? 'Update Password' : (isResetPassword ? 'Send Reset Link' : 'Sign In')
-                )}
-              </Button>
-              
-              {!isResetPassword && !isSetNewPassword && (
-                <div className="text-center">
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+
+            {!isSetNewPassword && (
+              <div>
+                <Label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+              </div>
+            )}
+
+            {(!isResetPassword || isSetNewPassword) && (
+              <div>
+                <Label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                  {isSetNewPassword ? 'New Password' : 'Password'}
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder={isSetNewPassword ? 'Enter your new password' : 'Enter your password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    required
+                  />
                   <button
                     type="button"
-                    onClick={() => {
-                      setIsResetPassword(true);
-                      setError('');
-                    }}
-                    className="text-sm text-primary hover:underline"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
-                    Forgot your password?
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                   </button>
                 </div>
-              )}
-            </form>
-            
-            <div className="mt-6">
-              <Separator />
-              {!isSetNewPassword && (
-                <div className="mt-6 text-center">
-                  <p className="text-sm text-muted-foreground">
-                    {isResetPassword ? 'Remember your password?' : "Forgot your password?"}
-                    {' '}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsResetPassword(!isResetPassword);
-                        setError('');
-                        setEmail('');
-                        setPassword('');
-                        setConfirmPassword('');
-                      }}
-                      className="text-primary hover:underline font-medium"
-                    >
-                      {isResetPassword ? 'Sign in' : 'Reset password'}
-                    </button>
+                {isSetNewPassword && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    Password should be at least 6 characters long
                   </p>
-                </div>
-              )}
-              
-              <div className="mt-4 text-center">
-                <Link 
-                  to="/" 
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  ← Back to Home
-                </Link>
+                )}
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            )}
+
+            {isSetNewPassword && (
+              <div>
+                <Label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                  Confirm New Password
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    placeholder="Confirm your new password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {!isResetPassword && !isSetNewPassword && (
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <Checkbox
+                    id="remember"
+                    checked={rememberMe}
+                    onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                    className="h-4 w-4"
+                  />
+                  <Label htmlFor="remember" className="ml-2 text-sm text-gray-600">
+                    Remember me
+                  </Label>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsResetPassword(true);
+                    setError('');
+                  }}
+                  className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                >
+                  Forgot Password
+                </button>
+              </div>
+            )}
+
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-black text-white py-3 px-4 rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:opacity-50"
+            >
+              {loading ? 'Please wait...' : (
+                isSetNewPassword ? 'Update Password' : (isResetPassword ? 'Send Reset Link' : 'Sign In')
+              )}
+            </Button>
+
+            {!isResetPassword && !isSetNewPassword && (
+              <>
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-300" />
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="bg-white px-2 text-gray-500">or</span>
+                  </div>
+                </div>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full py-3 px-4 border border-gray-300 rounded-lg font-medium hover:bg-gray-50 transition-colors flex items-center justify-center space-x-2"
+                >
+                  <Chrome className="h-5 w-5" />
+                  <span>Sign in with Google</span>
+                </Button>
+              </>
+            )}
+
+            {(isResetPassword || isSetNewPassword) && (
+              <div className="text-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsResetPassword(false);
+                    setIsSetNewPassword(false);
+                    setError('');
+                    setEmail('');
+                    setPassword('');
+                    setConfirmPassword('');
+                  }}
+                  className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                >
+                  ← Back to Sign In
+                </button>
+              </div>
+            )}
+          </form>
+
+          <div className="mt-8 text-center">
+            <Link 
+              to="/" 
+              className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+            >
+              ← Back to Home
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );
