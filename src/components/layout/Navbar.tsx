@@ -220,6 +220,13 @@ const Navbar = () => {
                 About
               </button>
               <Link 
+                to="/blog"
+                className="block px-3 py-2 text-white hover:text-cesium transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                Blog
+              </Link>
+              <Link 
                 to="/founders"
                 className="block px-3 py-2 text-white hover:text-cesium transition-colors"
                 onClick={() => setIsOpen(false)}
