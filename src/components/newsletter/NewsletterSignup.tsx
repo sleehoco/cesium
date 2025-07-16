@@ -55,10 +55,24 @@ const NewsletterSignup: React.FC<NewsletterSignupProps> = ({ className = '', com
         return;
       }
 
+      // Send welcome email
+      try {
+        await supabase.functions.invoke('send-welcome-email', {
+          body: {
+            email: email.trim().toLowerCase(),
+            name: name.trim() || null
+          }
+        });
+        console.log('Welcome email sent successfully');
+      } catch (emailError) {
+        console.error('Error sending welcome email:', emailError);
+        // Don't fail the subscription if email fails, just log it
+      }
+
       setIsSubscribed(true);
       toast({
         title: "Successfully Subscribed!",
-        description: "Welcome to our newsletter. You'll receive our latest updates and insights.",
+        description: "Welcome to our newsletter. Check your email for a welcome message with what to expect.",
       });
 
       // Reset form
