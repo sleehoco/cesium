@@ -13,7 +13,7 @@ const Founders = () => {
       name: "Julia Morrison",
       role: "CEO & Co-Founder", 
       image: "/placeholder.svg",
-      bio: "Cybersecurity expert with 15+ years of experience in enterprise security. Led security transformations for Fortune 500 companies and specializes in advanced threat intelligence.",
+      bio: "Expert in cybersecurity - vulnerability management, Operational Technology, Threat Intelligence. Led security transformations for Fortune 500 companies with 15+ years of experience.",
       expertise: ["Threat Intelligence", "Enterprise Security", "Risk Management"],
       social: {
         linkedin: "#",
