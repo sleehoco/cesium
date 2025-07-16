@@ -21,18 +21,6 @@ const Founders = () => {
         email: "julia@cesiumcyber.com"
       }
     },
-    {
-      name: "David Lee",
-      role: "CTO & Co-Founder",
-      image: "/placeholder.svg", 
-      bio: "Expert in AI-driven threat detection and incident response. Developed cutting-edge security platforms used by global enterprises.",
-      expertise: ["AI Cybersecurity", "Incident Response", "Cloud Security"],
-      social: {
-        linkedin: "#",
-        twitter: "#",
-        email: "david@cesiumcyber.com"
-      }
-    }
   ];
 
   const missionStatement = "To empower organizations with proactive cybersecurity solutions that anticipate and neutralize threats before they impact business operations.";
