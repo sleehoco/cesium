@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Shield, Award, Users, Target, Linkedin, Twitter, Mail } from 'lucide-react';
+import { Shield, Award, Users, Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Navbar from '@/components/layout/Navbar';
@@ -15,11 +15,6 @@ const Founders = () => {
       image: "/placeholder.svg",
       bio: "Expert in cybersecurity - vulnerability management, Operational Technology, Threat Intelligence. Led security transformations for Fortune 500 companies with 15+ years of experience.",
       expertise: ["Threat Intelligence", "Enterprise Security", "Risk Management"],
-      social: {
-        linkedin: "#",
-        twitter: "#",
-        email: "julia@cesiumcyber.com"
-      }
     },
   ];
 
@@ -110,17 +105,6 @@ const Founders = () => {
                       {founder.expertise.map((skill, i) => (
                         <span key={i} className="inline-block bg-secondary text-secondary-foreground px-3 py-1 rounded-full text-sm font-medium">{skill}</span>
                       ))}
-                    </div>
-                    <div className="flex gap-4">
-                      <a href={founder.social.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
-                        <Linkedin className="h-5 w-5" />
-                      </a>
-                      <a href={founder.social.twitter} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
-                        <Twitter className="h-5 w-5" />
-                      </a>
-                      <a href={`mailto:${founder.social.email}`} className="hover:text-primary transition-colors">
-                        <Mail className="h-5 w-5" />
-                      </a>
                     </div>
                   </CardContent>
                 </Card>
