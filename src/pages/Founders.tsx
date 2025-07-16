@@ -10,21 +10,21 @@ import CEOPopupTrigger from '@/components/ceo/CEOPopupTrigger';
 const Founders = () => {
   const founders = [
     {
-      name: "Sarah Chen",
-      role: "CEO & Co-Founder",
+      name: "Julia Morrison",
+      role: "CEO & Co-Founder", 
       image: "/placeholder.svg",
       bio: "Former NSA cybersecurity analyst with 15+ years of experience in enterprise security. Led security transformations for Fortune 500 companies.",
       expertise: ["Threat Intelligence", "Enterprise Security", "Risk Management"],
       social: {
         linkedin: "#",
         twitter: "#",
-        email: "sarah@cesiumcyber.com"
+        email: "julia@cesiumcyber.com"
       }
     },
     {
       name: "David Lee",
       role: "CTO & Co-Founder",
-      image: "/placeholder.svg",
+      image: "/placeholder.svg", 
       bio: "Expert in AI-driven threat detection and incident response. Developed cutting-edge security platforms used by global enterprises.",
       expertise: ["AI Cybersecurity", "Incident Response", "Cloud Security"],
       social: {
@@ -43,7 +43,7 @@ const Founders = () => {
       icon: Shield
     },
     {
-      title: "Collaboration",
+      title: "Collaboration", 
       description: "We work closely with our clients to understand their unique needs and develop tailored security strategies.",
       icon: Users
     },
