@@ -31,10 +31,9 @@ const HeroSection = () => {
   ]);
 
   const [stats] = useState([
-    { label: 'Clients Worldwide', value: '500+' },
     { label: 'Threats Detected Daily', value: '10,000+' },
     { label: 'Years of Experience', value: '15+' },
-    { label: 'Security Experts', value: '50+' }
+    { label: 'Security Experts', value: '3+' }
   ]);
 
   const navigate = useNavigate();
