@@ -102,7 +102,7 @@ const HeroSection = () => {
                 variant="button"
                 className="px-6 py-3"
               >
-                Meet Our CEO
+                CEO, Julia Morrison
               </CEOPopupTrigger>
             </motion.div>
           </motion.div>
