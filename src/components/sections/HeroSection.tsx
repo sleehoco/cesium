@@ -1,131 +1,152 @@
-import { ArrowRight, Shield, Lock, Server } from "lucide-react";
-import { Link } from "react-router-dom";
-import FadeInSection from "../utils/FadeInSection";
-import AnimatedCounter from "../utils/AnimatedCounter";
-import BackgroundAnimations from "../utils/BackgroundAnimations";
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Shield, Lock, Eye, CheckCircle, ArrowRight, Bot } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+import BackgroundAnimations from '@/components/utils/BackgroundAnimations';
+import CEOPopupTrigger from '@/components/ceo/CEOPopupTrigger';
 
 const HeroSection = () => {
-  const scrollToServices = () => {
-    const servicesSection = document.getElementById('services');
-    if (servicesSection) {
-      servicesSection.scrollIntoView({ behavior: 'smooth' });
+  const [featureList] = useState([
+    {
+      icon: Shield,
+      title: 'Advanced Threat Protection',
+      description: 'Protect your business from advanced threats with our AI-powered security solutions.'
+    },
+    {
+      icon: Lock,
+      title: 'Data Loss Prevention',
+      description: 'Prevent data breaches and ensure compliance with our comprehensive data loss prevention strategies.'
+    },
+    {
+      icon: Eye,
+      title: 'Real-Time Monitoring',
+      description: 'Gain real-time visibility into your network and systems with our 24/7 monitoring services.'
+    },
+    {
+      icon: CheckCircle,
+      title: 'Compliance Management',
+      description: 'Stay compliant with industry regulations and standards with our expert compliance management services.'
     }
-  };
+  ]);
 
-  const scrollToConsult = () => {
-    const consultSection = document.getElementById('consult');
-    if (consultSection) {
-      consultSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  const [stats] = useState([
+    { label: 'Clients Worldwide', value: '500+' },
+    { label: 'Threats Detected Daily', value: '10,000+' },
+    { label: 'Years of Experience', value: '15+' },
+    { label: 'Security Experts', value: '50+' }
+  ]);
+
+  const navigate = useNavigate();
 
   return (
-    <div className="relative bg-cyber-dark pt-28 pb-20 overflow-hidden">
-      {/* New comprehensive background animations */}
-      <BackgroundAnimations 
-        includeParticles={true}
-        includeGradients={true}
-        includeInteractive={true}
-        particleCount={60}
-      />
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-background/95">
+      <BackgroundAnimations />
       
-      {/* Enhanced Background pattern with animation */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMyMjIiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djZoNnYtNmgtNnptMCAwdjZoNnYtNmgtNnoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-10 animate-pulse"></div>
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Hero Content */}
-          <div>
-            <FadeInSection>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-                Advanced <span className="text-cesium">Cybersecurity</span> for the Modern Enterprise
-              </h1>
-            </FadeInSection>
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-12"
+          >
+            <motion.div 
+              className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+            >
+              <Shield className="h-4 w-4" />
+              Enterprise Cybersecurity Solutions
+            </motion.div>
             
-            <FadeInSection delay={200}>
-              <p className="text-xl text-gray-300 mb-8">
-                Protect your business with cutting-edge security solutions tailored to defend against today's evolving threats.
-              </p>
-            </FadeInSection>
+            <motion.h1 
+              className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 leading-tight"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+            >
+              Secure Your Digital
+              <span className="block bg-gradient-to-r from-primary via-primary to-primary/80 bg-clip-text text-transparent">
+                Infrastructure
+              </span>
+            </motion.h1>
             
-            <FadeInSection delay={400}>
-              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                <button
-                  onClick={scrollToConsult}
-                  className="bg-cesium hover:bg-cesium-dark text-cyber-dark font-medium px-6 py-3 rounded-md transition-all duration-300 flex items-center justify-center hover:scale-105 hover:shadow-lg hover:shadow-cesium/25"
-                >
-                  Get a Free Consultation
-                  <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                </button>
-                <button
-                  onClick={scrollToServices}
-                  className="border border-cesium/50 text-cesium hover:bg-cesium/10 font-medium px-6 py-3 rounded-md transition-all duration-300 flex items-center justify-center hover:scale-105 hover:border-cesium"
-                >
-                  Explore Our Services
-                </button>
-              </div>
-            </FadeInSection>
+            <motion.p 
+              className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+            >
+              Advanced cybersecurity solutions powered by AI and machine learning. 
+              Protect your business with enterprise-grade security that adapts and evolves.
+            </motion.p>
             
-            {/* Stats */}
-            <FadeInSection delay={600}>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-12">
-                <div className="bg-cyber border border-cesium/20 rounded-lg p-4 backdrop-blur-sm bg-black/30 hover:border-cesium/40 transition-all duration-300 hover:scale-105">
-                  <p className="text-cesium text-2xl font-bold">
-                    <AnimatedCounter end={100} suffix="+" />
-                  </p>
-                  <p className="text-gray-400 text-sm">Clients Protected</p>
-                </div>
-                <div className="bg-cyber border border-cesium/20 rounded-lg p-4 backdrop-blur-sm bg-black/30 hover:border-cesium/40 transition-all duration-300 hover:scale-105">
-                  <p className="text-cesium text-2xl font-bold">
-                    <AnimatedCounter end={1000} suffix="+" />
-                  </p>
-                  <p className="text-gray-400 text-sm">Threats Mitigated</p>
-                </div>
-                <div className="bg-cyber border border-cesium/20 rounded-lg p-4 backdrop-blur-sm bg-black/30 hover:border-cesium/40 transition-all duration-300 hover:scale-105">
-                  <p className="text-cesium text-2xl font-bold">
-                    <AnimatedCounter end={99.9} suffix="%" />
-                  </p>
-                  <p className="text-gray-400 text-sm">Success Rate</p>
-                </div>
+            <motion.div 
+              className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7, duration: 0.8 }}
+            >
+              <Button 
+                size="lg" 
+                className="px-8 py-3 text-lg group"
+                onClick={() => navigate('/contact')}
+              >
+                Get Started
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="px-8 py-3 text-lg"
+                onClick={() => navigate('/services')}
+              >
+                View Services
+              </Button>
+
+              <CEOPopupTrigger 
+                variant="button"
+                className="px-6 py-3"
+              >
+                Meet Our CEO
+              </CEOPopupTrigger>
+            </motion.div>
+          </motion.div>
+
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.9, duration: 0.8 }}
+          >
+            {featureList.map((feature, index) => (
+              <div key={index} className="p-6 bg-card rounded-lg shadow-md hover-lift">
+                <feature.icon className="h-6 w-6 text-primary mb-4" />
+                <h3 className="text-lg font-semibold text-foreground mb-2">{feature.title}</h3>
+                <p className="text-muted-foreground">{feature.description}</p>
               </div>
-            </FadeInSection>
-          </div>
-          
-          {/* Hero Image/Graphics with enhanced effects */}
-          <FadeInSection delay={300} direction="left">
-            <div className="flex justify-center relative">
-              <div className="relative w-full max-w-lg">
-                {/* Core graphic with enhanced animations */}
-                <div className="relative">
-                  <div className="bg-cyber rounded-2xl border border-cesium/30 shadow-xl p-8 relative z-10 backdrop-blur-sm bg-black/30 hover:border-cesium/50 transition-all duration-500 hover:shadow-2xl hover:shadow-cesium/20">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="p-4 bg-cyber-dark rounded-lg flex flex-col items-center justify-center border border-cesium/10 hover:border-cesium/30 transition-all duration-300 hover:scale-105 group">
-                        <Shield className="h-10 w-10 text-cesium mb-2 group-hover:animate-pulse" />
-                        <h3 className="text-white text-center">Threat Protection</h3>
-                      </div>
-                      <div className="p-4 bg-cyber-dark rounded-lg flex flex-col items-center justify-center border border-cesium/10 hover:border-cesium/30 transition-all duration-300 hover:scale-105 group">
-                        <Lock className="h-10 w-10 text-cesium mb-2 group-hover:animate-pulse" />
-                        <h3 className="text-white text-center">Data Security</h3>
-                      </div>
-                      <div className="p-4 bg-cyber-dark rounded-lg flex flex-col items-center justify-center border border-cesium/10 hover:border-cesium/30 transition-all duration-300 hover:scale-105 group">
-                        <Server className="h-10 w-10 text-cesium mb-2 group-hover:animate-pulse" />
-                        <h3 className="text-white text-center">Infrastructure</h3>
-                      </div>
-                      <div className="p-4 bg-cyber-dark rounded-lg flex flex-col items-center justify-center border border-cesium/10 hover:border-cesium/30 transition-all duration-300 hover:scale-105 group">
-                        <div className="h-10 w-10 bg-cesium/20 rounded-full flex items-center justify-center mb-2">
-                          <div className="h-4 w-4 bg-cesium rounded-full animate-ping"></div>
-                        </div>
-                        <h3 className="text-white text-center">24/7 Monitoring</h3>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            ))}
+          </motion.div>
+
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.1, duration: 0.8 }}
+          >
+            {stats.map((stat, index) => (
+              <div key={index} className="p-4">
+                <div className="text-3xl font-bold text-primary mb-2">{stat.value}</div>
+                <div className="text-sm text-muted-foreground uppercase">{stat.label}</div>
               </div>
-            </div>
-          </FadeInSection>
+            ))}
+          </motion.div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
