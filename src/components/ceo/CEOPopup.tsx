@@ -103,7 +103,7 @@ const CEOPopup = ({ open, onOpenChange }: CEOPopupProps) => {
             <div className="pt-2">
               <p className="text-xs text-muted-foreground italic">
                 "In cybersecurity, like in racing, there's no second place when it comes to performance." 
-                - CEO, Cesium Cybersecurity
+                - CEO, Julia Morrison
               </p>
             </div>
           </div>
