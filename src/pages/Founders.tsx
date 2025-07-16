@@ -14,7 +14,7 @@ const Founders = () => {
       role: "CEO & Co-Founder", 
       image: "/lovable-uploads/66d70e58-99fb-4681-aeca-18433b0b3de0.png",
       bio: "Expert in cybersecurity - vulnerability management, Operational Technology, Threat Intelligence. Led security transformations with 15+ years of experience.",
-      expertise: ["Threat Intelligence", "Enterprise Security", "Risk Management"],
+      expertise: ["Threat Intelligence", "Enterprise Security", "Risk Management", "AI"],
     },
     {
       name: "Co-Founder",
