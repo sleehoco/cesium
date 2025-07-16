@@ -16,6 +16,13 @@ const Founders = () => {
       bio: "Expert in cybersecurity - vulnerability management, Operational Technology, Threat Intelligence. Led security transformations for Fortune 500 companies with 15+ years of experience.",
       expertise: ["Threat Intelligence", "Enterprise Security", "Risk Management"],
     },
+    {
+      name: "Co-Founder",
+      role: "CTO & Co-Founder",
+      image: "/placeholder.svg",
+      bio: "Expert in cybersecurity - incident response, cloud security, and AI-driven threat detection. Specialized in developing advanced security architectures for enterprise environments with 12+ years of experience.",
+      expertise: ["Incident Response", "Cloud Security", "AI Security"]
+    }
   ];
 
   const missionStatement = "To empower organizations with proactive cybersecurity solutions that anticipate and neutralize threats before they impact business operations.";
