@@ -17,7 +17,7 @@ const Founders = () => {
       expertise: ["Threat Intelligence", "Enterprise Security", "Risk Management", "AI"],
     },
     {
-      name: "Co-Founder",
+      name: "Sung Lee",
       role: "CTO & Co-Founder",
       image: "/placeholder.svg",
       bio: "Expert in cybersecurity - incident response, cloud security, and AI-driven threat detection. Specialized in developing advanced security architectures for enterprise environments with 12+ years of experience.",
