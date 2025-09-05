@@ -1,7 +1,8 @@
 
 import React, { useState } from "react";
-import { Play, Loader2, Fingerprint, RefreshCw } from "lucide-react";
+import { Play, Loader2, Fingerprint, RefreshCw, Shield } from "lucide-react";
 import { FingerprintData } from "../../pages/BrowserFingerprintingDemo";
+import { fingerprintJSService } from "../../utils/fingerprintJSService";
 
 interface FingerprintCollectorProps {
   onDataCollected: (data: FingerprintData) => void;
@@ -22,6 +23,7 @@ const FingerprintCollector: React.FC<FingerprintCollectorProps> = ({
 
     // Simulate collection progress with real steps
     const steps = [
+      "Initializing FingerprintJS...",
       "Reading user agent...",
       "Measuring screen properties...", 
       "Generating canvas fingerprint...",
@@ -29,6 +31,7 @@ const FingerprintCollector: React.FC<FingerprintCollectorProps> = ({
       "Detecting available fonts...",
       "Checking hardware capabilities...",
       "Testing permissions...",
+      "Getting professional visitor ID...",
       "Calculating uniqueness..."
     ];
 
@@ -37,12 +40,25 @@ const FingerprintCollector: React.FC<FingerprintCollectorProps> = ({
       setProgress(((i + 1) / steps.length) * 100);
     }
 
-    // Collect actual browser data
+    // Collect both professional and educational browser data
     const data: FingerprintData = await gatherBrowserData();
     onDataCollected(data);
   };
 
   const gatherBrowserData = async (): Promise<FingerprintData> => {
+    // First, get professional FingerprintJS data
+    let fingerprintJSData = null;
+    try {
+      const result = await fingerprintJSService.getVisitorFingerprint();
+      fingerprintJSData = {
+        visitorId: result.visitorId,
+        confidence: result.confidence.score,
+        components: result.components
+      };
+    } catch (error) {
+      console.warn('Professional fingerprinting failed:', error);
+      fingerprintJSData = null;
+    }
     // Canvas fingerprinting - create a more complex pattern
     const canvas = document.createElement('canvas');
     canvas.width = 280;
@@ -176,6 +192,10 @@ const FingerprintCollector: React.FC<FingerprintCollectorProps> = ({
     };
 
     return {
+      // Professional FingerprintJS data
+      fingerprintJS: fingerprintJSData,
+      
+      // Educational browser fingerprinting data
       userAgent: navigator.userAgent,
       screen: {
         width: screen.width,
@@ -218,9 +238,19 @@ const FingerprintCollector: React.FC<FingerprintCollectorProps> = ({
         </div>
       </div>
 
-      <div className="space-y-4">
+        <div className="space-y-4">
+        <div className="flex items-start space-x-3 p-3 bg-blue-400/10 border border-blue-400/20 rounded-lg">
+          <Shield className="h-5 w-5 text-blue-400 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-blue-400 text-sm font-medium">Professional + Educational Analysis</p>
+            <p className="text-gray-300 text-xs mt-1">
+              Uses FingerprintJS for accurate visitor identification alongside educational browser data collection.
+            </p>
+          </div>
+        </div>
+        
         <p className="text-gray-300 text-sm leading-relaxed">
-          This scanner will collect real information from your browser and device. 
+          This scanner combines professional fingerprinting with educational demonstrations. 
           All data is processed locally and never leaves your browser.
         </p>
 
@@ -258,6 +288,7 @@ const FingerprintCollector: React.FC<FingerprintCollectorProps> = ({
         </button>
 
         <div className="text-xs text-gray-500 space-y-2">
+          <p>• Professional FingerprintJS integration</p>
           <p>• Real browser data collection</p>
           <p>• 100% privacy-focused (local only)</p>
           <p>• Educational demonstration</p>

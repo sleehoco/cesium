@@ -10,6 +10,15 @@ import PrivacyProtectionTips from "../components/fingerprinting/PrivacyProtectio
 import { Fingerprint, Shield, Eye, AlertTriangle } from "lucide-react";
 
 export interface FingerprintData {
+  // Professional FingerprintJS data
+  fingerprintJS: {
+    visitorId: string;
+    confidence: number;
+    components?: any;
+    extended?: any;
+  } | null;
+  
+  // Educational browser fingerprinting data
   userAgent: string;
   screen: {
     width: number;

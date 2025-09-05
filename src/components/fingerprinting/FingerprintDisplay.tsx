@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Monitor, Smartphone, Globe, Shield, Eye, Hash, Cpu, Wifi, Battery, ChevronDown, ChevronRight, Zap, Camera, Gamepad2 } from "lucide-react";
+import { Monitor, Smartphone, Globe, Shield, Eye, Hash, Cpu, Wifi, Battery, ChevronDown, ChevronRight, Zap, Camera, Gamepad2, Star, Award } from "lucide-react";
 import { FingerprintData } from "../../pages/BrowserFingerprintingDemo";
 import { useState } from "react";
 
@@ -218,6 +218,57 @@ const FingerprintDisplay: React.FC<FingerprintDisplayProps> = ({
 
   return (
     <div className="space-y-6">
+      {/* Professional Visitor ID */}
+      {data.fingerprintJS && (
+        <div className="bg-cyber rounded-lg border border-blue-400/20 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <div className="bg-blue-400/10 w-12 h-12 rounded-lg flex items-center justify-center mr-4">
+                <Award className="h-6 w-6 text-blue-400" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-white">Professional Visitor ID</h3>
+                <p className="text-gray-400 text-sm">Powered by FingerprintJS</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-2xl font-bold text-blue-400 font-mono break-all">
+                {data.fingerprintJS.visitorId}
+              </div>
+              <div className="text-sm text-gray-400">
+                Confidence: {Math.round(data.fingerprintJS.confidence * 100)}%
+              </div>
+            </div>
+          </div>
+          <div className="bg-cyber-dark/50 p-4 rounded-lg">
+            <p className="text-gray-300 text-sm leading-relaxed">
+              This is your <strong className="text-blue-400">professional visitor identifier</strong> - a highly accurate, 
+              stable fingerprint that remains consistent across browsing sessions. Unlike basic browser fingerprinting, 
+              this uses advanced techniques to provide {Math.round(data.fingerprintJS.confidence * 100)}% accuracy 
+              for visitor identification.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* FingerprintJS Error/Fallback */}
+      {!data.fingerprintJS && (
+        <div className="bg-cyber rounded-lg border border-orange-400/20 p-6">
+          <div className="flex items-center mb-4">
+            <div className="bg-orange-400/10 w-12 h-12 rounded-lg flex items-center justify-center mr-4">
+              <Shield className="h-6 w-6 text-orange-400" />
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold text-white">Educational Mode Only</h3>
+              <p className="text-gray-400 text-sm">Professional fingerprinting unavailable</p>
+            </div>
+          </div>
+          <p className="text-gray-300 text-sm">
+            Professional FingerprintJS service is not available. Using educational browser fingerprinting below.
+          </p>
+        </div>
+      )}
+
       {/* Uniqueness Score */}
       <div className="bg-cyber rounded-lg border border-red-400/20 p-6">
         <div className="flex items-center justify-between mb-4">
