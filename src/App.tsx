@@ -19,6 +19,7 @@ import Auth from "./pages/Auth";
 import ClientDashboard from "./pages/ClientDashboard";
 import BrowserFingerprintingDemo from "./pages/BrowserFingerprintingDemo";
 import HiddenCodeDetectorPage from "./pages/HiddenCodeDetector";
+import AdminDashboard from "./pages/AdminDashboard";
 import AdminSecurity from "./pages/AdminSecurity";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/utils/ProtectedRoute";
@@ -83,6 +84,14 @@ const App = () => {
                 <ProtectedRoute>
                   <ClientDashboard />
                 </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin" 
+              element={
+                <AdminRoute>
+                  <AdminDashboard />
+                </AdminRoute>
               } 
             />
             <Route 
