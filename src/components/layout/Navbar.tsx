@@ -126,6 +126,12 @@ const Navbar = () => {
             >
               Free Guide
             </Link>
+            <Link 
+              to="/hidden-code-detector"
+              className="text-white hover:text-cesium transition-colors"
+            >
+              Text Cleaner
+            </Link>
             {user ? (
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2 text-white">
@@ -249,6 +255,13 @@ const Navbar = () => {
                 onClick={() => setIsOpen(false)}
               >
                 Free Guide
+              </Link>
+              <Link 
+                to="/hidden-code-detector"
+                className="block px-3 py-2 text-white hover:text-cesium transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                Text Cleaner
               </Link>
               
               {user ? (

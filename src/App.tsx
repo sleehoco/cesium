@@ -18,6 +18,7 @@ import NewsletterManager from "./pages/NewsletterManager";
 import Auth from "./pages/Auth";
 import ClientDashboard from "./pages/ClientDashboard";
 import BrowserFingerprintingDemo from "./pages/BrowserFingerprintingDemo";
+import HiddenCodeDetectorPage from "./pages/HiddenCodeDetector";
 import AdminSecurity from "./pages/AdminSecurity";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/utils/ProtectedRoute";
@@ -73,6 +74,7 @@ const App = () => {
             <Route path="/blog-generator" element={<BlogGenerator />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/browser-fingerprinting-demo" element={<BrowserFingerprintingDemo />} />
+            <Route path="/hidden-code-detector" element={<HiddenCodeDetectorPage />} />
             {/* Redirect old insecure login route to secure auth */}
             <Route path="/login" element={<Navigate to="/auth" replace />} />
             <Route 
