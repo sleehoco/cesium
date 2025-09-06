@@ -30,7 +30,7 @@ import GoogleAnalytics from "./components/utils/GoogleAnalytics";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import "./utils/createAdminAccount"; // Auto-execute admin account creation
+// Note: createAdminAccount import removed to prevent blocking app startup
 
 // Updated Google Analytics Measurement ID
 const GA_MEASUREMENT_ID = "135-394-7148";

@@ -21,14 +21,5 @@ export const createAdminAccount = async (email: string, firstName: string = 'Adm
   }
 };
 
-// Auto-execute to create the admin account
-if (typeof window !== 'undefined') {
-  // Only run in browser environment
-  createAdminAccount('slee@sent.com', 'Admin', 'User')
-    .then((result) => {
-      console.log('Admin account creation result:', result);
-    })
-    .catch((error) => {
-      console.error('Failed to create admin account:', error);
-    });
-}
+// Note: Admin account creation moved to be manually triggered
+// This prevents blocking the app startup with async operations
