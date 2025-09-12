@@ -13,6 +13,31 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     
+    <!-- Optimize CSS loading to prevent render blocking -->
+    <style>
+      /* Critical CSS for initial render - minimal base styles */
+      *{box-sizing:border-box}
+      html,body{margin:0;padding:0;font-family:system-ui,-apple-system,sans-serif}
+      #root{min-height:100vh}
+      /* Loading indicator to prevent blank screen */
+      .css-loading{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:18px;color:#666}
+    </style>
+    
+    <!-- Non-blocking CSS loading script -->
+    <script>
+      (function(){
+        var links = document.getElementsByTagName('link');
+        for(var i = 0; i < links.length; i++){
+          var link = links[i];
+          if(link.rel === 'stylesheet' && link.media !== 'print'){
+            // Convert blocking stylesheets to non-blocking
+            link.media = 'print';
+            link.onload = function(){this.media='all';this.onload=null;};
+          }
+        }
+      })();
+    </script>
+    
     <!-- Favicon -->
     <link rel="icon" href="/lovable-uploads/b24b90f5-8a07-4589-821e-d614e2703fa9.png" type="image/png" />
     <link rel="apple-touch-icon" href="/lovable-uploads/b24b90f5-8a07-4589-821e-d614e2703fa9.png" />

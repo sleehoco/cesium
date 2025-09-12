@@ -30,9 +30,18 @@ export default defineConfig(({ mode }) => ({
         manualChunks: {
           vendor: ['react', 'react-dom', 'react-router-dom'],
           ui: ['/src/components/ui/button', '/src/components/ui/card', '/src/components/ui/input']
+        },
+        // Optimize CSS and JS loading
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name?.endsWith('.css')) {
+            return 'assets/css/[name]-[hash][extname]';
+          }
+          return 'assets/[name]-[hash][extname]';
         }
       }
     },
+    // CSS optimization
+    cssMinify: true,
   },
   optimizeDeps: {
     include: ['react', 'react-dom', 'react-router-dom'],
