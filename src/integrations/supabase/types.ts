@@ -451,6 +451,33 @@ export type Database = {
           },
         ]
       }
+      newsletter_rate_limits: {
+        Row: {
+          attempts: number | null
+          blocked_until: string | null
+          email: string | null
+          id: string
+          ip_address: unknown | null
+          last_attempt: string | null
+        }
+        Insert: {
+          attempts?: number | null
+          blocked_until?: string | null
+          email?: string | null
+          id?: string
+          ip_address?: unknown | null
+          last_attempt?: string | null
+        }
+        Update: {
+          attempts?: number | null
+          blocked_until?: string | null
+          email?: string | null
+          id?: string
+          ip_address?: unknown | null
+          last_attempt?: string | null
+        }
+        Relationships: []
+      }
       newsletter_sends: {
         Row: {
           bounced_at: string | null
@@ -836,6 +863,10 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      validate_email: {
+        Args: { email_text: string }
         Returns: boolean
       }
     }
