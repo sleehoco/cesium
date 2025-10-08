@@ -154,7 +154,7 @@ const ServicesSection = () => {
                   to={`/services#${service.id}`}
                   className="inline-flex items-center text-sm font-medium text-cesium hover:text-cesium-light"
                 >
-                  Learn more
+                  Learn more about {service.title}
                   <ArrowUpRight className="ml-1 h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </Link>
               )}
