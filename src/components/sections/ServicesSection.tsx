@@ -1,5 +1,5 @@
 
-import { Shield, AlertTriangle, Clock, ArrowUpRight, Server, Lock, FileKey, Users, Factory, Fingerprint } from "lucide-react";
+import { Shield, AlertTriangle, Clock, ArrowUpRight, Server, Lock, FileKey, Users, Factory, Fingerprint, ShieldCheck } from "lucide-react";
 import ScrollAnimation from "../utils/ScrollAnimation";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate } from "react-router-dom";
@@ -74,6 +74,15 @@ const ServicesSection = () => {
       color: "text-blue-400",
       bgColor: "bg-blue-400/10",
       borderColor: "border-blue-400/20"
+    },
+    {
+      id: "microsoft-365-security",
+      title: "Microsoft 365 Security Evaluation",
+      description: "Comprehensive security assessment of your Microsoft 365 environment, including Exchange, SharePoint, Teams, and Azure AD configurations.",
+      icon: ShieldCheck,
+      color: "text-cyan-400",
+      bgColor: "bg-cyan-400/10",
+      borderColor: "border-cyan-400/20"
     },
     {
       id: "compliance-assistance",
