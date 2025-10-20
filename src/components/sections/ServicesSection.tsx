@@ -82,7 +82,8 @@ const ServicesSection = () => {
       icon: ShieldCheck,
       color: "text-cyan-400",
       bgColor: "bg-cyan-400/10",
-      borderColor: "border-cyan-400/20"
+      borderColor: "border-cyan-400/20",
+      link: "/m365-security-assessment"
     },
     {
       id: "compliance-assistance",
@@ -158,6 +159,14 @@ const ServicesSection = () => {
                   Try Interactive Demo
                   <ArrowUpRight className="ml-1 h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </button>
+              ) : service.link ? (
+                <Link 
+                  to={service.link}
+                  className={`inline-flex items-center text-sm font-medium ${service.color} hover:opacity-80`}
+                >
+                  Take Assessment
+                  <ArrowUpRight className="ml-1 h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </Link>
               ) : (
                 <Link 
                   to={`/services#${service.id}`}
