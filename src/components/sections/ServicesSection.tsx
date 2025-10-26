@@ -1,5 +1,5 @@
 
-import { Shield, AlertTriangle, Clock, ArrowUpRight, Server, Lock, FileKey, Users, Factory, Fingerprint, ShieldCheck } from "lucide-react";
+import { Shield, AlertTriangle, Clock, ArrowUpRight, Server, Lock, FileKey, Users, Factory, Fingerprint, ShieldCheck, FileText } from "lucide-react";
 import ScrollAnimation from "../utils/ScrollAnimation";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate } from "react-router-dom";
@@ -86,6 +86,16 @@ const ServicesSection = () => {
       link: "/m365-security-assessment"
     },
     {
+      id: "ai-policy-generator",
+      title: "AI Policy Generator",
+      description: "Generate comprehensive cybersecurity policies instantly using AI. Tailored to your organization's specific needs and industry standards.",
+      icon: FileText,
+      color: "text-indigo-400",
+      bgColor: "bg-indigo-400/10",
+      borderColor: "border-indigo-400/20",
+      link: "/policy-generator"
+    },
+    {
       id: "compliance-assistance",
       title: "Compliance Assistance",
       description: "Help navigating complex regulatory requirements including GDPR, HIPAA, PCI DSS, and more.",
@@ -164,7 +174,7 @@ const ServicesSection = () => {
                   to={service.link}
                   className={`inline-flex items-center text-sm font-medium ${service.color} hover:opacity-80`}
                 >
-                  Take Assessment
+                  {service.id === "ai-policy-generator" ? "Generate Policy" : "Take Assessment"}
                   <ArrowUpRight className="ml-1 h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </Link>
               ) : (
