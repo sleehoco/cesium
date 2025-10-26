@@ -14,16 +14,27 @@ const P5HeroAnimation = () => {
   const p5Instance = useRef<p5 | null>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    console.log("P5HeroAnimation: Component mounted");
+    
+    if (!containerRef.current) {
+      console.log("P5HeroAnimation: Container ref not found");
+      return;
+    }
 
+    console.log("P5HeroAnimation: Starting p5 sketch");
+    
     const sketch = (p: p5) => {
       let nodes: Node[] = [];
       const numNodes = 50;
       const maxDistance = 150;
 
       p.setup = () => {
+        console.log("P5HeroAnimation: Setup started");
         const parent = containerRef.current;
-        if (!parent) return;
+        if (!parent) {
+          console.log("P5HeroAnimation: No parent element in setup");
+          return;
+        }
         
         const w = parent.clientWidth || window.innerWidth;
         const h = parent.clientHeight || window.innerHeight;
@@ -34,6 +45,8 @@ const P5HeroAnimation = () => {
         canvas.style('position', 'absolute');
         canvas.style('top', '0');
         canvas.style('left', '0');
+        
+        console.log(`P5HeroAnimation: Canvas created ${w}x${h}`);
 
         // Initialize nodes
         for (let i = 0; i < numNodes; i++) {
@@ -118,9 +131,15 @@ const P5HeroAnimation = () => {
       };
     };
 
-    p5Instance.current = new p5(sketch);
+    try {
+      p5Instance.current = new p5(sketch);
+      console.log("P5HeroAnimation: p5 instance created successfully");
+    } catch (error) {
+      console.error("P5HeroAnimation: Error creating p5 instance", error);
+    }
 
     return () => {
+      console.log("P5HeroAnimation: Cleanup");
       p5Instance.current?.remove();
       p5Instance.current = null;
     };
