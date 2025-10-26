@@ -1,5 +1,4 @@
-import { useEffect, useRef } from 'react';
-import p5 from 'p5';
+import { useEffect, useRef, useState } from 'react';
 
 interface Node {
   x: number;
@@ -11,7 +10,8 @@ interface Node {
 
 const P5HeroAnimation = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const p5Instance = useRef<p5 | null>(null);
+  const p5Instance = useRef<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     console.log("P5HeroAnimation: Component mounted");
@@ -21,9 +21,12 @@ const P5HeroAnimation = () => {
       return;
     }
 
-    console.log("P5HeroAnimation: Starting p5 sketch");
-    
-    const sketch = (p: p5) => {
+    // Dynamically import p5
+    import('p5').then((p5Module) => {
+      console.log("P5HeroAnimation: p5 loaded successfully");
+      const p5 = p5Module.default;
+      
+      const sketch = (p: any) => {
       let nodes: Node[] = [];
       const numNodes = 50;
       const maxDistance = 150;
@@ -131,12 +134,18 @@ const P5HeroAnimation = () => {
       };
     };
 
-    try {
-      p5Instance.current = new p5(sketch);
-      console.log("P5HeroAnimation: p5 instance created successfully");
-    } catch (error) {
-      console.error("P5HeroAnimation: Error creating p5 instance", error);
-    }
+      try {
+        p5Instance.current = new p5(sketch);
+        setIsLoading(false);
+        console.log("P5HeroAnimation: p5 instance created successfully");
+      } catch (error) {
+        console.error("P5HeroAnimation: Error creating p5 instance", error);
+        setIsLoading(false);
+      }
+    }).catch((error) => {
+      console.error("P5HeroAnimation: Error loading p5", error);
+      setIsLoading(false);
+    });
 
     return () => {
       console.log("P5HeroAnimation: Cleanup");
