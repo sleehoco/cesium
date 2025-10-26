@@ -6,6 +6,8 @@ import BackgroundAnimations from '@/components/utils/BackgroundAnimations';
 import { Shield, FileText, CheckCircle } from 'lucide-react';
 
 const PolicyGenerator = () => {
+  console.log('PolicyGenerator component rendering');
+  
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
