@@ -20,22 +20,20 @@ const P5HeroAnimation = () => {
       let nodes: Node[] = [];
       const numNodes = 50;
       const maxDistance = 150;
-      let bgColor: p5.Color;
-      let nodeColor: p5.Color;
-      let lineColor: p5.Color;
 
       p.setup = () => {
-        const canvas = p.createCanvas(
-          containerRef.current?.offsetWidth || window.innerWidth,
-          containerRef.current?.offsetHeight || window.innerHeight
-        );
-        canvas.parent(containerRef.current!);
+        const parent = containerRef.current;
+        if (!parent) return;
         
-        // Get CSS color values
-        const isDark = document.documentElement.classList.contains('dark');
-        bgColor = isDark ? p.color(10, 10, 20, 0) : p.color(255, 255, 255, 0);
-        nodeColor = isDark ? p.color(100, 200, 255, 200) : p.color(50, 100, 200, 200);
-        lineColor = isDark ? p.color(100, 200, 255, 50) : p.color(50, 100, 200, 30);
+        const w = parent.clientWidth || window.innerWidth;
+        const h = parent.clientHeight || window.innerHeight;
+        
+        const canvas = p.createCanvas(w, h);
+        canvas.parent(parent);
+        canvas.style('display', 'block');
+        canvas.style('position', 'absolute');
+        canvas.style('top', '0');
+        canvas.style('left', '0');
 
         // Initialize nodes
         for (let i = 0; i < numNodes; i++) {
@@ -50,7 +48,7 @@ const P5HeroAnimation = () => {
       };
 
       p.draw = () => {
-        p.background(bgColor);
+        p.clear();
 
         // Update and draw nodes
         for (let i = 0; i < nodes.length; i++) {
@@ -72,8 +70,8 @@ const P5HeroAnimation = () => {
             const distance = p.dist(node.x, node.y, nodes[j].x, nodes[j].y);
             
             if (distance < maxDistance) {
-              const alpha = p.map(distance, 0, maxDistance, 100, 0);
-              p.stroke(p.red(lineColor), p.green(lineColor), p.blue(lineColor), alpha);
+              const alpha = p.map(distance, 0, maxDistance, 80, 0);
+              p.stroke(100, 200, 255, alpha);
               p.strokeWeight(1);
               p.line(node.x, node.y, nodes[j].x, nodes[j].y);
               node.connections.push(j);
@@ -82,14 +80,14 @@ const P5HeroAnimation = () => {
 
           // Draw node
           p.noStroke();
-          p.fill(nodeColor);
+          p.fill(100, 200, 255, 200);
           const size = p.map(node.connections.length, 0, 10, 3, 8);
           p.circle(node.x, node.y, size);
 
           // Pulse effect for highly connected nodes
           if (node.connections.length > 3) {
             const pulse = p.sin(p.frameCount * 0.05 + i) * 5 + 10;
-            p.fill(p.red(nodeColor), p.green(nodeColor), p.blue(nodeColor), 50);
+            p.fill(100, 200, 255, 50);
             p.circle(node.x, node.y, size + pulse);
           }
         }
@@ -100,21 +98,22 @@ const P5HeroAnimation = () => {
             const distance = p.dist(p.mouseX, p.mouseY, node.x, node.y);
             if (distance < maxDistance * 1.5) {
               const alpha = p.map(distance, 0, maxDistance * 1.5, 150, 0);
-              p.stroke(p.red(nodeColor), p.green(nodeColor), p.blue(nodeColor), alpha);
+              p.stroke(100, 200, 255, alpha);
               p.strokeWeight(2);
               p.line(p.mouseX, p.mouseY, node.x, node.y);
             }
           }
           
           p.noStroke();
-          p.fill(nodeColor);
+          p.fill(100, 200, 255, 255);
           p.circle(p.mouseX, p.mouseY, 12);
         }
       };
 
       p.windowResized = () => {
-        if (containerRef.current) {
-          p.resizeCanvas(containerRef.current.offsetWidth, containerRef.current.offsetHeight);
+        const parent = containerRef.current;
+        if (parent) {
+          p.resizeCanvas(parent.clientWidth, parent.clientHeight);
         }
       };
     };
@@ -123,14 +122,15 @@ const P5HeroAnimation = () => {
 
     return () => {
       p5Instance.current?.remove();
+      p5Instance.current = null;
     };
   }, []);
 
   return (
     <div 
       ref={containerRef} 
-      className="absolute inset-0 w-full h-full"
-      style={{ zIndex: 0 }}
+      className="absolute inset-0 w-full h-full pointer-events-none"
+      style={{ zIndex: 1 }}
     />
   );
 };
