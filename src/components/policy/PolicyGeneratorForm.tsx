@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { FileText, Download, Loader2 } from 'lucide-react';
 import { Document, Paragraph, TextRun, HeadingLevel, AlignmentType, Packer } from 'docx';
 import { saveAs } from 'file-saver';
+import RequestAccessForm from './RequestAccessForm';
 
 const formSchema = z.object({
   accessKey: z.string().optional(),
@@ -103,10 +104,32 @@ const PolicyGeneratorForm = () => {
   };
 
   const onSubmit = async (values: FormValues) => {
+    if (!hasAccess) {
+      toast.error('Please validate your access key first');
+      return;
+    }
+
     setIsGenerating(true);
     setGeneratedPolicy('');
 
     try {
+      // Increment usage count for the access key
+      const accessKey = savedAccessKey || form.getValues('accessKey');
+      if (accessKey) {
+        const { data: keyData } = await supabase
+          .from('policy_generator_keys')
+          .select('usage_count')
+          .eq('access_key', accessKey)
+          .single();
+        
+        if (keyData) {
+          await supabase
+            .from('policy_generator_keys')
+            .update({ usage_count: keyData.usage_count + 1 })
+            .eq('access_key', accessKey);
+        }
+      }
+
       const { data, error } = await supabase.functions.invoke('generate-policy', {
         body: values,
       });
@@ -169,9 +192,52 @@ const PolicyGeneratorForm = () => {
 
   return (
     <div className="space-y-8">
-      <div className="bg-card p-8 rounded-lg border border-border shadow-lg">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      {!hasAccess ? (
+        <div className="bg-card p-8 rounded-lg border border-border shadow-lg">
+          <h2 className="text-2xl font-bold mb-4">Access Key Required</h2>
+          <p className="text-muted-foreground mb-6">
+            You need a valid access key to use the Policy Generator. Enter your key below or request access.
+          </p>
+          <Form {...form}>
+            <form onSubmit={(e) => { e.preventDefault(); handleAccessKeyValidation(); }} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="accessKey"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Access Key</FormLabel>
+                    <FormControl>
+                      <Input placeholder="PG-XXXXXXXXXXXX" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button 
+                type="submit" 
+                className="w-full"
+                disabled={isValidatingKey}
+              >
+                {isValidatingKey ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Validating...
+                  </>
+                ) : (
+                  'Validate Access Key'
+                )}
+              </Button>
+            </form>
+          </Form>
+          <div className="mt-6 pt-6 border-t border-border">
+            <p className="text-sm text-muted-foreground mb-4">Don't have an access key?</p>
+            <RequestAccessForm onAccessGranted={() => {}} />
+          </div>
+        </div>
+      ) : (
+        <div className="bg-card p-8 rounded-lg border border-border shadow-lg">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
               name="policyType"
@@ -268,8 +334,9 @@ const PolicyGeneratorForm = () => {
           </form>
         </Form>
       </div>
+      )}
 
-      {generatedPolicy && (
+      {generatedPolicy && hasAccess && (
         <div className="bg-card p-8 rounded-lg border border-border shadow-lg">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold">Generated Policy</h2>
