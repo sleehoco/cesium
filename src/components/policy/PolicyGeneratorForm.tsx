@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -14,6 +14,7 @@ import { Document, Paragraph, TextRun, HeadingLevel, AlignmentType, Packer } fro
 import { saveAs } from 'file-saver';
 
 const formSchema = z.object({
+  accessKey: z.string().optional(),
   policyType: z.string().min(1, 'Please select a policy type'),
   companyName: z.string().min(2, 'Company name must be at least 2 characters'),
   industry: z.string().optional(),

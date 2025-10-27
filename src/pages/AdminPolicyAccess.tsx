@@ -57,7 +57,7 @@ const AdminPolicyAccess = () => {
           .order('created_at', { ascending: false }),
       ]);
 
-      if (requestsRes.data) setRequests(requestsRes.data);
+      if (requestsRes.data) setRequests(requestsRes.data as AccessRequest[]);
       if (keysRes.data) setKeys(keysRes.data);
     } catch (error) {
       console.error('Error fetching data:', error);
