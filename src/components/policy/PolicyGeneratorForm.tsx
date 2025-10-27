@@ -55,30 +55,22 @@ const PolicyGeneratorForm = () => {
   const validateAccessKey = async (key: string) => {
     setIsValidatingKey(true);
     try {
-      const { data, error } = await supabase
-        .from('policy_generator_keys')
-        .select('*')
-        .eq('access_key', key)
-        .eq('is_active', true)
-        .single();
+      const { data, error } = await supabase.rpc('validate_policy_access_key', {
+        key_to_validate: key
+      });
 
-      if (error || !data) {
+      if (error) {
+        console.error('Error validating access key:', error);
         setHasAccess(false);
-        toast.error('Invalid or expired access key');
+        toast.error('Failed to validate access key');
         return;
       }
 
-      // Check if key is expired
-      if (data.expires_at && new Date(data.expires_at) < new Date()) {
-        setHasAccess(false);
-        toast.error('This access key has expired');
-        return;
-      }
+      const result = data as { valid: boolean; error?: string };
 
-      // Check usage limit
-      if (data.max_usage !== null && data.usage_count >= data.max_usage) {
+      if (!result.valid) {
         setHasAccess(false);
-        toast.error('This access key has reached its usage limit');
+        toast.error(result.error || 'Invalid or expired access key');
         return;
       }
 
@@ -116,18 +108,9 @@ const PolicyGeneratorForm = () => {
       // Increment usage count for the access key
       const accessKey = savedAccessKey || form.getValues('accessKey');
       if (accessKey) {
-        const { data: keyData } = await supabase
-          .from('policy_generator_keys')
-          .select('usage_count')
-          .eq('access_key', accessKey)
-          .single();
-        
-        if (keyData) {
-          await supabase
-            .from('policy_generator_keys')
-            .update({ usage_count: keyData.usage_count + 1 })
-            .eq('access_key', accessKey);
-        }
+        await supabase.rpc('increment_key_usage', {
+          key_to_increment: accessKey
+        });
       }
 
       const { data, error } = await supabase.functions.invoke('generate-policy', {

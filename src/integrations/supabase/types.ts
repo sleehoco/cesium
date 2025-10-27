@@ -952,7 +952,15 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_key_usage: {
+        Args: { key_to_increment: string }
+        Returns: undefined
+      }
       validate_email: { Args: { email_text: string }; Returns: boolean }
+      validate_policy_access_key: {
+        Args: { key_to_validate: string }
+        Returns: Json
+      }
     }
     Enums: {
       app_role: "admin" | "user" | "moderator"
