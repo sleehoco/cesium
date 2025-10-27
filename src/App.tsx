@@ -24,6 +24,7 @@ import AdminSecurity from "./pages/AdminSecurity";
 import NotFound from "./pages/NotFound";
 import M365SecurityAssessment from "./pages/M365SecurityAssessment";
 import PolicyGenerator from "./pages/PolicyGenerator";
+import AdminPolicyAccess from "./pages/AdminPolicyAccess";
 import ProtectedRoute from "./components/utils/ProtectedRoute";
 import AdminRoute from "./components/auth/AdminRoute";
 import AdminRoleManagement from "./components/admin/AdminRoleManagement";
@@ -79,7 +80,8 @@ const App = () => {
             <Route path="/browser-fingerprinting-demo" element={<BrowserFingerprintingDemo />} />
             <Route path="/hidden-code-detector" element={<HiddenCodeDetectorPage />} />
             <Route path="/m365-security-assessment" element={<M365SecurityAssessment />} />
-            <Route path="/policy-generator" element={<PolicyGenerator />} />
+          <Route path="/policy-generator" element={<PolicyGenerator />} />
+          <Route path="/admin/policy-access" element={<AdminPolicyAccess />} />
             {/* Redirect old insecure login route to secure auth */}
             <Route path="/login" element={<Navigate to="/auth" replace />} />
             <Route 

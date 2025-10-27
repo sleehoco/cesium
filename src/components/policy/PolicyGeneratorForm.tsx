@@ -25,16 +25,81 @@ type FormValues = z.infer<typeof formSchema>;
 const PolicyGeneratorForm = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedPolicy, setGeneratedPolicy] = useState<string>('');
+  const [hasAccess, setHasAccess] = useState(false);
+  const [isValidatingKey, setIsValidatingKey] = useState(false);
+  const [savedAccessKey, setSavedAccessKey] = useState<string>('');
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      accessKey: '',
       policyType: '',
       companyName: '',
       industry: '',
       specificRequirements: '',
     },
   });
+
+  useEffect(() => {
+    // Check if there's a saved access key in localStorage
+    const savedKey = localStorage.getItem('policyGeneratorAccessKey');
+    if (savedKey) {
+      setSavedAccessKey(savedKey);
+      form.setValue('accessKey', savedKey);
+      validateAccessKey(savedKey);
+    }
+  }, []);
+
+  const validateAccessKey = async (key: string) => {
+    setIsValidatingKey(true);
+    try {
+      const { data, error } = await supabase
+        .from('policy_generator_keys')
+        .select('*')
+        .eq('access_key', key)
+        .eq('is_active', true)
+        .single();
+
+      if (error || !data) {
+        setHasAccess(false);
+        toast.error('Invalid or expired access key');
+        return;
+      }
+
+      // Check if key is expired
+      if (data.expires_at && new Date(data.expires_at) < new Date()) {
+        setHasAccess(false);
+        toast.error('This access key has expired');
+        return;
+      }
+
+      // Check usage limit
+      if (data.max_usage !== null && data.usage_count >= data.max_usage) {
+        setHasAccess(false);
+        toast.error('This access key has reached its usage limit');
+        return;
+      }
+
+      setHasAccess(true);
+      localStorage.setItem('policyGeneratorAccessKey', key);
+      toast.success('Access key validated successfully!');
+    } catch (error) {
+      console.error('Error validating access key:', error);
+      setHasAccess(false);
+      toast.error('Failed to validate access key');
+    } finally {
+      setIsValidatingKey(false);
+    }
+  };
+
+  const handleAccessKeyValidation = async () => {
+    const key = form.getValues('accessKey');
+    if (!key) {
+      toast.error('Please enter an access key');
+      return;
+    }
+    await validateAccessKey(key);
+  };
 
   const onSubmit = async (values: FormValues) => {
     setIsGenerating(true);

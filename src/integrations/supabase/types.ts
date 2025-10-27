@@ -457,7 +457,7 @@ export type Database = {
           blocked_until: string | null
           email: string | null
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           last_attempt: string | null
         }
         Insert: {
@@ -465,7 +465,7 @@ export type Database = {
           blocked_until?: string | null
           email?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           last_attempt?: string | null
         }
         Update: {
@@ -473,7 +473,7 @@ export type Database = {
           blocked_until?: string | null
           email?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           last_attempt?: string | null
         }
         Relationships: []
@@ -675,6 +675,95 @@ export type Database = {
           },
         ]
       }
+      policy_generator_access_requests: {
+        Row: {
+          company_name: string | null
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          notes: string | null
+          phone_number: string | null
+          reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+        }
+        Insert: {
+          company_name?: string | null
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          notes?: string | null
+          phone_number?: string | null
+          reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+        }
+        Update: {
+          company_name?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          notes?: string | null
+          phone_number?: string | null
+          reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
+      policy_generator_keys: {
+        Row: {
+          access_key: string
+          access_request_id: string | null
+          created_at: string
+          created_by: string | null
+          email: string
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          max_usage: number | null
+          usage_count: number | null
+        }
+        Insert: {
+          access_key: string
+          access_request_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          email: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          max_usage?: number | null
+          usage_count?: number | null
+        }
+        Update: {
+          access_key?: string
+          access_request_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          max_usage?: number | null
+          usage_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "policy_generator_keys_access_request_id_fkey"
+            columns: ["access_request_id"]
+            isOneToOne: false
+            referencedRelation: "policy_generator_access_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -846,16 +935,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      generate_slug: {
-        Args: { input_text: string }
-        Returns: string
-      }
+      generate_access_key: { Args: never; Returns: string }
+      generate_slug: { Args: { input_text: string }; Returns: string }
       generate_speech: {
         Args: { text_content: string; voice_id: string }
         Returns: string
       }
       get_current_user_role: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: Database["public"]["Enums"]["app_role"]
       }
       has_role: {
@@ -865,10 +952,7 @@ export type Database = {
         }
         Returns: boolean
       }
-      validate_email: {
-        Args: { email_text: string }
-        Returns: boolean
-      }
+      validate_email: { Args: { email_text: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "user" | "moderator"
