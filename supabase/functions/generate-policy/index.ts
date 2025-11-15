@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.4';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -11,10 +12,48 @@ serve(async (req) => {
   }
 
   try {
-    const { policyType, companyName, industry, specificRequirements } = await req.json();
+    const { policyType, companyName, industry, specificRequirements, accessKey } = await req.json();
     
-    if (!policyType || !companyName) {
-      throw new Error('Missing required parameters');
+    if (!policyType || !companyName || !accessKey) {
+      return new Response(
+        JSON.stringify({ error: 'Missing required parameters' }),
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
+    }
+
+    // Validate access key server-side
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    const { data: validationData, error: validationError } = await supabase.rpc('validate_policy_access_key', {
+      key_to_validate: accessKey
+    });
+
+    if (validationError) {
+      console.error('Access key validation error:', validationError);
+      return new Response(
+        JSON.stringify({ error: 'Failed to validate access key' }),
+        { 
+          status: 500, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
+    }
+
+    const validation = validationData as { valid: boolean; error?: string };
+    
+    if (!validation.valid) {
+      return new Response(
+        JSON.stringify({ error: validation.error || 'Invalid or expired access key' }),
+        { 
+          status: 401, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
     }
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
@@ -107,6 +146,11 @@ Make it comprehensive, specific to ${policyType}, and tailored to a ${industry |
     const policyContent = data.choices[0].message.content;
     
     console.log(`Generated policy (${policyContent.length} chars)`);
+    
+    // Increment usage count after successful generation
+    await supabase.rpc('increment_key_usage', {
+      key_to_increment: accessKey
+    });
     
     return new Response(
       JSON.stringify({ policyContent }),

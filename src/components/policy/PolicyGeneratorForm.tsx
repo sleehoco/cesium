@@ -105,16 +105,13 @@ const PolicyGeneratorForm = () => {
     setGeneratedPolicy('');
 
     try {
-      // Increment usage count for the access key
       const accessKey = savedAccessKey || form.getValues('accessKey');
-      if (accessKey) {
-        await supabase.rpc('increment_key_usage', {
-          key_to_increment: accessKey
-        });
-      }
 
       const { data, error } = await supabase.functions.invoke('generate-policy', {
-        body: values,
+        body: {
+          ...values,
+          accessKey: accessKey,
+        },
       });
 
       if (error) throw error;
