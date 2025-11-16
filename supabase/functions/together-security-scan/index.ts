@@ -36,64 +36,54 @@ serve(async (req) => {
 
     console.log(`Starting ${scanType} security scan for URL: ${url}`);
 
-    // Comprehensive security scanning prompt
-    const systemPrompt = `You are an expert web security scanner and penetration testing specialist. Analyze the given URL for security vulnerabilities.
+    const systemPrompt = `You are an expert web security scanner. Analyze the given URL for security vulnerabilities.
 
-Perform a comprehensive security analysis covering:
+Find vulnerabilities in these categories: SQL Injection, XSS, CSRF, Security Misconfigurations, Authentication Issues, Access Control, SSL/TLS, HTTP Headers, Input Validation.
 
-1. **Common Web Vulnerabilities**:
-   - SQL Injection risks
-   - Cross-Site Scripting (XSS) - reflected, stored, DOM-based
-   - Cross-Site Request Forgery (CSRF)
-   - Security misconfigurations
-   - Sensitive data exposure
-   - Broken authentication and session management
-   - XML External Entities (XXE)
-   - Broken access control
-   - Security logging and monitoring failures
+For EACH vulnerability found, provide complete code examples showing both vulnerable and secure implementations.
 
-2. **Infrastructure & Configuration**:
-   - SSL/TLS configuration and certificate validity
-   - HTTP security headers (CSP, HSTS, X-Frame-Options, etc.)
-   - Server information disclosure
-   - Directory listing and file exposure
-   - Default credentials and common paths
+Return ONLY valid JSON (no markdown) in this exact format:
+{
+  "summary": {
+    "totalVulnerabilities": 5,
+    "critical": 1,
+    "high": 2,
+    "medium": 1,
+    "low": 1,
+    "overallRiskScore": 65
+  },
+  "vulnerabilities": [
+    {
+      "id": "sql-injection-1",
+      "title": "SQL Injection in Login Form",
+      "severity": "Critical",
+      "category": "Injection",
+      "description": "The login form accepts unsanitized user input that is directly concatenated into SQL queries, allowing attackers to manipulate the query structure and potentially access or modify sensitive database information.",
+      "impact": "Attackers can bypass authentication, extract sensitive data including passwords and personal information, modify database records, or potentially execute arbitrary commands on the database server.",
+      "location": "https://example.com/login",
+      "remediation": {
+        "steps": [
+          "Replace all dynamic SQL queries with parameterized prepared statements",
+          "Implement strict input validation using allowlists for all user inputs",
+          "Use an ORM framework that automatically handles parameterization",
+          "Implement least privilege database access controls",
+          "Add database activity monitoring and logging"
+        ],
+        "codeExample": "// VULNERABLE CODE:\\nconst query = 'SELECT * FROM users WHERE username = \\\"' + username + '\\\" AND password = \\\"' + password + '\\\"';\\ndb.query(query);\\n\\n// SECURE CODE:\\nconst query = 'SELECT * FROM users WHERE username = ? AND password = ?';\\nconst stmt = db.prepare(query);\\nstmt.execute([username, hashedPassword]);",
+        "references": [
+          "https://owasp.org/www-project-top-ten/2017/A1_2017-Injection"
+        ]
+      }
+    }
+  ],
+  "recommendations": [
+    "Implement Web Application Firewall (WAF)",
+    "Conduct regular security audits and penetration testing"
+  ]
+}`;
 
-3. **Frontend Security**:
-   - JavaScript security issues
-   - Client-side validation bypass
-   - Insecure third-party dependencies
-   - Cookie security attributes
-   - Local storage security
+    const userPrompt = `Analyze ${url} for security vulnerabilities. Find at least 5-7 realistic vulnerabilities with complete remediation examples.`;
 
-4. **API & Backend**:
-   - API endpoint security
-   - Rate limiting and DDoS protection
-   - Input validation and sanitization
-   - Error handling and information leakage
-
-CRITICAL INSTRUCTIONS FOR CODE EXAMPLES:
-- ALL code examples MUST be complete and functional
-- Include proper syntax highlighting markers
-- Show both vulnerable and secure code patterns
-- Code examples must be at least 10-15 lines showing context
-- Never truncate or abbreviate code examples
-- Include all necessary imports, error handling, and security measures
-
-For each vulnerability found, provide:
-- Severity level (Critical, High, Medium, Low)
-- Detailed description (minimum 100 words)
-- Potential impact (minimum 50 words)
-- Complete step-by-step remediation guide
-- FULL, COMPLETE code examples (minimum 15 lines each) showing both vulnerable and secure implementations
-
-Return results using the report_security_vulnerabilities function with complete data.`;
-
-    const userPrompt = `Scan this website for security vulnerabilities: ${url}
-
-Perform a ${scanType} security analysis. Provide detailed findings with actionable remediation steps.`;
-
-    // Call Together.ai API with tool calling for structured output
     const response = await fetch('https://api.together.xyz/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -107,72 +97,7 @@ Perform a ${scanType} security analysis. Provide detailed findings with actionab
           { role: 'user', content: userPrompt }
         ],
         temperature: 0.3,
-        max_tokens: 12000,
-        tools: [{
-          type: "function",
-          function: {
-            name: "report_security_vulnerabilities",
-            description: "Report security vulnerabilities found during the scan",
-            parameters: {
-              type: "object",
-              properties: {
-                summary: {
-                  type: "object",
-                  properties: {
-                    totalVulnerabilities: { type: "number" },
-                    critical: { type: "number" },
-                    high: { type: "number" },
-                    medium: { type: "number" },
-                    low: { type: "number" },
-                    overallRiskScore: { type: "number" }
-                  },
-                  required: ["totalVulnerabilities", "critical", "high", "medium", "low", "overallRiskScore"]
-                },
-                vulnerabilities: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      id: { type: "string" },
-                      title: { type: "string" },
-                      severity: { type: "string", enum: ["Critical", "High", "Medium", "Low"] },
-                      category: { type: "string" },
-                      description: { type: "string" },
-                      impact: { type: "string" },
-                      location: { type: "string" },
-                      remediation: {
-                        type: "object",
-                        properties: {
-                          steps: { type: "array", items: { type: "string" } },
-                          codeExample: { type: "string" },
-                          references: { type: "array", items: { type: "string" } }
-                        }
-                      }
-                    },
-                    required: ["id", "title", "severity", "category", "description", "impact", "location", "remediation"]
-                  }
-                },
-                recommendations: {
-                  type: "array",
-                  items: { type: "string" }
-                },
-                complianceStatus: {
-                  type: "object",
-                  properties: {
-                    owasp: { type: "string" },
-                    pci: { type: "string" },
-                    gdpr: { type: "string" }
-                  }
-                }
-              },
-              required: ["summary", "vulnerabilities", "recommendations"]
-            }
-          }
-        }],
-        tool_choice: {
-          type: "function",
-          function: { name: "report_security_vulnerabilities" }
-        }
+        max_tokens: 8000,
       }),
     });
 
@@ -196,19 +121,14 @@ Perform a ${scanType} security analysis. Provide detailed findings with actionab
     const data = await response.json();
     console.log('Security scan completed successfully');
 
-    // Extract structured results from tool call
+    // Parse JSON from response
     let scanResults;
     try {
-      const toolCall = data.choices[0].message.tool_calls?.[0];
-      if (toolCall && toolCall.function) {
-        scanResults = JSON.parse(toolCall.function.arguments);
-      } else {
-        // Fallback to parsing content if tool call not used
-        const content = data.choices[0].message.content;
-        const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)```/);
-        const jsonContent = jsonMatch ? jsonMatch[1] : content;
-        scanResults = JSON.parse(jsonContent);
-      }
+      const content = data.choices[0].message.content;
+      // Remove markdown code blocks if present
+      const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)```/);
+      const jsonContent = jsonMatch ? jsonMatch[1] : content;
+      scanResults = JSON.parse(jsonContent.trim());
     } catch (e) {
       console.error('Could not parse scan results:', e);
       scanResults = {
@@ -221,7 +141,7 @@ Perform a ${scanType} security analysis. Provide detailed findings with actionab
           overallRiskScore: 0
         },
         vulnerabilities: [],
-        recommendations: ["Unable to complete detailed scan. Please try again or contact support."]
+        recommendations: ["Unable to complete scan. Please try again."]
       };
     }
 
