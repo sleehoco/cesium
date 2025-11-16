@@ -101,7 +101,7 @@ Perform a ${scanType} security analysis. Provide detailed findings with actionab
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo',
+        model: 'Qwen/Qwen2.5-72B-Instruct-Turbo',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
