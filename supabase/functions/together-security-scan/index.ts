@@ -117,7 +117,7 @@ Return results in JSON format with this structure:
 
 Perform a ${scanType} security analysis. Provide detailed findings with actionable remediation steps.`;
 
-    // Call Together.ai API
+    // Call Together.ai API with tool calling for structured output
     const response = await fetch('https://api.together.xyz/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -131,7 +131,72 @@ Perform a ${scanType} security analysis. Provide detailed findings with actionab
           { role: 'user', content: userPrompt }
         ],
         temperature: 0.3,
-        max_tokens: 8000,
+        max_tokens: 16000,
+        tools: [{
+          type: "function",
+          function: {
+            name: "report_security_vulnerabilities",
+            description: "Report security vulnerabilities found during the scan",
+            parameters: {
+              type: "object",
+              properties: {
+                summary: {
+                  type: "object",
+                  properties: {
+                    totalVulnerabilities: { type: "number" },
+                    critical: { type: "number" },
+                    high: { type: "number" },
+                    medium: { type: "number" },
+                    low: { type: "number" },
+                    overallRiskScore: { type: "number" }
+                  },
+                  required: ["totalVulnerabilities", "critical", "high", "medium", "low", "overallRiskScore"]
+                },
+                vulnerabilities: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: { type: "string" },
+                      title: { type: "string" },
+                      severity: { type: "string", enum: ["Critical", "High", "Medium", "Low"] },
+                      category: { type: "string" },
+                      description: { type: "string" },
+                      impact: { type: "string" },
+                      location: { type: "string" },
+                      remediation: {
+                        type: "object",
+                        properties: {
+                          steps: { type: "array", items: { type: "string" } },
+                          codeExample: { type: "string" },
+                          references: { type: "array", items: { type: "string" } }
+                        }
+                      }
+                    },
+                    required: ["id", "title", "severity", "category", "description", "impact", "location", "remediation"]
+                  }
+                },
+                recommendations: {
+                  type: "array",
+                  items: { type: "string" }
+                },
+                complianceStatus: {
+                  type: "object",
+                  properties: {
+                    owasp: { type: "string" },
+                    pci: { type: "string" },
+                    gdpr: { type: "string" }
+                  }
+                }
+              },
+              required: ["summary", "vulnerabilities", "recommendations"]
+            }
+          }
+        }],
+        tool_choice: {
+          type: "function",
+          function: { name: "report_security_vulnerabilities" }
+        }
       }),
     });
 
@@ -153,18 +218,23 @@ Perform a ${scanType} security analysis. Provide detailed findings with actionab
     }
 
     const data = await response.json();
-    const content = data.choices[0].message.content;
-    
     console.log('Security scan completed successfully');
 
-    // Try to parse JSON from the response
+    // Extract structured results from tool call
     let scanResults;
     try {
-      const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)```/);
-      const jsonContent = jsonMatch ? jsonMatch[1] : content;
-      scanResults = JSON.parse(jsonContent);
+      const toolCall = data.choices[0].message.tool_calls?.[0];
+      if (toolCall && toolCall.function) {
+        scanResults = JSON.parse(toolCall.function.arguments);
+      } else {
+        // Fallback to parsing content if tool call not used
+        const content = data.choices[0].message.content;
+        const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)```/);
+        const jsonContent = jsonMatch ? jsonMatch[1] : content;
+        scanResults = JSON.parse(jsonContent);
+      }
     } catch (e) {
-      console.log('Could not parse JSON response, returning raw content');
+      console.error('Could not parse scan results:', e);
       scanResults = {
         summary: {
           totalVulnerabilities: 0,
@@ -174,9 +244,8 @@ Perform a ${scanType} security analysis. Provide detailed findings with actionab
           low: 0,
           overallRiskScore: 0
         },
-        rawAnalysis: content,
         vulnerabilities: [],
-        recommendations: []
+        recommendations: ["Unable to complete detailed scan. Please try again or contact support."]
       };
     }
 
