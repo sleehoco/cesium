@@ -164,7 +164,7 @@ const SecurityScanner = () => {
       <BackgroundAnimations />
       <Navbar />
 
-      <div className="relative z-10 container mx-auto px-4 py-12 max-w-7xl">
+      <div className="relative z-20 container mx-auto px-4 py-12 max-w-7xl">
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
             <Shield className="w-8 h-8 text-primary" />
@@ -314,11 +314,11 @@ const SecurityScanner = () => {
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <Accordion type="single" collapsible className="w-full">
+                      <Accordion type="single" collapsible className="w-full relative z-10">
                         {scanResults.vulnerabilities.map((vuln, index) => (
-                          <AccordionItem key={vuln.id || index} value={`item-${index}`}>
-                            <AccordionTrigger className="hover:no-underline">
-                              <div className="flex items-center gap-3 text-left w-full">
+                          <AccordionItem key={vuln.id || index} value={`item-${index}`} className="relative">
+                            <AccordionTrigger className="hover:no-underline cursor-pointer">
+                              <div className="flex items-center gap-3 text-left w-full pointer-events-none">
                                 <Badge className={getSeverityColor(vuln.severity)}>
                                   {getSeverityIcon(vuln.severity)}
                                   <span className="ml-1">{vuln.severity}</span>
