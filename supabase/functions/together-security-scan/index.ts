@@ -72,46 +72,22 @@ Perform a comprehensive security analysis covering:
    - Input validation and sanitization
    - Error handling and information leakage
 
+CRITICAL INSTRUCTIONS FOR CODE EXAMPLES:
+- ALL code examples MUST be complete and functional
+- Include proper syntax highlighting markers
+- Show both vulnerable and secure code patterns
+- Code examples must be at least 10-15 lines showing context
+- Never truncate or abbreviate code examples
+- Include all necessary imports, error handling, and security measures
+
 For each vulnerability found, provide:
 - Severity level (Critical, High, Medium, Low)
-- Detailed description
-- Potential impact
-- Step-by-step remediation guide
-- Code examples where applicable
+- Detailed description (minimum 100 words)
+- Potential impact (minimum 50 words)
+- Complete step-by-step remediation guide
+- FULL, COMPLETE code examples (minimum 15 lines each) showing both vulnerable and secure implementations
 
-Return results in JSON format with this structure:
-{
-  "summary": {
-    "totalVulnerabilities": number,
-    "critical": number,
-    "high": number,
-    "medium": number,
-    "low": number,
-    "overallRiskScore": number (0-100)
-  },
-  "vulnerabilities": [
-    {
-      "id": string,
-      "title": string,
-      "severity": "Critical" | "High" | "Medium" | "Low",
-      "category": string,
-      "description": string,
-      "impact": string,
-      "location": string,
-      "remediation": {
-        "steps": string[],
-        "codeExample": string (if applicable),
-        "references": string[]
-      }
-    }
-  ],
-  "recommendations": string[],
-  "complianceStatus": {
-    "owasp": string,
-    "pci": string,
-    "gdpr": string
-  }
-}`;
+Return results using the report_security_vulnerabilities function with complete data.`;
 
     const userPrompt = `Scan this website for security vulnerabilities: ${url}
 
@@ -131,7 +107,7 @@ Perform a ${scanType} security analysis. Provide detailed findings with actionab
           { role: 'user', content: userPrompt }
         ],
         temperature: 0.3,
-        max_tokens: 16000,
+        max_tokens: 32000,
         tools: [{
           type: "function",
           function: {
