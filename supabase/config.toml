@@ -18,5 +18,5 @@ verify_jwt = false
 [functions.generate-policy]
 verify_jwt = false
 
-[functions.moonshot-security-scan]
+[functions.together-security-scan]
 verify_jwt = false
