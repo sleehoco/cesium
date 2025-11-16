@@ -15,6 +15,19 @@ serve(async (req) => {
   }
 
   try {
+    // Get the authorization header
+    const authHeader = req.headers.get('authorization');
+    if (!authHeader) {
+      console.error('Missing authorization header');
+      return new Response(
+        JSON.stringify({ error: "Unauthorized: Missing authentication" }),
+        { 
+          status: 401, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
+    }
+
     const { newsletter_id, subject, content } = await req.json();
     
     if (!newsletter_id || !subject || !content) {
@@ -27,7 +40,7 @@ serve(async (req) => {
       );
     }
 
-    // Initialize Supabase client
+    // Initialize Supabase client with user's JWT for authorization check
     const supabaseUrl = Deno.env.get('SUPABASE_URL');
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
     
@@ -35,7 +48,53 @@ serve(async (req) => {
       throw new Error('Supabase configuration not found');
     }
 
+    // Create client with service role key to check authorization
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Verify the JWT and get user info
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+
+    if (authError || !user) {
+      console.error('Authentication failed:', authError);
+      return new Response(
+        JSON.stringify({ error: "Unauthorized: Invalid authentication token" }),
+        { 
+          status: 401, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
+    }
+
+    // Check if user has admin role
+    const { data: hasAdminRole, error: roleError } = await supabase.rpc('has_role', {
+      _user_id: user.id,
+      _role: 'admin'
+    });
+
+    if (roleError) {
+      console.error('Role check failed:', roleError);
+      return new Response(
+        JSON.stringify({ error: "Authorization check failed" }),
+        { 
+          status: 500, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
+    }
+
+    if (!hasAdminRole) {
+      console.error(`Unauthorized newsletter send attempt by user ${user.id}`);
+      return new Response(
+        JSON.stringify({ error: "Forbidden: Admin role required to send newsletters" }),
+        { 
+          status: 403, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
+    }
+
+    console.log(`Newsletter send authorized for admin user ${user.id}`);
 
     // Initialize Resend
     const resendApiKey = Deno.env.get('RESEND_API_KEY');
@@ -153,6 +212,7 @@ serve(async (req) => {
     const failed = results.filter(r => !r.success).length;
 
     console.log(`Newsletter sending completed: ${successful} successful, ${failed} failed`);
+    console.log(`Audit log: Admin user ${user.id} sent newsletter "${subject}" to ${successful}/${subscribers.length} subscribers`);
 
     return new Response(
       JSON.stringify({
