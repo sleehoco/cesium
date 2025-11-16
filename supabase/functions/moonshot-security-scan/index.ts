@@ -118,27 +118,38 @@ Return results in JSON format with this structure:
 Perform a ${scanType} security analysis. Provide detailed findings with actionable remediation steps.`;
 
     // Call Moonshot AI API
-    const response = await fetch('https://api.moonshot.cn/v1/chat/completions', {
+    const response = await fetch('https://api.moonshot.ai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${moonshotApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'moonshot-v1-128k', // Using largest context model for comprehensive analysis
+        model: 'kimi-k2-turbo-preview', // Using Kimi K2 model for comprehensive analysis
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ],
-        temperature: 0.3, // Lower temperature for more consistent, factual responses
-        max_tokens: 8000,
+        temperature: 0.6, // Recommended temperature for Kimi models
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
       console.error('Moonshot AI API error:', response.status, errorText);
-      throw new Error(`Moonshot AI API error: ${response.status}`);
+      
+      let errorMessage = `Moonshot AI API error: ${response.status}`;
+      try {
+        const errorJson = JSON.parse(errorText);
+        if (errorJson.error?.message) {
+          errorMessage = errorJson.error.message;
+        }
+      } catch (e) {
+        // If can't parse JSON, use the raw text
+        errorMessage = errorText || errorMessage;
+      }
+      
+      throw new Error(errorMessage);
     }
 
     const data = await response.json();
