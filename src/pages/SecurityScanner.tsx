@@ -84,7 +84,7 @@ const SecurityScanner = () => {
     try {
       console.log('Starting security scan for:', data.url);
       
-      const { data: scanData, error } = await supabase.functions.invoke('moonshot-security-scan', {
+      const { data: scanData, error } = await supabase.functions.invoke('together-security-scan', {
         body: {
           url: data.url,
           scanType: 'comprehensive'
@@ -173,7 +173,7 @@ const SecurityScanner = () => {
             AI Security Scanner
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Powered by Moonshot AI - Comprehensive vulnerability detection and security analysis
+            Powered by Together.ai - Comprehensive vulnerability detection and security analysis
           </p>
         </div>
 
