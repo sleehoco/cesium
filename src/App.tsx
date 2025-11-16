@@ -81,7 +81,14 @@ const App = () => {
             <Route path="/browser-fingerprinting-demo" element={<BrowserFingerprintingDemo />} />
             <Route path="/hidden-code-detector" element={<HiddenCodeDetectorPage />} />
             <Route path="/m365-security-assessment" element={<M365SecurityAssessment />} />
-            <Route path="/security-scanner" element={<SecurityScanner />} />
+            <Route 
+              path="/security-scanner" 
+              element={
+                <ProtectedRoute>
+                  <SecurityScanner />
+                </ProtectedRoute>
+              } 
+            />
           <Route path="/policy-generator" element={<PolicyGenerator />} />
           <Route path="/admin/policy-access" element={<AdminPolicyAccess />} />
             {/* Redirect old insecure login route to secure auth */}
