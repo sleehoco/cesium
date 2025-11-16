@@ -102,29 +102,11 @@ const Navbar = () => {
             >
               About
             </button>
-            <Link to="/blog" className="text-white hover:text-cesium transition-colors">
-              Blog
-            </Link>
             <Link 
               to="/founders"
               className="text-white hover:text-cesium transition-colors"
             >
               Founders
-            </Link>
-            {isAdmin && (
-              <Link 
-                to="/blog-generator"
-                className="text-white hover:text-cesium transition-colors flex items-center gap-1"
-              >
-                <Shield className="h-4 w-4" />
-                AI Blog
-              </Link>
-            )}
-            <Link 
-              to="/pdf-download"
-              className="text-white hover:text-cesium transition-colors"
-            >
-              Free Guide
             </Link>
             <Link 
               to="/hidden-code-detector"
@@ -233,35 +215,11 @@ const Navbar = () => {
                 About
               </button>
               <Link 
-                to="/blog"
-                className="block px-3 py-2 text-white hover:text-cesium transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                Blog
-              </Link>
-              <Link 
                 to="/founders"
                 className="block px-3 py-2 text-white hover:text-cesium transition-colors"
                 onClick={() => setIsOpen(false)}
               >
                 Founders
-              </Link>
-              {isAdmin && (
-                <Link 
-                  to="/blog-generator"
-                  className="block px-3 py-2 text-white hover:text-cesium transition-colors flex items-center gap-2"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <Shield className="h-4 w-4" />
-                  AI Blog
-                </Link>
-              )}
-              <Link 
-                to="/pdf-download"
-                className="block px-3 py-2 text-white hover:text-cesium transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                Free Guide
               </Link>
               <Link 
                 to="/hidden-code-detector"
