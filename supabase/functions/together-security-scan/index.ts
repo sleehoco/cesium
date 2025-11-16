@@ -107,7 +107,7 @@ Perform a ${scanType} security analysis. Provide detailed findings with actionab
           { role: 'user', content: userPrompt }
         ],
         temperature: 0.3,
-        max_tokens: 32000,
+        max_tokens: 12000,
         tools: [{
           type: "function",
           function: {
