@@ -33,6 +33,7 @@ import GoogleAnalytics from "./components/utils/GoogleAnalytics";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import SecurityScanner from "./pages/SecurityScanner";
 // Note: createAdminAccount import removed to prevent blocking app startup
 
 // Updated Google Analytics Measurement ID
@@ -80,6 +81,7 @@ const App = () => {
             <Route path="/browser-fingerprinting-demo" element={<BrowserFingerprintingDemo />} />
             <Route path="/hidden-code-detector" element={<HiddenCodeDetectorPage />} />
             <Route path="/m365-security-assessment" element={<M365SecurityAssessment />} />
+            <Route path="/security-scanner" element={<SecurityScanner />} />
           <Route path="/policy-generator" element={<PolicyGenerator />} />
           <Route path="/admin/policy-access" element={<AdminPolicyAccess />} />
             {/* Redirect old insecure login route to secure auth */}

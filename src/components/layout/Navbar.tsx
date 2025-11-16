@@ -132,6 +132,13 @@ const Navbar = () => {
             >
               Text Cleaner
             </Link>
+            <Link 
+              to="/security-scanner"
+              className="text-white hover:text-cesium transition-colors flex items-center gap-1"
+            >
+              <Shield className="h-4 w-4" />
+              Security Scanner
+            </Link>
             {user ? (
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2 text-white">
@@ -262,6 +269,14 @@ const Navbar = () => {
                 onClick={() => setIsOpen(false)}
               >
                 Text Cleaner
+              </Link>
+              <Link 
+                to="/security-scanner"
+                className="block px-3 py-2 text-white hover:text-cesium transition-colors flex items-center gap-1"
+                onClick={() => setIsOpen(false)}
+              >
+                <Shield className="h-4 w-4" />
+                Security Scanner
               </Link>
               
               {user ? (
