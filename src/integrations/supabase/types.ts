@@ -351,6 +351,51 @@ export type Database = {
           },
         ]
       }
+      connection_fingerprints: {
+        Row: {
+          ai_analysis: Json | null
+          browser_fingerprint: Json | null
+          connection_metadata: Json | null
+          created_at: string
+          detected_threats: string[] | null
+          id: string
+          ip_address: unknown
+          risk_score: number | null
+          session_id: string
+          updated_at: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          ai_analysis?: Json | null
+          browser_fingerprint?: Json | null
+          connection_metadata?: Json | null
+          created_at?: string
+          detected_threats?: string[] | null
+          id?: string
+          ip_address?: unknown
+          risk_score?: number | null
+          session_id: string
+          updated_at?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          ai_analysis?: Json | null
+          browser_fingerprint?: Json | null
+          connection_metadata?: Json | null
+          created_at?: string
+          detected_threats?: string[] | null
+          id?: string
+          ip_address?: unknown
+          risk_score?: number | null
+          session_id?: string
+          updated_at?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       data_brokers: {
         Row: {
           created_at: string
