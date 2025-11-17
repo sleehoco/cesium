@@ -5,17 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import CEOPopupTrigger from '@/components/ceo/CEOPopupTrigger';
 
 const Founders = () => {
   const founders = [
-    {
-      name: "Julia Morrison",
-      role: "CEO & Co-Founder", 
-      image: "/lovable-uploads/66d70e58-99fb-4681-aeca-18433b0b3de0.png",
-      bio: "Expert in cybersecurity - vulnerability management, Operational Technology, Threat Intelligence. Her unique legal background (Law degree, BS in Law) combined with MS in Cyber Security provides deep understanding of compliance, risk frameworks, and regulatory requirements. Led security transformations with 15+ years of experience.",
-      expertise: ["Threat Intelligence", "Enterprise Security", "Risk Management", "AI"],
-    },
     {
       name: "Sung Lee",
       role: "CTO & Co-Founder",
@@ -63,10 +55,10 @@ const Founders = () => {
               transition={{ duration: 0.8 }}
             >
               <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-                Meet Our <span className="text-primary">Founders</span>
+                Meet Our <span className="text-primary">Founder</span>
               </h1>
               <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-                Industry veterans with decades of combined experience in cybersecurity,
+                Industry veteran with over a decade of experience in cybersecurity,
                 dedicated to protecting your digital assets.
               </p>
               
@@ -77,10 +69,6 @@ const Founders = () => {
                 >
                   Learn More
                 </Button>
-                
-                <CEOPopupTrigger>
-                  CEO & Her McLaren
-                </CEOPopupTrigger>
               </div>
             </motion.div>
           </div>
