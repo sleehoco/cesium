@@ -109,6 +109,12 @@ const Navbar = () => {
               Founders
             </Link>
             <Link 
+              to="/cyber-dashboard"
+              className="text-white hover:text-cesium transition-colors"
+            >
+              Security Hub
+            </Link>
+            <Link 
               to="/hidden-code-detector"
               className="text-white hover:text-cesium transition-colors"
             >
@@ -220,6 +226,13 @@ const Navbar = () => {
                 onClick={() => setIsOpen(false)}
               >
                 Founders
+              </Link>
+              <Link 
+                to="/cyber-dashboard"
+                className="block px-3 py-2 text-white hover:text-cesium transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                Security Hub
               </Link>
               <Link 
                 to="/hidden-code-detector"

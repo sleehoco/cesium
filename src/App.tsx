@@ -5,8 +5,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
-import Services from "./pages/Services";
+import NotFound from "./pages/NotFound";
 import Contact from "./pages/Contact";
+import Services from "./pages/Services";
+import CyberDashboard from "./pages/CyberDashboard";
 import PdfDownload from "./pages/PdfDownload";
 import Founders from "./pages/Founders";
 import BlogGenerator from "./pages/BlogGenerator";
@@ -21,7 +23,6 @@ import BrowserFingerprintingDemo from "./pages/BrowserFingerprintingDemo";
 import HiddenCodeDetectorPage from "./pages/HiddenCodeDetector";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminSecurity from "./pages/AdminSecurity";
-import NotFound from "./pages/NotFound";
 import M365SecurityAssessment from "./pages/M365SecurityAssessment";
 import PolicyGenerator from "./pages/PolicyGenerator";
 import AdminPolicyAccess from "./pages/AdminPolicyAccess";
@@ -67,6 +68,7 @@ const App = () => {
             <BadgeRemover />
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/cyber-dashboard" element={<CyberDashboard />} />
             <Route path="/services" element={<Services />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/pdf-download" element={<PdfDownload />} />
