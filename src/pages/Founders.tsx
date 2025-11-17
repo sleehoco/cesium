@@ -12,8 +12,8 @@ const Founders = () => {
       name: "Julia Morrison",
       role: "CEO & Co-Founder",
       image: "/placeholder.svg",
-      bio: "Visionary leader with extensive experience in cybersecurity strategy and business development. Passionate about empowering organizations with proactive security solutions and building strong client relationships.",
-      expertise: ["Strategic Leadership", "Business Development", "Cybersecurity Strategy", "Client Relations"]
+      bio: "Expert in cybersecurity - vulnerability management, Operational Technology, Threat Intelligence. Her unique legal background (Law degree, BS in Law) combined with MS in Cyber Security provides deep understanding of compliance, risk frameworks, and regulatory requirements. Led security transformations with 15+ years of experience.",
+      expertise: ["Threat Intelligence", "Enterprise Security", "Risk Management", "AI"]
     },
     {
       name: "Sung Lee",
