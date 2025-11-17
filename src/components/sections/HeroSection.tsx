@@ -4,7 +4,6 @@ import { Shield, Lock, Eye, CheckCircle, ArrowRight, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import NetworkAnimation from '@/components/utils/NetworkAnimation';
-import CEOPopupTrigger from '@/components/ceo/CEOPopupTrigger';
 
 const HeroSection = () => {
   const [featureList] = useState([
@@ -96,13 +95,6 @@ const HeroSection = () => {
               >
                 View Services
               </Button>
-
-              <CEOPopupTrigger 
-                variant="button"
-                className="px-6 py-3"
-              >
-                CEO, Julia Morrison
-              </CEOPopupTrigger>
             </motion.div>
           </motion.div>
 
