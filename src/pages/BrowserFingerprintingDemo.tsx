@@ -7,7 +7,9 @@ import ScrollAnimation from "../components/utils/ScrollAnimation";
 import FingerprintCollector from "../components/fingerprinting/FingerprintCollector";
 import FingerprintDisplay from "../components/fingerprinting/FingerprintDisplay";
 import PrivacyProtectionTips from "../components/fingerprinting/PrivacyProtectionTips";
-import { Fingerprint, Shield, Eye, AlertTriangle } from "lucide-react";
+import FingerprintAnalysis from "../components/fingerprinting/FingerprintAnalysis";
+import { Fingerprint, Shield, Eye, AlertTriangle, Brain } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export interface FingerprintData {
   // Professional FingerprintJS data
@@ -92,7 +94,8 @@ const BrowserFingerprintingDemo = () => {
               </h1>
               <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
                 Discover exactly what information your browser reveals about you. This real-time demo collects 
-                actual data from your device to show tracking techniques used across the web.
+                actual data from your device to show tracking techniques used across the web. Our AI analyzes
+                your connection for potential security threats and anomalies.
               </p>
               
               <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-400">
@@ -131,11 +134,30 @@ const BrowserFingerprintingDemo = () => {
               {/* Results Display */}
               <div className="lg:col-span-2">
                 <ScrollAnimation className="delay-200">
-                  <FingerprintDisplay 
-                    data={fingerprintData}
-                    isCollecting={isCollecting}
-                    collectionComplete={collectionComplete}
-                  />
+                  <Tabs defaultValue="fingerprint" className="w-full">
+                    <TabsList className="grid w-full grid-cols-2 mb-6">
+                      <TabsTrigger value="fingerprint" className="flex items-center gap-2">
+                        <Fingerprint className="h-4 w-4" />
+                        Fingerprint Data
+                      </TabsTrigger>
+                      <TabsTrigger value="analysis" className="flex items-center gap-2">
+                        <Brain className="h-4 w-4" />
+                        AI Security Analysis
+                      </TabsTrigger>
+                    </TabsList>
+                    
+                    <TabsContent value="fingerprint">
+                      <FingerprintDisplay 
+                        data={fingerprintData}
+                        isCollecting={isCollecting}
+                        collectionComplete={collectionComplete}
+                      />
+                    </TabsContent>
+                    
+                    <TabsContent value="analysis">
+                      <FingerprintAnalysis />
+                    </TabsContent>
+                  </Tabs>
                 </ScrollAnimation>
               </div>
             </div>
