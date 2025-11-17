@@ -9,6 +9,13 @@ import Footer from '@/components/layout/Footer';
 const Founders = () => {
   const founders = [
     {
+      name: "Julia Morrison",
+      role: "CEO & Co-Founder",
+      image: "/placeholder.svg",
+      bio: "Visionary leader with extensive experience in cybersecurity strategy and business development. Passionate about empowering organizations with proactive security solutions and building strong client relationships.",
+      expertise: ["Strategic Leadership", "Business Development", "Cybersecurity Strategy", "Client Relations"]
+    },
+    {
       name: "Sung Lee",
       role: "CTO & Co-Founder",
       image: "/placeholder.svg",
@@ -55,11 +62,10 @@ const Founders = () => {
               transition={{ duration: 0.8 }}
             >
               <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-                Meet Our <span className="text-primary">Founder</span>
+                Meet Our <span className="text-primary">Founders</span>
               </h1>
               <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-                Industry veteran with over a decade of experience in cybersecurity,
-                dedicated to protecting your digital assets.
+                Industry veterans dedicated to protecting your digital assets with innovative cybersecurity solutions.
               </p>
               
               <div className="flex flex-wrap justify-center gap-4">
