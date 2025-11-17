@@ -123,25 +123,42 @@ const HiddenCodeDetector = () => {
     toast.info('All fields cleared');
   };
 
-  const renderTextWithHighlights = (text: string) => {
+  const renderTextWithHighlights = (text: string): React.ReactNode => {
     if (!showHidden || detectedCodes.length === 0) {
       return text;
     }
 
-    let result = text;
-    let offset = 0;
+    // Get all positions and sort them
+    const allPositions = detectedCodes
+      .flatMap(d => d.positions)
+      .sort((a, b) => a - b);
 
-    detectedCodes.forEach(({ positions }) => {
-      positions.forEach(pos => {
-        const adjustedPos = pos + offset;
-        result = result.slice(0, adjustedPos) + 
-          '<span class="bg-destructive/20 border border-destructive/40 px-1 rounded text-xs">●</span>' +
-          result.slice(adjustedPos + 1);
-        offset += '<span class="bg-destructive/20 border border-destructive/40 px-1 rounded text-xs">●</span>'.length - 1;
-      });
+    const parts: React.ReactNode[] = [];
+    let lastPos = 0;
+
+    allPositions.forEach((pos, idx) => {
+      // Add text before the hidden character
+      if (pos > lastPos) {
+        parts.push(text.slice(lastPos, pos));
+      }
+      // Add highlighted marker for hidden character
+      parts.push(
+        <span 
+          key={`hidden-${pos}-${idx}`} 
+          className="bg-destructive/20 border border-destructive/40 px-1 rounded text-xs"
+        >
+          ●
+        </span>
+      );
+      lastPos = pos + 1;
     });
 
-    return result;
+    // Add remaining text
+    if (lastPos < text.length) {
+      parts.push(text.slice(lastPos));
+    }
+
+    return parts;
   };
 
   return (
@@ -214,10 +231,9 @@ const HiddenCodeDetector = () => {
             {showHidden && inputText && (
               <div className="p-3 bg-muted rounded-md">
                 <h4 className="text-sm font-medium mb-2">Original with Hidden Characters Highlighted:</h4>
-                <div 
-                  className="font-mono text-xs whitespace-pre-wrap break-words"
-                  dangerouslySetInnerHTML={{ __html: renderTextWithHighlights(inputText) }}
-                />
+                <div className="font-mono text-xs whitespace-pre-wrap break-words">
+                  {renderTextWithHighlights(inputText)}
+                </div>
               </div>
             )}
           </CardContent>
