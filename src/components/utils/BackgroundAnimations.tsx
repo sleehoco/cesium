@@ -19,7 +19,7 @@ const BackgroundAnimations = ({
   className = ""
 }: BackgroundAnimationsProps) => {
   return (
-    <div className={`absolute inset-0 overflow-hidden ${className}`}>
+    <div className={`absolute inset-0 ${className}`} style={{ pointerEvents: 'none' }}>
       {includeGradients && (
         <DynamicGradient colors={['#1A1A1A', '#2A2A2A', '#0A0A0A', '#8B5CF6', '#4338CA']} />
       )}
