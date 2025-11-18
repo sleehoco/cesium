@@ -17,6 +17,13 @@ interface Particle {
   color: string;
 }
 
+interface TrailPoint {
+  x: number;
+  y: number;
+  alpha: number;
+  size: number;
+}
+
 const InteractiveBackground = ({ 
   className = "", 
   intensity = 0.1 
@@ -25,6 +32,7 @@ const InteractiveBackground = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: -1000, y: -1000 });
   const particlesRef = useRef<Particle[]>([]);
+  const trailRef = useRef<TrailPoint[]>([]);
   const animationFrameRef = useRef<number>();
 
   useEffect(() => {
@@ -68,29 +76,67 @@ const InteractiveBackground = ({
     // Mouse move handler
     const handleMouseMove = (e: MouseEvent) => {
       const rect = container.getBoundingClientRect();
-      setMousePosition({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      setMousePosition({ x, y });
+      
+      // Add trail point
+      trailRef.current.push({
+        x,
+        y,
+        alpha: 1,
+        size: 8
       });
+      
+      // Limit trail length
+      if (trailRef.current.length > 20) {
+        trailRef.current.shift();
+      }
     };
 
     // Animation loop
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
+      // Draw and update trail
+      trailRef.current = trailRef.current.filter(point => {
+        point.alpha -= 0.05;
+        point.size *= 0.95;
+        
+        if (point.alpha > 0) {
+          ctx.beginPath();
+          ctx.arc(point.x, point.y, point.size, 0, Math.PI * 2);
+          ctx.fillStyle = `hsl(var(--primary) / ${point.alpha * 0.4})`;
+          ctx.fill();
+          
+          // Draw glow around trail
+          const gradient = ctx.createRadialGradient(point.x, point.y, 0, point.x, point.y, point.size * 3);
+          gradient.addColorStop(0, `hsl(var(--primary) / ${point.alpha * 0.2})`);
+          gradient.addColorStop(1, 'transparent');
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(point.x, point.y, point.size * 3, 0, Math.PI * 2);
+          ctx.fill();
+          
+          return true;
+        }
+        return false;
+      });
+      
       particlesRef.current.forEach((particle) => {
         // Calculate distance from mouse
         const dx = mousePosition.x - particle.x;
         const dy = mousePosition.y - particle.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
-        const maxDistance = 150;
+        const maxDistance = 250;
         
-        // Apply mouse influence
+        // Apply mouse influence with stronger effect
         if (distance < maxDistance) {
           const force = (maxDistance - distance) / maxDistance;
           const angle = Math.atan2(dy, dx);
-          particle.vx += Math.cos(angle) * force * 0.3;
-          particle.vy += Math.sin(angle) * force * 0.3;
+          particle.vx += Math.cos(angle) * force * 0.5;
+          particle.vy += Math.sin(angle) * force * 0.5;
         }
         
         // Return to base position
@@ -112,22 +158,43 @@ const InteractiveBackground = ({
         ctx.fillStyle = particle.color.replace(')', ` / ${opacity})`);
         ctx.fill();
         
-        // Draw connections
+        // Draw connections with enhanced visibility near mouse
         particlesRef.current.forEach((other) => {
           const dx2 = particle.x - other.x;
           const dy2 = particle.y - other.y;
           const dist = Math.sqrt(dx2 * dx2 + dy2 * dy2);
           
-          if (dist < 100) {
+          if (dist < 120) {
+            const mouseDistToLine = Math.min(
+              Math.sqrt((mousePosition.x - particle.x) ** 2 + (mousePosition.y - particle.y) ** 2),
+              Math.sqrt((mousePosition.x - other.x) ** 2 + (mousePosition.y - other.y) ** 2)
+            );
+            const lineOpacity = mouseDistToLine < maxDistance ? 0.3 : 0.1;
+            
             ctx.beginPath();
             ctx.moveTo(particle.x, particle.y);
             ctx.lineTo(other.x, other.y);
-            ctx.strokeStyle = `hsl(var(--primary) / ${0.1 * (1 - dist / 100)})`;
-            ctx.lineWidth = 0.5;
+            ctx.strokeStyle = `hsl(var(--primary) / ${lineOpacity * (1 - dist / 120)})`;
+            ctx.lineWidth = mouseDistToLine < maxDistance ? 1.5 : 0.5;
             ctx.stroke();
           }
         });
       });
+      
+      // Draw mouse cursor glow
+      if (mousePosition.x > 0 && mousePosition.y > 0) {
+        const gradient = ctx.createRadialGradient(
+          mousePosition.x, mousePosition.y, 0,
+          mousePosition.x, mousePosition.y, 60
+        );
+        gradient.addColorStop(0, 'hsl(var(--primary) / 0.4)');
+        gradient.addColorStop(0.5, 'hsl(var(--primary) / 0.2)');
+        gradient.addColorStop(1, 'transparent');
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(mousePosition.x, mousePosition.y, 60, 0, Math.PI * 2);
+        ctx.fill();
+      }
       
       animationFrameRef.current = requestAnimationFrame(animate);
     };
