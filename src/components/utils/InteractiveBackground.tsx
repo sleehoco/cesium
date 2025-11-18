@@ -156,16 +156,16 @@ const InteractiveBackground = ({
   return (
     <div
       ref={containerRef}
-      className={`absolute inset-0 pointer-events-none ${className}`}
+      className={`absolute inset-0 ${className}`}
       style={{ zIndex: 2 }}
     >
       <div 
-        className="absolute inset-0 transition-all duration-300 ease-out"
+        className="absolute inset-0 transition-all duration-300 ease-out pointer-events-none"
         style={gradientStyle}
       />
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 w-full h-full"
+        className="absolute inset-0 w-full h-full pointer-events-none"
       />
     </div>
   );
