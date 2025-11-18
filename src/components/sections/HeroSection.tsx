@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Shield, Lock, Eye, CheckCircle, ArrowRight, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import NetworkAnimation from '@/components/utils/NetworkAnimation';
+import BackgroundAnimations from '@/components/utils/BackgroundAnimations';
 
 const HeroSection = () => {
   const [featureList] = useState([
@@ -39,7 +39,7 @@ const HeroSection = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-background/95 pt-20">
-      <NetworkAnimation />
+      <BackgroundAnimations includeGradients={false} includeParticles={false} />
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-6xl mx-auto">
