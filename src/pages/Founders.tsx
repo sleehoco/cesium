@@ -81,7 +81,7 @@ const Founders = () => {
               transition={{ duration: 0.8 }}
             >
               <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 text-center">
-                Meet The Team <span className="text-primary">Founders</span>
+                Meet The Team
               </h1>
               <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
                 Industry veterans dedicated to protecting your digital assets with innovative cybersecurity solutions.
