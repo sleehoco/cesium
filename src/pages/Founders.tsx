@@ -7,6 +7,7 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import juliaMorrisonImage from '@/assets/julia-morrison.jpeg';
 import sungLeeImage from '@/assets/sung-lee.png';
+import siarheiKatliarouImage from '@/assets/siarhei-katliarou.png';
 
 const Founders = () => {
   const founders = [
@@ -27,7 +28,7 @@ const Founders = () => {
     {
       name: "Siarhei Katliarou",
       role: "Director of Business Development",
-      image: "/placeholder.svg",
+      image: siarheiKatliarouImage,
       bio: "Brings 30 years of experience in business operations and strategic growth, supported by a strong military background that shaped his discipline, precision, and ability to move fast when it matters. Builds partnerships, opens new markets, and strengthens our position in the cyber domain.",
       expertise: ["Strategic Growth", "Business Operations", "Partnership Development", "Market Expansion"]
     }
