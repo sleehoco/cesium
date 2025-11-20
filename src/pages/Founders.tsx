@@ -23,6 +23,13 @@ const Founders = () => {
       image: sungLeeImage,
       bio: "Expert in cybersecurity - incident response, cloud security, and AI-driven threat detection. Specialized in developing advanced security architectures for enterprise environments with 12+ years of experience.",
       expertise: ["Incident Response", "Cloud Security", "AI Security", "Enterprise Architecture"]
+    },
+    {
+      name: "Siarhei Katliarou",
+      role: "Director of Business Development",
+      image: "/placeholder.svg",
+      bio: "Brings 30 years of experience in business operations and strategic growth, supported by a strong military background that shaped his discipline, precision, and ability to move fast when it matters. Builds partnerships, opens new markets, and strengthens our position in the cyber domain.",
+      expertise: ["Strategic Growth", "Business Operations", "Partnership Development", "Market Expansion"]
     }
   ];
 
@@ -90,7 +97,7 @@ const Founders = () => {
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
             >
               {founders.map((founder, index) => (
                 <Card
