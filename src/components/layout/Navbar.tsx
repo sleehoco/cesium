@@ -106,7 +106,7 @@ const Navbar = () => {
               to="/founders"
               className="text-white hover:text-cesium transition-colors"
             >
-              Founders
+              Meet The Team
             </Link>
             <Link 
               to="/cyber-dashboard"
@@ -225,7 +225,7 @@ const Navbar = () => {
                 className="block px-3 py-2 text-white hover:text-cesium transition-colors"
                 onClick={() => setIsOpen(false)}
               >
-                Founders
+                Meet The Team
               </Link>
               <Link 
                 to="/cyber-dashboard"
