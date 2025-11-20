@@ -8,6 +8,7 @@ import Footer from '@/components/layout/Footer';
 import juliaMorrisonImage from '@/assets/julia-morrison.jpeg';
 import sungLeeImage from '@/assets/sung-lee.png';
 import siarheiKatliarouImage from '@/assets/siarhei-katliarou.png';
+import milaKatliarovaImage from '@/assets/mila-katliarova.png';
 
 const Founders = () => {
   const founders = [
@@ -35,7 +36,7 @@ const Founders = () => {
     {
       name: "Mila Katliarova",
       role: "Business Operations Lead",
-      image: "/placeholder.svg",
+      image: milaKatliarovaImage,
       bio: "Brings 30 years of hands-on experience building processes, managing teams, and keeping complex operations running without friction. Her leadership keeps our structure solid, our workflow sharp, and our execution reliable, anchoring daily operations in the fast-paced cybersecurity space.",
       expertise: ["Process Management", "Team Leadership", "Operations Excellence", "Workflow Optimization"]
     }
