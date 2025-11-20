@@ -115,11 +115,11 @@ const Founders = () => {
                 >
                   <CardContent className="p-6">
                     <div className="flex items-center mb-4">
-                      <div className="w-24 h-24 rounded-full overflow-hidden mr-4 bg-muted">
+                      <div className="w-24 h-24 rounded-full overflow-hidden mr-4 bg-muted flex-shrink-0">
                         <img
                           src={founder.image}
                           alt={founder.name}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover object-center"
                         />
                       </div>
                       <div>
