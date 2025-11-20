@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import juliaMorrisonImage from '@/assets/julia-morrison.jpeg';
+import sungLeeImage from '@/assets/sung-lee.png';
 
 const Founders = () => {
   const founders = [
@@ -19,7 +20,7 @@ const Founders = () => {
     {
       name: "Sung Lee",
       role: "CTO & Co-Founder",
-      image: "/placeholder.svg",
+      image: sungLeeImage,
       bio: "Expert in cybersecurity - incident response, cloud security, and AI-driven threat detection. Specialized in developing advanced security architectures for enterprise environments with 12+ years of experience.",
       expertise: ["Incident Response", "Cloud Security", "AI Security", "Enterprise Architecture"]
     }
