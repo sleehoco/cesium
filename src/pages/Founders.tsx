@@ -5,13 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import juliaMorrisonImage from '@/assets/julia-morrison.jpeg';
 
 const Founders = () => {
   const founders = [
     {
       name: "Julia Morrison",
       role: "CEO & Co-Founder",
-      image: "/placeholder.svg",
+      image: juliaMorrisonImage,
       bio: "Expert in cybersecurity - vulnerability management, Operational Technology, Threat Intelligence. Her unique legal background (Law degree, BS in Law) combined with MS in Cyber Security provides deep understanding of compliance, risk frameworks, and regulatory requirements. Led security transformations with 15+ years of experience.",
       expertise: ["Threat Intelligence", "Enterprise Security", "Risk Management", "AI"]
     },
