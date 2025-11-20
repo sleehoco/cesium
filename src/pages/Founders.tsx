@@ -31,6 +31,13 @@ const Founders = () => {
       image: siarheiKatliarouImage,
       bio: "Brings 30 years of experience in business operations and strategic growth, supported by a strong military background that shaped his discipline, precision, and ability to move fast when it matters. Builds partnerships, opens new markets, and strengthens our position in the cyber domain.",
       expertise: ["Strategic Growth", "Business Operations", "Partnership Development", "Market Expansion"]
+    },
+    {
+      name: "Mila Katliarova",
+      role: "Business Operations Lead",
+      image: "/placeholder.svg",
+      bio: "Brings 30 years of hands-on experience building processes, managing teams, and keeping complex operations running without friction. Her leadership keeps our structure solid, our workflow sharp, and our execution reliable, anchoring daily operations in the fast-paced cybersecurity space.",
+      expertise: ["Process Management", "Team Leadership", "Operations Excellence", "Workflow Optimization"]
     }
   ];
 
@@ -98,7 +105,7 @@ const Founders = () => {
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
             >
               {founders.map((founder, index) => (
                 <Card
