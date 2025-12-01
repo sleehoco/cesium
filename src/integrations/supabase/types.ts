@@ -496,6 +496,110 @@ export type Database = {
           },
         ]
       }
+      lead_activities: {
+        Row: {
+          activity_type: Database["public"]["Enums"]["activity_type"]
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          lead_id: string
+          metadata: Json | null
+          title: string
+        }
+        Insert: {
+          activity_type: Database["public"]["Enums"]["activity_type"]
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          lead_id: string
+          metadata?: Json | null
+          title: string
+        }
+        Update: {
+          activity_type?: Database["public"]["Enums"]["activity_type"]
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          lead_id?: string
+          metadata?: Json | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_activities_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leads: {
+        Row: {
+          assigned_to: string | null
+          company: string | null
+          contact_count: number | null
+          created_at: string
+          email: string
+          estimated_value: number | null
+          expected_close_date: string | null
+          id: string
+          initial_message: string | null
+          last_contacted_at: string | null
+          name: string
+          notes: string | null
+          phone: string | null
+          priority: Database["public"]["Enums"]["lead_priority"]
+          service_interest: string | null
+          source: Database["public"]["Enums"]["lead_source"]
+          status: Database["public"]["Enums"]["lead_status"]
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          company?: string | null
+          contact_count?: number | null
+          created_at?: string
+          email: string
+          estimated_value?: number | null
+          expected_close_date?: string | null
+          id?: string
+          initial_message?: string | null
+          last_contacted_at?: string | null
+          name: string
+          notes?: string | null
+          phone?: string | null
+          priority?: Database["public"]["Enums"]["lead_priority"]
+          service_interest?: string | null
+          source: Database["public"]["Enums"]["lead_source"]
+          status?: Database["public"]["Enums"]["lead_status"]
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          company?: string | null
+          contact_count?: number | null
+          created_at?: string
+          email?: string
+          estimated_value?: number | null
+          expected_close_date?: string | null
+          id?: string
+          initial_message?: string | null
+          last_contacted_at?: string | null
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          priority?: Database["public"]["Enums"]["lead_priority"]
+          service_interest?: string | null
+          source?: Database["public"]["Enums"]["lead_source"]
+          status?: Database["public"]["Enums"]["lead_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       newsletter_rate_limits: {
         Row: {
           attempts: number | null
@@ -1008,8 +1112,25 @@ export type Database = {
       }
     }
     Enums: {
+      activity_type: "email" | "call" | "meeting" | "note" | "status_change"
       app_role: "admin" | "user" | "moderator"
       automation_status: "pending" | "in_progress" | "completed" | "failed"
+      lead_priority: "low" | "medium" | "high" | "urgent"
+      lead_source:
+        | "contact_form"
+        | "consultation_booking"
+        | "newsletter"
+        | "service_inquiry"
+        | "direct"
+        | "referral"
+      lead_status:
+        | "new"
+        | "contacted"
+        | "qualified"
+        | "proposal_sent"
+        | "negotiation"
+        | "closed_won"
+        | "closed_lost"
       removal_request_status: "pending" | "in_progress" | "completed" | "failed"
     }
     CompositeTypes: {
@@ -1138,8 +1259,27 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      activity_type: ["email", "call", "meeting", "note", "status_change"],
       app_role: ["admin", "user", "moderator"],
       automation_status: ["pending", "in_progress", "completed", "failed"],
+      lead_priority: ["low", "medium", "high", "urgent"],
+      lead_source: [
+        "contact_form",
+        "consultation_booking",
+        "newsletter",
+        "service_inquiry",
+        "direct",
+        "referral",
+      ],
+      lead_status: [
+        "new",
+        "contacted",
+        "qualified",
+        "proposal_sent",
+        "negotiation",
+        "closed_won",
+        "closed_lost",
+      ],
       removal_request_status: ["pending", "in_progress", "completed", "failed"],
     },
   },

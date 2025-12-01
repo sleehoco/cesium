@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { Shield, Users, Settings, FileText } from 'lucide-react';
+import { Shield, Users, Settings, FileText, TrendingUp } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -89,6 +89,26 @@ const AdminDashboard = () => {
                 <Link to="/blog-generator">
                   <Button className="w-full">
                     AI Blog Generator
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            {/* Sales Pipeline */}
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-cesium" />
+                  Sales Pipeline
+                </CardTitle>
+                <CardDescription>
+                  Track and manage leads from all sources
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Link to="/admin/sales">
+                  <Button className="w-full">
+                    View Sales Dashboard
                   </Button>
                 </Link>
               </CardContent>
