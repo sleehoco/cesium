@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { contactFormSchema, ContactFormValues } from "./ContactFormSchema";
-import { supabase } from "@/integrations/supabase/client";
+import { useContactService } from "./useContactService";
 import {
   Form,
   FormControl,
@@ -24,6 +24,7 @@ type ContactFormProps = {
 
 const ContactForm = ({ className }: ContactFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { submitContact } = useContactService();
   
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
@@ -37,42 +38,14 @@ const ContactForm = ({ className }: ContactFormProps) => {
 
   const onSubmit = async (values: ContactFormValues) => {
     setIsSubmitting(true);
-    console.log("Submitting form with values:", values);
     
     try {
-      console.log("Calling send-contact-email function...");
-      const { data, error } = await supabase.functions.invoke('send-contact-email', {
-        body: values
+      await submitContact(values);
+      
+      toast.success("Thank you for your message!", {
+        description: "We've received your inquiry and will get back to you soon.",
       });
-      
-      console.log("Response from function:", { data, error });
-      
-      if (error) {
-        throw new Error(error.message || "Failed to send message");
-      }
-      
-      if (data) {
-        console.log("Full response data:", data);
-        
-        const userEmailSent = data.userEmail?.sent;
-        const companyEmailSent = data.companyEmail?.sent;
-        
-        if (userEmailSent && companyEmailSent) {
-          toast.success("Thank you for your message!", {
-            description: `Your message has been sent and our team at ${data.companyEmail?.sentTo || 'information@cesiumcyber.com'} has been notified.`,
-          });
-          form.reset();
-        } else if (userEmailSent) {
-          toast.success("Your message has been received", {
-            description: "You should receive a confirmation email shortly. There was an issue notifying our team, but we'll check your message soon.",
-          });
-          form.reset();
-        } else {
-          throw new Error("Failed to send message");
-        }
-      } else {
-        throw new Error("No response data received");
-      }
+      form.reset();
     } catch (error) {
       console.error("Error sending message:", error);
       toast.error("Failed to send message", {

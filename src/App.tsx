@@ -26,6 +26,7 @@ import AdminSecurity from "./pages/AdminSecurity";
 import M365SecurityAssessment from "./pages/M365SecurityAssessment";
 import PolicyGenerator from "./pages/PolicyGenerator";
 import AdminPolicyAccess from "./pages/AdminPolicyAccess";
+import SalesPipeline from "./pages/SalesPipeline";
 import ProtectedRoute from "./components/utils/ProtectedRoute";
 import AdminRoute from "./components/auth/AdminRoute";
 import AdminRoleManagement from "./components/admin/AdminRoleManagement";
@@ -135,6 +136,16 @@ const App = () => {
             <Route 
               path="/admin/security" 
               element={<RouteErrorBoundary routeName="Admin Security"><AdminSecurity /></RouteErrorBoundary>} 
+            />
+            <Route 
+              path="/admin/sales" 
+              element={
+                <RouteErrorBoundary routeName="Sales Pipeline">
+                  <AdminRoute>
+                    <SalesPipeline />
+                  </AdminRoute>
+                </RouteErrorBoundary>
+              } 
             />
             <Route path="*" element={<RouteErrorBoundary routeName="404"><NotFound /></RouteErrorBoundary>} />
             </Routes>

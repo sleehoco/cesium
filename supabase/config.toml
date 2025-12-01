@@ -26,3 +26,9 @@ verify_jwt = false
 
 [functions.together-security-scan]
 verify_jwt = false
+
+[functions.create-lead]
+verify_jwt = false
+
+[functions.send-newsletter]
+verify_jwt = true
