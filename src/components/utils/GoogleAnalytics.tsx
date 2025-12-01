@@ -25,6 +25,14 @@ const GoogleAnalytics = ({ measurementId }: GoogleAnalyticsProps) => {
   // Set up GA tracking
   useEffect(() => {
     if (window.gtag && measurementId && !initialized) {
+      // Validate measurement ID format (GA4 format: G-XXXXXXXXXX)
+      const isValidFormat = /^G-[A-Z0-9]+$/i.test(measurementId);
+      
+      if (!isValidFormat) {
+        console.warn("Invalid Google Analytics Measurement ID format. Expected format: G-XXXXXXXXXX");
+        return;
+      }
+      
       window.gtag('config', measurementId);
       setInitialized(true);
       console.log("Google Analytics initialized with ID:", measurementId);

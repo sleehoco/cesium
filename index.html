@@ -57,13 +57,16 @@
     <meta name="twitter:image" content="/opengraph-image.png" />
     <meta name="twitter:site" content="@cesiumcyber" />
     
-    <!-- Google tag (gtag.js) - defer to not block rendering -->
-    <script defer src="https://www.googletagmanager.com/gtag/js?id=135-394-7148"></script>
+    <!-- Google tag (gtag.js) - Loaded conditionally based on consent -->
+    <!-- Set your GA_MEASUREMENT_ID in .env as VITE_GA_MEASUREMENT_ID -->
     <script>
+      // Initialize gtag with consent mode
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
+      gtag('consent', 'default', {
+        'analytics_storage': 'denied'
+      });
       gtag('js', new Date());
-      gtag('config', '135-394-7148');
     </script>
   </head>
   <body>
