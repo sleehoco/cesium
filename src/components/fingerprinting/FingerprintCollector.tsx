@@ -1,8 +1,9 @@
 
 import React, { useState } from "react";
-import { Play, Loader2, Fingerprint, RefreshCw, Shield } from "lucide-react";
+import { Play, Loader2, Fingerprint, RefreshCw, Shield, AlertCircle } from "lucide-react";
 import { FingerprintData } from "../../pages/BrowserFingerprintingDemo";
 import { fingerprintJSService } from "../../utils/fingerprintJSService";
+import { hasConsent } from "../utils/CookieConsent";
 
 interface FingerprintCollectorProps {
   onDataCollected: (data: FingerprintData) => void;
@@ -18,6 +19,12 @@ const FingerprintCollector: React.FC<FingerprintCollectorProps> = ({
   const [progress, setProgress] = useState(0);
 
   const collectFingerprint = async () => {
+    // Check for fingerprinting consent
+    if (!hasConsent('fingerprinting')) {
+      alert('Please accept fingerprinting in the cookie consent banner to use this feature.');
+      return;
+    }
+
     onStartCollection();
     setProgress(0);
 
@@ -248,6 +255,18 @@ const FingerprintCollector: React.FC<FingerprintCollectorProps> = ({
             </p>
           </div>
         </div>
+
+        {!hasConsent('fingerprinting') && (
+          <div className="flex items-start space-x-3 p-3 bg-yellow-400/10 border border-yellow-400/20 rounded-lg">
+            <AlertCircle className="h-5 w-5 text-yellow-400 mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="text-yellow-400 text-sm font-medium">Consent Required</p>
+              <p className="text-gray-300 text-xs mt-1">
+                Please accept fingerprinting in the cookie consent banner below to use this feature.
+              </p>
+            </div>
+          </div>
+        )}
         
         <p className="text-gray-300 text-sm leading-relaxed">
           This scanner combines professional fingerprinting with educational demonstrations. 
