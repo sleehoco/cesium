@@ -27,6 +27,7 @@ import M365SecurityAssessment from "./pages/M365SecurityAssessment";
 import PolicyGenerator from "./pages/PolicyGenerator";
 import AdminPolicyAccess from "./pages/AdminPolicyAccess";
 import SalesPipeline from "./pages/SalesPipeline";
+import LeadFollowupSettings from "./pages/LeadFollowupSettings";
 import ProtectedRoute from "./components/utils/ProtectedRoute";
 import AdminRoute from "./components/auth/AdminRoute";
 import AdminRoleManagement from "./components/admin/AdminRoleManagement";
@@ -143,6 +144,16 @@ const App = () => {
                 <RouteErrorBoundary routeName="Sales Pipeline">
                   <AdminRoute>
                     <SalesPipeline />
+                  </AdminRoute>
+                </RouteErrorBoundary>
+              } 
+            />
+            <Route 
+              path="/admin/followup-settings" 
+              element={
+                <RouteErrorBoundary routeName="Follow-up Settings">
+                  <AdminRoute>
+                    <LeadFollowupSettings />
                   </AdminRoute>
                 </RouteErrorBoundary>
               } 

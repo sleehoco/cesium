@@ -105,10 +105,15 @@ const AdminDashboard = () => {
                   Track and manage leads from all sources
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-2">
                 <Link to="/admin/sales">
                   <Button className="w-full">
                     View Sales Dashboard
+                  </Button>
+                </Link>
+                <Link to="/admin/followup-settings">
+                  <Button variant="outline" className="w-full">
+                    Follow-up Settings
                   </Button>
                 </Link>
               </CardContent>

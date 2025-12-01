@@ -32,3 +32,6 @@ verify_jwt = false
 
 [functions.send-newsletter]
 verify_jwt = true
+
+[functions.automated-lead-followup]
+verify_jwt = false
