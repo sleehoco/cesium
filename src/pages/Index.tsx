@@ -1,6 +1,6 @@
 
 import React, { Suspense, lazy } from "react";
-import ProfessionalNavbar from "../components/layout/ProfessionalNavbar";
+import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import HeroSection from "../components/sections/HeroSection";
 import ScrollToTop from "../components/utils/ScrollToTop";
@@ -31,8 +31,8 @@ const Index = () => {
         modifiedTime={new Date().toISOString()}
       />
       <PageLoader />
-      <ProfessionalNavbar />
-      <main className="pt-16 lg:pt-20">
+      <Navbar />
+      <main>
         {/* Critical section - load immediately */}
         <HeroSection />
         

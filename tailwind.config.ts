@@ -72,20 +72,6 @@ export default {
 					dark: '#000000',
 					light: '#1A1A1A',
 				},
-				// Professional Blue Color Palette
-				navy: {
-					DEFAULT: 'hsl(var(--navy))',
-					light: 'hsl(var(--navy-light))',
-				},
-				'blue-primary': 'hsl(var(--blue-primary))',
-				'blue-light': 'hsl(var(--blue-light))',
-				'blue-dark': 'hsl(var(--blue-dark))',
-				'gray-pro': {
-					600: 'hsl(var(--gray-600))',
-					700: 'hsl(var(--gray-700))',
-				},
-				success: 'hsl(var(--success))',
-				warning: 'hsl(var(--warning))',
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
