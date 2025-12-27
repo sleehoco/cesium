@@ -90,6 +90,12 @@ const Navbar = () => {
             <Link to="/" className="text-white hover:text-cesium transition-colors">
               Home
             </Link>
+            <Link 
+              to="/podcast"
+              className="text-cesium hover:text-cesium/80 transition-colors font-semibold flex items-center gap-1"
+            >
+              🎙️ Podcast
+            </Link>
             <button 
               onClick={handleServicesClick}
               className="text-white hover:text-cesium transition-colors"
@@ -201,6 +207,13 @@ const Navbar = () => {
                 onClick={() => setIsOpen(false)}
               >
                 Home
+              </Link>
+              <Link 
+                to="/podcast"
+                className="block px-3 py-2 text-cesium hover:text-cesium/80 transition-colors font-semibold"
+                onClick={() => setIsOpen(false)}
+              >
+                🎙️ Podcast
               </Link>
               <button 
                 onClick={() => {

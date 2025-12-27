@@ -824,6 +824,36 @@ export type Database = {
           },
         ]
       }
+      podcast_episodes: {
+        Row: {
+          audio_url: string
+          created_at: string
+          created_by: string | null
+          id: string
+          published_at: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          audio_url: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          published_at?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          audio_url?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          published_at?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       policy_generator_access_requests: {
         Row: {
           company_name: string | null
