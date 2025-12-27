@@ -9,6 +9,7 @@ import Footer from '@/components/layout/Footer';
 import { ArrowLeft, Calendar, Eye, User, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
+import DOMPurify from 'dompurify';
 
 interface BlogPost {
   id: string;
@@ -218,17 +219,24 @@ const BlogPost = () => {
           {/* Content */}
           <div className="prose prose-lg prose-neutral dark:prose-invert max-w-none">
             <div dangerouslySetInnerHTML={{ 
-              __html: blogPost.content
-                .replace(/```mermaid\n([\s\S]*?)\n```/g, 
-                  '<div class="bg-blue-50 dark:bg-blue-950 p-6 border-l-4 border-blue-400 my-6 rounded-r-lg"><strong>Mermaid Diagram:</strong><br/><code class="text-sm">$1</code></div>'
-                )
-                .replace(/\n/g, '<br/>')
-                .replace(/#{1,6}\s([^\n]+)/g, (match, title) => {
-                  const level = match.indexOf(' ');
-                  return `<h${level} class="font-bold mt-8 mb-4 text-primary">${title}</h${level}>`;
-                })
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+              __html: DOMPurify.sanitize(
+                blogPost.content
+                  .replace(/```mermaid\n([\s\S]*?)\n```/g, 
+                    '<div class="bg-blue-50 dark:bg-blue-950 p-6 border-l-4 border-blue-400 my-6 rounded-r-lg"><strong>Mermaid Diagram:</strong><br/><code class="text-sm">$1</code></div>'
+                  )
+                  .replace(/\n/g, '<br/>')
+                  .replace(/#{1,6}\s([^\n]+)/g, (match, title) => {
+                    const level = match.indexOf(' ');
+                    return `<h${level} class="font-bold mt-8 mb-4 text-primary">${title}</h${level}>`;
+                  })
+                  .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                  .replace(/\*(.*?)\*/g, '<em>$1</em>'),
+                {
+                  ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'a', 'code', 'pre', 'div', 'span'],
+                  ALLOWED_ATTR: ['href', 'class', 'style'],
+                  ALLOW_DATA_ATTR: false
+                }
+              )
             }} />
           </div>
         </article>

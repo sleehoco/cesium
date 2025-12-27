@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2, Bot, Users, Zap, FileText, Search, Image, BarChart3, Save, Eye, Globe } from 'lucide-react';
+import DOMPurify from 'dompurify';
 
 interface Agent {
   name: string;
@@ -474,11 +475,18 @@ Cybersecurity is an ongoing process that requires constant vigilance and adaptat
                   <div className="mt-2 p-4 border rounded-lg bg-muted">
                     <div className="prose prose-sm max-w-none">
                       <div dangerouslySetInnerHTML={{ 
-                        __html: result.final_post.content
-                          .substring(0, 1000)
-                          .replace(/```mermaid\n([\s\S]*?)\n```/g, 
-                            '<div class="bg-blue-50 p-4 border-l-4 border-blue-400 my-4"><strong>Mermaid Diagram:</strong> <code>$1</code></div>'
-                          ) + '...'
+                        __html: DOMPurify.sanitize(
+                          result.final_post.content
+                            .substring(0, 1000)
+                            .replace(/```mermaid\n([\s\S]*?)\n```/g, 
+                              '<div class="bg-blue-50 p-4 border-l-4 border-blue-400 my-4"><strong>Mermaid Diagram:</strong> <code>$1</code></div>'
+                            ) + '...',
+                          {
+                            ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'a', 'code', 'pre', 'div', 'span'],
+                            ALLOWED_ATTR: ['href', 'class', 'style'],
+                            ALLOW_DATA_ATTR: false
+                          }
+                        )
                       }} />
                     </div>
                   </div>
