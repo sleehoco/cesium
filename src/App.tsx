@@ -28,6 +28,7 @@ import PolicyGenerator from "./pages/PolicyGenerator";
 import AdminPolicyAccess from "./pages/AdminPolicyAccess";
 import SalesPipeline from "./pages/SalesPipeline";
 import LeadFollowupSettings from "./pages/LeadFollowupSettings";
+import Podcast from "./pages/Podcast";
 import ProtectedRoute from "./components/utils/ProtectedRoute";
 import AdminRoute from "./components/auth/AdminRoute";
 import AdminRoleManagement from "./components/admin/AdminRoleManagement";
@@ -75,6 +76,7 @@ const App = () => {
             <CookieConsent />
           <Routes>
             <Route path="/" element={<RouteErrorBoundary routeName="Home"><Index /></RouteErrorBoundary>} />
+            <Route path="/podcast" element={<RouteErrorBoundary routeName="Podcast"><Podcast /></RouteErrorBoundary>} />
             <Route path="/cyber-dashboard" element={<RouteErrorBoundary routeName="Cyber Dashboard"><CyberDashboard /></RouteErrorBoundary>} />
             <Route path="/services" element={<RouteErrorBoundary routeName="Services"><Services /></RouteErrorBoundary>} />
             <Route path="/contact" element={<RouteErrorBoundary routeName="Contact"><Contact /></RouteErrorBoundary>} />
