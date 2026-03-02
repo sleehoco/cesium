@@ -7,6 +7,7 @@ import ScrollToTop from "../components/utils/ScrollToTop";
 import PageLoader from "../components/utils/PageLoader";
 import MetaTags from "../components/utils/MetaTags";
 import LazyLoad from "../components/utils/LazyLoad";
+import IranCyberRiskBanner from "../components/sections/IranCyberRiskBanner";
 
 // Lazy load non-critical sections
 const ServicesSection = lazy(() => import("../components/sections/ServicesSection"));
@@ -35,6 +36,9 @@ const Index = () => {
       <main>
         {/* Critical section - load immediately */}
         <HeroSection />
+
+        {/* Iran Cyber Risk Advisory */}
+        <IranCyberRiskBanner />
         
         {/* Non-critical sections - lazy load */}
         <LazyLoad height="400px">
