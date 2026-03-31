@@ -1,32 +1,8 @@
 
-# CesiumCyber Security Robots.txt
 User-agent: *
 Allow: /
-
-# Sitemaps
-Sitemap: https://cesiumcyber.com/sitemap.xml
-
-# Crawl delay to not overwhelm the server
-Crawl-delay: 1
-
-# Block access to admin sections (example)
-User-agent: *
 Disallow: /admin/
 Disallow: /login/
+Disallow: /auth/
 
-# Allow major search engines with no crawl delay
-User-agent: Googlebot
-Allow: /
-Crawl-delay: 0
-
-User-agent: Bingbot
-Allow: /
-Crawl-delay: 0
-
-User-agent: Slurp
-Allow: /
-Crawl-delay: 0
-
-User-agent: DuckDuckBot
-Allow: /
-Crawl-delay: 0
+Sitemap: https://cesiumcyber.com/sitemap.xml

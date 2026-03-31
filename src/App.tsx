@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Contact from "./pages/Contact";
 import Services from "./pages/Services";
+import ShannonPlusPlus from "./pages/ShannonPlusPlus";
 import CyberDashboard from "./pages/CyberDashboard";
 import PdfDownload from "./pages/PdfDownload";
 import Founders from "./pages/Founders";
@@ -79,6 +80,7 @@ const App = () => {
             <Route path="/podcast" element={<RouteErrorBoundary routeName="Podcast"><Podcast /></RouteErrorBoundary>} />
             <Route path="/cyber-dashboard" element={<RouteErrorBoundary routeName="Cyber Dashboard"><CyberDashboard /></RouteErrorBoundary>} />
             <Route path="/services" element={<RouteErrorBoundary routeName="Services"><Services /></RouteErrorBoundary>} />
+            <Route path="/shannon-plus-plus" element={<RouteErrorBoundary routeName="Shannon++"><ShannonPlusPlus /></RouteErrorBoundary>} />
             <Route path="/contact" element={<RouteErrorBoundary routeName="Contact"><Contact /></RouteErrorBoundary>} />
             <Route path="/pdf-download" element={<RouteErrorBoundary routeName="PDF Download"><PdfDownload /></RouteErrorBoundary>} />
             <Route path="/founders" element={<RouteErrorBoundary routeName="Team"><Founders /></RouteErrorBoundary>} />

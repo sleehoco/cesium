@@ -14,14 +14,17 @@ const Contact = () => {
   useEffect(() => {
     // Check if there's a pre-filled message in the URL state
     const serviceName = location.state?.serviceName;
-    if (serviceName) {
+    const prefillMessage = location.state?.prefillMessage;
+    if (serviceName || prefillMessage) {
       // Wait for the form to be rendered and then pre-fill it
       setTimeout(() => {
         const messageTextarea = document.querySelector('textarea[name="message"]') as HTMLTextAreaElement;
         const nameInput = document.querySelector('input[name="name"]') as HTMLInputElement;
         
         if (messageTextarea) {
-          const defaultMessage = `I'm interested in ${serviceName}. Please provide more information about your services.`;
+          const defaultMessage =
+            prefillMessage ||
+            `I'm interested in ${serviceName}. Please provide more information about your services.`;
           messageTextarea.value = defaultMessage;
           
           // Trigger events to update form state

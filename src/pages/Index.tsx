@@ -8,11 +8,13 @@ import PageLoader from "../components/utils/PageLoader";
 import MetaTags from "../components/utils/MetaTags";
 import LazyLoad from "../components/utils/LazyLoad";
 import IranCyberRiskBanner from "../components/sections/IranCyberRiskBanner";
+import SecurityRobotSection from "../components/sections/SecurityRobotSection";
 
 // Lazy load non-critical sections
 const ServicesSection = lazy(() => import("../components/sections/ServicesSection"));
 const AboutSection = lazy(() => import("../components/sections/AboutSection"));
 const ApproachSection = lazy(() => import("../components/sections/ApproachSection"));
+const FaqSection = lazy(() => import("../components/sections/FaqSection"));
 const ContactSection = lazy(() => import("../components/sections/ContactSection"));
 
 // Simple fallback for lazy loaded components
@@ -24,9 +26,9 @@ const Index = () => {
   return (
     <div id="top" className="bg-cyber min-h-screen">
       <MetaTags 
-        title="CesiumCyber Security - Advanced Cybersecurity Solutions for Business"
-        description="Protect your digital assets with our comprehensive security solutions including penetration testing, vulnerability assessment, and incident response services."
-        keywords="cybersecurity, penetration testing, vulnerability assessment, security consulting, incident response, cloud security, data protection, GDPR compliance, HIPAA compliance, cybersecurity services"
+        title="Small Business Cybersecurity Services in Maryland | CesiumCyber"
+        description="CesiumCyber provides small business cybersecurity services from Columbia, Maryland, including vulnerability assessments, penetration testing, Microsoft 365 security, incident response, and ongoing protection."
+        keywords="small business cybersecurity, cybersecurity services Maryland, Columbia MD cybersecurity, managed cybersecurity services, penetration testing, vulnerability assessment, Microsoft 365 security, incident response, compliance assistance"
         url="https://cesiumcyber.com"
         canonical="https://cesiumcyber.com"
         modifiedTime={new Date().toISOString()}
@@ -56,6 +58,14 @@ const Index = () => {
         <LazyLoad height="400px">
           <Suspense fallback={<SectionFallback />}>
             <ApproachSection />
+          </Suspense>
+        </LazyLoad>
+
+        <SecurityRobotSection />
+
+        <LazyLoad height="400px">
+          <Suspense fallback={<SectionFallback />}>
+            <FaqSection />
           </Suspense>
         </LazyLoad>
         

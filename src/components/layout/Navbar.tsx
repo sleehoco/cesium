@@ -1,47 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/button';
 import { LogOut, User, Shield } from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [showBorder, setShowBorder] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { user, isAdmin, signOut } = useAuth();
   const location = useLocation();
+  const homeSections = ['top', 'services', 'about', 'approach', 'faq', 'contact'];
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setShowBorder(true);
-      } else {
-        setShowBorder(false);
-      }
-    };
-
+    const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToSection = (sectionId: string) => {
-    if (location.pathname === '/services' && ['top', 'about', 'approach', 'contact'].includes(sectionId)) {
+    if (location.pathname !== '/' && homeSections.includes(sectionId)) {
       window.location.href = `/#${sectionId}`;
       return;
     }
-    
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     } else {
-      // If element not found (maybe lazy loaded), try again after a short delay
       setTimeout(() => {
         const retryElement = document.getElementById(sectionId);
-        if (retryElement) {
-          retryElement.scrollIntoView({ behavior: 'smooth' });
-        }
+        if (retryElement) retryElement.scrollIntoView({ behavior: 'smooth' });
       }, 100);
     }
   };
@@ -69,246 +55,145 @@ const Navbar = () => {
   const isAuthPage = location.pathname === '/auth';
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      showBorder ? 'bg-cyber border-b border-cesium/20 backdrop-blur-sm' : 'bg-cyber/80 backdrop-blur-sm'
-    }`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <img 
-              src="/lovable-uploads/b24b90f5-8a07-4589-821e-d614e2703fa9.png" 
-              alt="CesiumCyber Security Logo" 
-              className="h-8 w-8"
-            />
-            <span className="text-cesium font-bold text-xl">CesiumCyber</span>
-            <span className="text-white font-light">Security</span>
-          </Link>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0A]">
+      {/* Classification Banner */}
+      <div className="border-b border-[#D4AF37]/20 py-1.5 px-4 text-center bg-[#0A0A0A]">
+        <span className="font-tech text-[#D4AF37] text-[10px] tracking-[0.18em] uppercase select-none">
+          CesiumCyber Security | Columbia, MD
+        </span>
+      </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-white hover:text-cesium transition-colors">
-              Home
+      {/* Main Navigation */}
+      <div className={`transition-colors duration-300 ${scrolled ? 'border-b border-[#D4AF37]/15' : 'border-b border-transparent'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-14">
+
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2.5">
+              <img
+                src="/lovable-uploads/b24b90f5-8a07-4589-821e-d614e2703fa9.png"
+                alt="CesiumCyber Logo"
+                className="h-6 w-6"
+              />
+              <span className="font-display text-[#D4AF37] font-bold text-lg tracking-[0.02em]">CesiumCyber</span>
             </Link>
-            <Link 
-              to="/podcast"
-              className="text-cesium hover:text-cesium/80 transition-colors font-semibold flex items-center gap-1"
-            >
-              🎙️ Podcast
-            </Link>
-            <button 
-              onClick={handleServicesClick}
-              className="text-white hover:text-cesium transition-colors"
-            >
-              Services
-            </button>
-            <button 
-              onClick={() => scrollToSection('about')} 
-              className="text-white hover:text-cesium transition-colors"
-            >
-              About
-            </button>
-            <Link 
-              to="/founders"
-              className="text-white hover:text-cesium transition-colors"
-            >
-              Meet The Team
-            </Link>
-            <Link 
-              to="/cyber-dashboard"
-              className="text-white hover:text-cesium transition-colors"
-            >
-              Security Hub
-            </Link>
-            <Link 
-              to="/hidden-code-detector"
-              className="text-white hover:text-cesium transition-colors"
-            >
-              Text Cleaner
-            </Link>
-            <Link 
-              to="/security-scanner"
-              className="text-white hover:text-cesium transition-colors flex items-center gap-1"
-            >
-              <Shield className="h-4 w-4" />
-              Security Scanner
-            </Link>
-            {user ? (
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2 text-white">
-                  <User className="h-4 w-4" />
-                  <span className="text-sm">{user.email}</span>
-                  {isAdmin && <Shield className="h-4 w-4 text-cesium" />}
-                </div>
-                <Button 
-                  onClick={handleSignOut}
-                  variant="outline"
-                  size="sm"
-                  className="border-white text-white hover:bg-white hover:text-black"
-                >
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Sign Out
-                </Button>
-              </div>
-            ) : !isAuthPage ? (
-              <div className="flex items-center gap-2">
-                <Link to="/auth">
-                  <Button variant="outline" size="sm" className="border-white text-white hover:bg-white hover:text-black">
-                    Sign In
-                  </Button>
-                </Link>
-                <button 
-                  onClick={handleContactClick}
-                  className="bg-cesium text-black px-4 py-2 rounded-md hover:bg-cesium/80 transition-colors font-medium"
-                >
-                  Contact Us
-                </button>
-              </div>
-            ) : (
-              <button 
-                onClick={handleContactClick}
-                className="bg-cesium text-black px-4 py-2 rounded-md hover:bg-cesium/80 transition-colors font-medium"
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-7">
+              <Link to="/" className="font-ui text-[15px] text-white/78 hover:text-white transition-colors duration-150">
+                Home
+              </Link>
+              <button
+                onClick={handleServicesClick}
+                className="font-ui text-[15px] text-white/78 hover:text-white transition-colors duration-150"
               >
-                Contact Us
+                Services
               </button>
-            )}
-          </div>
+              <button
+                onClick={() => scrollToSection('about')}
+                className="font-ui text-[15px] text-white/78 hover:text-white transition-colors duration-150"
+              >
+                About
+              </button>
+              <Link to="/founders" className="font-ui text-[15px] text-white/78 hover:text-white transition-colors duration-150">
+                Team
+              </Link>
+              <Link to="/blog" className="font-ui text-[15px] text-white/78 hover:text-white transition-colors duration-150">
+                Blog
+              </Link>
+              <Link to="/shannon-plus-plus" className="font-ui text-[15px] text-white/78 hover:text-white transition-colors duration-150">
+                Shannon++
+              </Link>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden">
+              {user ? (
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-1.5 text-white/45 text-[12px]">
+                    <User className="h-3 w-3" />
+                    <span>{user.email}</span>
+                    {isAdmin && <Shield className="h-3 w-3 text-[#D4AF37]" />}
+                  </div>
+                  <button
+                    onClick={handleSignOut}
+                    className="font-ui text-[14px] text-white/60 hover:text-red-400 transition-colors flex items-center gap-1"
+                  >
+                    <LogOut className="h-3 w-3" />
+                    Sign out
+                  </button>
+                </div>
+              ) : !isAuthPage ? (
+                <div className="flex items-center gap-3">
+                  <Link to="/auth" className="font-ui text-[15px] text-white/78 hover:text-white transition-colors duration-150">
+                    Sign in
+                  </Link>
+                  <button
+                    onClick={handleContactClick}
+                    className="font-ui border border-[#D4AF37] text-[#D4AF37] px-4 py-2 text-[14px] hover:bg-[#D4AF37] hover:text-black transition-colors duration-200"
+                  >
+                    Contact
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={handleContactClick}
+                  className="font-ui border border-[#D4AF37] text-[#D4AF37] px-4 py-2 text-[14px] hover:bg-[#D4AF37] hover:text-black transition-colors duration-200"
+                >
+                  Contact
+                </button>
+              )}
+            </div>
+
+            {/* Mobile toggle */}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-white hover:text-cesium focus:outline-none focus:text-cesium transition-colors"
+              className="md:hidden font-ui text-white/78 hover:text-[#D4AF37] transition-colors text-[14px]"
             >
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
-                />
-              </svg>
+              {isOpen ? 'Close' : 'Menu'}
             </button>
           </div>
         </div>
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden bg-cyber border-t border-cesium/20">
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              <Link 
-                to="/" 
-                className="block px-3 py-2 text-white hover:text-cesium transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                Home
-              </Link>
-              <Link 
-                to="/podcast"
-                className="block px-3 py-2 text-cesium hover:text-cesium/80 transition-colors font-semibold"
-                onClick={() => setIsOpen(false)}
-              >
-                🎙️ Podcast
-              </Link>
-              <button 
-                onClick={() => {
-                  handleServicesClick();
-                  setIsOpen(false);
-                }}
-                className="block w-full text-left px-3 py-2 text-white hover:text-cesium transition-colors"
-              >
-                Services
-              </button>
-              <button 
-                onClick={() => {
-                  scrollToSection('about');
-                  setIsOpen(false);
-                }} 
-                className="block w-full text-left px-3 py-2 text-white hover:text-cesium transition-colors"
-              >
-                About
-              </button>
-              <Link 
-                to="/founders"
-                className="block px-3 py-2 text-white hover:text-cesium transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                Meet The Team
-              </Link>
-              <Link 
-                to="/cyber-dashboard"
-                className="block px-3 py-2 text-white hover:text-cesium transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                Security Hub
-              </Link>
-              <Link 
-                to="/hidden-code-detector"
-                className="block px-3 py-2 text-white hover:text-cesium transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                Text Cleaner
-              </Link>
-              <Link 
-                to="/security-scanner"
-                className="block px-3 py-2 text-white hover:text-cesium transition-colors flex items-center gap-1"
-                onClick={() => setIsOpen(false)}
-              >
-                <Shield className="h-4 w-4" />
-                Security Scanner
-              </Link>
-              
+          <div className="md:hidden border-t border-[#D4AF37]/15 bg-[#0A0A0A]">
+            <div className="px-4 py-5 space-y-4">
+              <Link to="/" className="block font-ui text-[16px] text-white/82 hover:text-white" onClick={() => setIsOpen(false)}>Home</Link>
+              <button onClick={() => { handleServicesClick(); setIsOpen(false); }} className="block font-ui text-[16px] text-white/82 hover:text-white">Services</button>
+              <button onClick={() => { scrollToSection('about'); setIsOpen(false); }} className="block font-ui text-[16px] text-white/82 hover:text-white">About</button>
+              <Link to="/founders" className="block font-ui text-[16px] text-white/82 hover:text-white" onClick={() => setIsOpen(false)}>Team</Link>
+              <Link to="/blog" className="block font-ui text-[16px] text-white/82 hover:text-white" onClick={() => setIsOpen(false)}>Blog</Link>
+              <Link to="/shannon-plus-plus" className="block font-ui text-[16px] text-white/82 hover:text-white" onClick={() => setIsOpen(false)}>Shannon++</Link>
+
               {user ? (
-                <div className="px-3 py-2 border-t border-cesium/20 mt-2">
-                  <div className="flex items-center gap-2 text-white mb-3">
-                    <User className="h-4 w-4" />
-                    <span className="text-sm">{user.email}</span>
-                    {isAdmin && <Shield className="h-4 w-4 text-cesium" />}
+                <div className="border-t border-[#D4AF37]/15 pt-3 mt-3 space-y-2">
+                  <div className="flex items-center gap-1.5 text-white/40">
+                    <User className="h-3 w-3" />
+                    <span className="text-[12px]">{user.email}</span>
+                    {isAdmin && <Shield className="h-3 w-3 text-[#D4AF37]" />}
                   </div>
-                  <button 
-                    onClick={() => {
-                      handleSignOut();
-                      setIsOpen(false);
-                    }}
-                    className="w-full text-left px-3 py-2 bg-white/10 text-white rounded-md hover:bg-white/20 transition-colors font-medium flex items-center gap-2"
+                  <button
+                    onClick={() => { handleSignOut(); setIsOpen(false); }}
+                    className="flex items-center gap-1 font-ui text-[15px] text-red-400"
                   >
-                    <LogOut className="h-4 w-4" />
-                    Sign Out
+                    <LogOut className="h-3 w-3" />
+                    Sign out
                   </button>
                 </div>
               ) : !isAuthPage ? (
-                <div className="px-3 py-2 border-t border-cesium/20 mt-2 space-y-2">
-                  <Link 
-                    to="/auth"
-                    className="block w-full text-center px-3 py-2 bg-white/10 text-white rounded-md hover:bg-white/20 transition-colors font-medium"
-                    onClick={() => setIsOpen(false)}
+                <div className="border-t border-[#D4AF37]/15 pt-3 mt-3 space-y-2">
+                  <Link to="/auth" className="block font-ui text-[16px] text-white/82 hover:text-white" onClick={() => setIsOpen(false)}>Sign in</Link>
+                  <button
+                    onClick={() => { handleContactClick(); setIsOpen(false); }}
+                    className="font-ui border border-[#D4AF37] text-[#D4AF37] px-4 py-2 text-[15px] hover:bg-[#D4AF37] hover:text-black transition-colors"
                   >
-                    Sign In
-                  </Link>
-                  <button 
-                    onClick={() => {
-                      handleContactClick();
-                      setIsOpen(false);
-                    }}
-                    className="block w-full text-left px-3 py-2 bg-cesium text-black rounded-md hover:bg-cesium/80 transition-colors font-medium"
-                  >
-                    Contact Us
+                    Contact
                   </button>
                 </div>
               ) : (
-                <button 
-                  onClick={() => {
-                    handleContactClick();
-                    setIsOpen(false);
-                  }}
-                  className="block w-full text-left px-3 py-2 bg-cesium text-black rounded-md hover:bg-cesium/80 transition-colors font-medium mx-3 mt-2"
+                <button
+                  onClick={() => { handleContactClick(); setIsOpen(false); }}
+                  className="font-ui border border-[#D4AF37] text-[#D4AF37] px-4 py-2 text-[15px] hover:bg-[#D4AF37] hover:text-black transition-colors"
                 >
-                  Contact Us
+                  Contact
                 </button>
               )}
             </div>

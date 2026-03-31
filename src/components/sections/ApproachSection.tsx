@@ -1,84 +1,98 @@
 
-import { Search, FileText, ShieldCheck, ArrowRightCircle } from "lucide-react";
+const phases = [
+  {
+    num: "01",
+    title: "We start by listening.",
+    plain: "Free consultation",
+    description: "We schedule a call, learn about your business, and ask straightforward questions. No forms, no jargon. At the end, you'll know exactly where you stand and what needs attention.",
+    status: "FREE",
+    statusColor: "text-[#D4AF37] border-[#D4AF37]/40",
+  },
+  {
+    num: "02",
+    title: "We show you what we found.",
+    plain: "Plain-English report",
+    description: "We run a security scan and write up what we find in plain language — not a 200-page technical document. You'll understand what's at risk and why it matters for your specific business.",
+    status: "INCLUDED",
+    statusColor: "text-white/40 border-white/20",
+  },
+  {
+    num: "03",
+    title: "We fix it, together.",
+    plain: "Hands-on protection",
+    description: "We set up the right tools and controls for your business — antivirus, email security, backups, monitoring. You approve everything. We handle all the technical setup.",
+    status: "INCLUDED",
+    statusColor: "text-white/40 border-white/20",
+  },
+  {
+    num: "04",
+    title: "We keep watching.",
+    plain: "Ongoing monitoring",
+    description: "Once you're protected, we don't disappear. Our systems watch your network 24/7. If something looks wrong, we alert you immediately — and we handle it so you don't have to.",
+    status: "ONGOING",
+    statusColor: "text-green-400 border-green-400/40",
+  },
+];
 
 const ApproachSection = () => {
-  const approachSteps = [
-    {
-      id: 1,
-      title: "Assessment",
-      description: "We begin with a comprehensive evaluation of your current security posture to identify vulnerabilities and gaps.",
-      icon: Search,
-      color: "text-cesium",
-      bgColor: "bg-cesium/10",
-    },
-    {
-      id: 2,
-      title: "Strategy Development",
-      description: "Based on our findings, we develop a tailored security strategy aligned with your business objectives.",
-      icon: FileText,
-      color: "text-cesium",
-      bgColor: "bg-cesium/10",
-    },
-    {
-      id: 3,
-      title: "Implementation",
-      description: "We deploy advanced security solutions and controls to protect your systems, networks, and data.",
-      icon: ShieldCheck,
-      color: "text-cesium",
-      bgColor: "bg-cesium/10",
-    },
-    {
-      id: 4,
-      title: "Continuous Monitoring",
-      description: "Our team provides ongoing monitoring and optimization to adapt to evolving threats.",
-      icon: ArrowRightCircle,
-      color: "text-cesium",
-      bgColor: "bg-cesium/10",
-    },
-  ];
-
   return (
-    <div id="approach" className="bg-cyber py-20">
+    <section id="approach" className="bg-[#0A0A0A] py-24 border-t border-[#D4AF37]/10" aria-labelledby="approach-heading">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-white">
-            Our <span className="text-cesium">Approach</span>
+
+        {/* Section header */}
+        <div className="inline-flex items-center gap-3 mb-14">
+          <div className="h-px w-8 bg-[#D4AF37]" />
+          <span className="font-tech text-[10px] tracking-[0.18em] text-white/55 uppercase">How it works</span>
+        </div>
+
+        <div className="mb-10">
+          <h2 id="approach-heading" className="font-display text-4xl md:text-5xl font-bold text-white tracking-[-0.03em] mb-3 leading-tight">
+            A simple process for
+            <br />
+            <span className="text-[#D4AF37]">busy business owners.</span>
           </h2>
-          <p className="mt-4 text-xl text-gray-300 max-w-3xl mx-auto">
-            A systematic methodology to ensure comprehensive protection
+          <p className="font-ui text-[18px] text-white/78 max-w-2xl leading-8 mt-4">
+            You do not need an internal security department to get this done. We guide the process, explain each step clearly, and keep the work focused on business risk.
           </p>
         </div>
 
-        <div className="relative">
-          {/* Connection line */}
-          <div className="absolute left-1/2 top-8 bottom-8 w-0.5 bg-cesium/30 transform -translate-x-1/2 hidden md:block"></div>
-          
-          <div className="space-y-12 relative">
-            {approachSteps.map((step, index) => (
-              <div key={step.id} className="relative z-10">
-                <div className={`md:w-1/2 ${index % 2 === 0 ? 'md:pr-12 md:ml-auto' : 'md:pl-12'}`}>
-                  <div className="bg-cyber-dark rounded-lg p-6 border border-cesium/20 hover:border-cesium/50 transition-all duration-300">
-                    <div className="flex items-center mb-4">
-                      <div className={`${step.bgColor} w-12 h-12 rounded-full flex items-center justify-center mr-4`}>
-                        <step.icon className={`h-6 w-6 ${step.color}`} />
-                      </div>
-                      <div>
-                        <span className="text-cesium text-sm font-semibold">Step {step.id}</span>
-                        <h3 className="text-xl font-semibold text-white">{step.title}</h3>
-                      </div>
-                    </div>
-                    <p className="text-gray-400">{step.description}</p>
-                  </div>
-                </div>
-                
-                {/* Circle on the timeline */}
-                <div className="absolute top-6 left-1/2 w-4 h-4 bg-cesium rounded-full transform -translate-x-1/2 hidden md:block"></div>
-              </div>
-            ))}
+        {/* Steps */}
+        <div className="border border-[#D4AF37]/15">
+          <div className="hidden md:grid grid-cols-12 bg-[#D4AF37]/5 border-b border-[#D4AF37]/15 px-6 py-3">
+            <span className="col-span-1 font-tech text-[9px] tracking-[0.14em] text-white/35">STEP</span>
+            <span className="col-span-3 font-tech text-[9px] tracking-[0.14em] text-white/35">WHAT HAPPENS</span>
+            <span className="col-span-6 font-tech text-[9px] tracking-[0.14em] text-white/35">WHAT IT MEANS FOR YOU</span>
+            <span className="col-span-2 font-tech text-[9px] tracking-[0.14em] text-white/35 text-right">COST</span>
           </div>
+
+          {phases.map((phase, i) => (
+            <div
+              key={phase.num}
+              className={`grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-0 px-6 py-6 border-b border-[#D4AF37]/08 hover:bg-[#D4AF37]/[0.03] transition-colors duration-200 ${
+                i % 2 === 0 ? 'bg-transparent' : 'bg-white/[0.01]'
+              }`}
+            >
+              <div className="md:col-span-1">
+                <span className="font-display text-[#D4AF37] text-2xl font-bold">{phase.num}</span>
+              </div>
+              <div className="md:col-span-3">
+                <div className="font-ui text-[18px] font-semibold text-white/92 leading-snug mb-1">{phase.title}</div>
+                <div className="font-ui text-[15px] text-white/62">{phase.plain}</div>
+              </div>
+              <div className="md:col-span-6">
+                <p className="font-ui text-[16px] text-white/78 leading-8">{phase.description}</p>
+              </div>
+              <div className="md:col-span-2 md:text-right">
+                <span className={`font-tech text-[9px] tracking-[0.12em] border px-2 py-1 ${phase.statusColor}`}>
+                  {phase.status}
+                </span>
+              </div>
+            </div>
+          ))}
         </div>
+
       </div>
-    </div>
+    </section>
   );
 };
 

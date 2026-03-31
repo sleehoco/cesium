@@ -13,6 +13,7 @@ interface MetaTagsProps {
   author?: string;
   section?: string;
   canonical?: string;
+  schema?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
 const MetaTags = ({
@@ -26,8 +27,49 @@ const MetaTags = ({
   modifiedTime,
   author = "CesiumCyber Security",
   section = "Cybersecurity",
-  canonical = "https://cesiumcyber.com"
+  canonical = "https://cesiumcyber.com",
+  schema,
 }: MetaTagsProps) => {
+  const imageUrl = image.startsWith("http") ? image : `${url}${image}`;
+  const structuredData = schema ?? {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ProfessionalService",
+        "name": "CesiumCyber Security",
+        "url": url,
+        "image": imageUrl,
+        "logo": `${url}/lovable-uploads/b24b90f5-8a07-4589-821e-d614e2703fa9.png`,
+        "telephone": "+1-301-531-5670",
+        "email": "information@cesiumcyber.com",
+        "priceRange": "$$",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "3500 Cedar Ave.",
+          "addressLocality": "Columbia",
+          "addressRegion": "MD",
+          "postalCode": "21045",
+          "addressCountry": "US"
+        },
+        "areaServed": [
+          "Maryland",
+          "Virginia",
+          "Washington, DC",
+          "United States"
+        ],
+        "sameAs": [
+          "https://twitter.com/cesiumcyber",
+          "https://www.linkedin.com/company/cesiumcyber"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "name": "CesiumCyber Security",
+        "url": url
+      }
+    ]
+  };
+
   return (
     <Helmet>
       {/* Basic Meta Tags */}
@@ -35,6 +77,7 @@ const MetaTags = ({
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
       <meta name="author" content={author} />
+      <meta name="robots" content="index, follow" />
       <link rel="canonical" href={canonical} />
       
       {/* Open Graph / Facebook */}
@@ -42,9 +85,11 @@ const MetaTags = ({
       <meta property="og:url" content={url} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={image} />
+      <meta property="og:image" content={imageUrl} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content="CesiumCyber cybersecurity services" />
+      <meta property="og:locale" content="en_US" />
       <meta property="og:site_name" content="CesiumCyber Security" />
       
       {/* Article specific tags */}
@@ -56,40 +101,13 @@ const MetaTags = ({
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={image} />
+      <meta name="twitter:image" content={imageUrl} />
       <meta name="twitter:site" content="@cesiumcyber" />
+      <meta name="twitter:creator" content="@cesiumcyber" />
       
-      {/* Structured Data for Organization */}
+      {/* Structured Data */}
       <script type="application/ld+json">
-        {`
-          {
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "CesiumCyber Security",
-            "url": "${url}",
-            "logo": "${url}/lovable-uploads/b24b90f5-8a07-4589-821e-d614e2703fa9.png",
-            "contactPoint": {
-              "@type": "ContactPoint",
-              "telephone": "(301) 531-5670",
-              "contactType": "customer service",
-              "email": "information@cesiumcyber.com",
-              "areaServed": "US",
-              "availableLanguage": "English"
-            },
-            "address": {
-              "@type": "PostalAddress",
-              "streetAddress": "3500 Cedar Ave.",
-              "addressLocality": "Columbia",
-              "addressRegion": "MD",
-              "postalCode": "21045",
-              "addressCountry": "US"
-            },
-            "sameAs": [
-              "https://twitter.com/cesiumcyber",
-              "https://www.linkedin.com/company/cesiumcyber"
-            ]
-          }
-        `}
+        {JSON.stringify(structuredData)}
       </script>
     </Helmet>
   );

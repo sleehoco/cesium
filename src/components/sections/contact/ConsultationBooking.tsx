@@ -45,19 +45,19 @@ const ConsultationBooking = ({ className }: ConsultationBookingProps) => {
 
   return (
     <div id="consult" className={`bg-cyber-dark rounded-lg border border-cesium/20 p-6 md:p-8 ${className}`}>
-      <h3 className="text-2xl font-semibold text-white mb-4">Free Consultation</h3>
-      <p className="text-gray-400 mb-6">
+      <h3 className="font-display text-3xl font-semibold text-white mb-4">Free consultation</h3>
+      <p className="font-ui text-[16px] text-gray-300 leading-7 mb-6">
         Schedule a free 30-minute consultation with our security experts to discuss your cybersecurity needs.
       </p>
       <Dialog open={isOpenBooking} onOpenChange={setIsOpenBooking}>
         <DialogTrigger asChild>
-          <Button className="w-full bg-cesium hover:bg-cesium-dark text-cyber-dark font-medium px-4 py-3 rounded-md transition-colors">
-            Book a Consultation
+          <Button className="w-full bg-cesium hover:bg-cesium-dark text-cyber-dark font-ui text-[16px] font-medium px-4 py-3 rounded-md transition-colors">
+            Book a consultation
           </Button>
         </DialogTrigger>
         <DialogContent className="bg-cyber-dark border border-cesium/20 text-white">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-semibold text-white">Book Your Free Consultation</DialogTitle>
+            <DialogTitle className="font-display text-2xl font-semibold text-white">Book your free consultation</DialogTitle>
           </DialogHeader>
           
           <ConsultationBookingForm 

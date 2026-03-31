@@ -1,23 +1,18 @@
 
-import { Mail, Phone, MapPin, Instagram } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const location = useLocation();
+  const homeSections = ['top', 'services', 'about', 'approach', 'faq', 'contact'];
 
-  // Function to handle smooth scrolling for anchor links
   const scrollToSection = (sectionId: string) => {
-    // If we're on the services page and trying to navigate to home sections
-    if (location.pathname === '/services' && ['top', 'about', 'approach', 'contact'].includes(sectionId)) {
+    if (location.pathname !== '/' && homeSections.includes(sectionId)) {
       window.location.href = `/#${sectionId}`;
       return;
     }
-    
     const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (element) element.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleServicesClick = () => {
@@ -29,140 +24,138 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-cyber-dark border-t border-cesium/20 text-gray-300">
-      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Company Info */}
-          <div className="col-span-1 md:col-span-1">
-            <Link to="/" className="flex items-start">
-              <span className="text-cesium font-bold text-2xl">CesiumCyber</span>
-              <span className="text-white font-light ml-2">Security</span>
-            </Link>
-            <p className="mt-4 text-sm">
-              Providing advanced cybersecurity solutions to protect your business from evolving threats.
+    <footer className="bg-[#0A0A0A] border-t border-[#D4AF37]/10">
+
+      {/* Main footer content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+
+          {/* Company */}
+          <div className="md:col-span-1">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="font-display text-[#D4AF37] font-bold text-2xl tracking-[0.01em]">CesiumCyber</span>
+            </div>
+            <p className="font-ui text-[16px] text-white/78 leading-7">
+              Cybersecurity services for small businesses, including assessments,
+              Microsoft 365 security, incident response, and ongoing protection.
             </p>
+            <div className="mt-4 font-ui text-[15px] text-white/58">
+              Columbia, MD | Est. 2009
+            </div>
           </div>
 
           {/* Quick Links */}
-          <div className="col-span-1">
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/" className="hover:text-cesium transition-colors">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <button 
-                  onClick={handleServicesClick}
-                  className="hover:text-cesium transition-colors"
-                >
-                  Services
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => scrollToSection('about')} 
-                  className="hover:text-cesium transition-colors"
-                >
-                  About Us
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => scrollToSection('approach')} 
-                  className="hover:text-cesium transition-colors"
-                >
-                  Our Approach
-                </button>
-              </li>
+          <div className="md:col-span-1">
+            <div className="font-tech text-[10px] tracking-[0.16em] text-white/45 mb-5 border-b border-[#D4AF37]/10 pb-2">
+              NAVIGATION
+            </div>
+            <ul className="space-y-2.5">
+              {[
+                { label: 'Home', href: '/', type: 'link' },
+                { label: 'Services', onClick: handleServicesClick, type: 'button' },
+                { label: 'About', onClick: () => scrollToSection('about'), type: 'button' },
+                { label: 'Our approach', onClick: () => scrollToSection('approach'), type: 'button' },
+                { label: 'FAQ', onClick: () => scrollToSection('faq'), type: 'button' },
+                { label: 'Contact', onClick: () => scrollToSection('contact'), type: 'button' },
+                { label: 'Podcast', href: '/podcast', type: 'link' },
+                { label: 'Meet the team', href: '/founders', type: 'link' },
+                { label: 'Shannon++', href: '/shannon-plus-plus', type: 'link' },
+              ].map((item) =>
+                item.type === 'link' ? (
+                  <li key={item.label}>
+                    <Link to={item.href!} className="font-ui text-[16px] text-white/78 hover:text-[#D4AF37] transition-colors">
+                      {item.label}
+                    </Link>
+                  </li>
+                ) : (
+                  <li key={item.label}>
+                    <button onClick={item.onClick} className="font-ui text-[16px] text-white/78 hover:text-[#D4AF37] transition-colors">
+                      {item.label}
+                    </button>
+                  </li>
+                )
+              )}
             </ul>
           </div>
 
           {/* Services */}
-          <div className="col-span-1">
-            <h3 className="text-lg font-semibold mb-4">Services</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link 
-                  to="/services#vulnerability-assessment"
-                  className="hover:text-cesium transition-colors"
-                >
-                  Vulnerability Assessment
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/services#penetration-testing"
-                  className="hover:text-cesium transition-colors"
-                >
-                  Penetration Testing
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/services#security-consulting"
-                  className="hover:text-cesium transition-colors"
-                >
-                  Security Consulting
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/services#incident-response"
-                  className="hover:text-cesium transition-colors"
-                >
-                  Incident Response
-                </Link>
-              </li>
+          <div className="md:col-span-1">
+            <div className="font-tech text-[10px] tracking-[0.16em] text-white/45 mb-5 border-b border-[#D4AF37]/10 pb-2">
+              CORE SERVICES
+            </div>
+            <ul className="space-y-2.5">
+              {[
+                { label: 'Managed cybersecurity', href: '/services' },
+                { label: 'Microsoft 365 security', href: '/m365-security-assessment' },
+                { label: 'Vulnerability assessment', href: '/services#vulnerability-assessment' },
+                { label: 'Penetration testing', href: '/services#penetration-testing' },
+                { label: 'Incident response', href: '/services#incident-response' },
+                { label: 'Compliance assistance', href: '/services#compliance-assistance' },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link to={item.href} className="font-ui text-[16px] text-white/78 hover:text-[#D4AF37] transition-colors">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Contact */}
-          <div className="col-span-1">
-            <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
-            <ul className="space-y-3">
-              <li className="flex items-start">
-                <MapPin className="h-5 w-5 text-cesium mr-2 mt-0.5" />
-                <span>3500 Cedar Ave. Columbia, MD 21045</span>
+          <div className="md:col-span-1">
+            <div className="font-tech text-[10px] tracking-[0.16em] text-white/45 mb-5 border-b border-[#D4AF37]/10 pb-2">
+              CONTACT
+            </div>
+            <ul className="space-y-4">
+              <li>
+                <span className="font-tech text-white/40 text-[10px] tracking-[0.12em] block mb-1">Location</span>
+                <span className="font-ui text-[16px] text-white/82 leading-7">3500 Cedar Ave. Columbia, MD 21045</span>
               </li>
-              <li className="flex items-center">
-                <Phone className="h-5 w-5 text-cesium mr-2" />
-                <span>(301) 531-5670</span>
+              <li>
+                <span className="font-tech text-white/40 text-[10px] tracking-[0.12em] block mb-1">Service area</span>
+                <span className="font-ui text-[16px] text-white/82 leading-7">Maryland and remote engagements nationwide</span>
               </li>
-              <li className="flex items-center">
-                <Mail className="h-5 w-5 text-cesium mr-2" />
-                <span>information@cesiumcyber.com</span>
+              <li>
+                <span className="font-tech text-white/40 text-[10px] tracking-[0.12em] block mb-1">Phone</span>
+                <span className="font-ui text-[16px] text-white/82 leading-7">(301) 531-5670</span>
               </li>
-              <li className="flex items-center">
-                <Instagram className="h-5 w-5 text-cesium mr-2" />
-                <a 
-                  href="https://instagram.com/cesiumcyber" 
-                  target="_blank" 
+              <li>
+                <span className="font-tech text-white/40 text-[10px] tracking-[0.12em] block mb-1">Email</span>
+                <span className="font-ui text-[16px] text-white/82 leading-7">information@cesiumcyber.com</span>
+              </li>
+              <li>
+                <span className="font-tech text-white/40 text-[10px] tracking-[0.12em] block mb-1">Instagram</span>
+                <a
+                  href="https://instagram.com/cesiumcyber"
+                  target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-cesium transition-colors"
+                  className="font-ui text-[16px] text-white/82 hover:text-[#D4AF37] transition-colors"
                 >
                   @cesiumcyber
                 </a>
               </li>
             </ul>
           </div>
-        </div>
 
-        <div className="border-t border-cesium/10 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-sm text-gray-400">
-            © {currentYear} CesiumCyber Security. All rights reserved.
+        </div>
+      </div>
+
+      {/* Classification Footer Banner */}
+      <div className="border-t border-[#D4AF37]/10 py-4 px-4">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-3">
+          <p className="font-ui text-[14px] text-white/52 text-center md:text-left">
+            CesiumCyber Security | Small business cybersecurity | Columbia, Maryland
           </p>
-          <div className="mt-4 md:mt-0 flex space-x-6">
-            <button className="text-gray-400 hover:text-cesium">
-              Privacy Policy
-            </button>
-            <button className="text-gray-400 hover:text-cesium">
-              Terms of Service
-            </button>
+          <div className="flex items-center gap-4 font-ui text-[14px] text-white/52 flex-wrap justify-center">
+            <span>© {currentYear} CesiumCyber Security</span>
+            <span className="text-white/20">|</span>
+            <button className="hover:text-[#D4AF37] transition-colors">Privacy policy</button>
+            <span className="text-white/20">|</span>
+            <button className="hover:text-[#D4AF37] transition-colors">Terms of service</button>
           </div>
         </div>
       </div>
+
     </footer>
   );
 };
