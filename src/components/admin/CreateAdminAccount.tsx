@@ -35,8 +35,8 @@ const CreateAdminAccount = () => {
       if (data.success) {
         setSuccess(true);
         toast({
-          title: "Admin Account Created!",
-          description: `Account created for ${email}. Credentials sent via email.`,
+          title: "Admin Invite Sent",
+          description: `Admin access was provisioned for ${email}. A secure setup link was emailed.`,
         });
         
         // Reset form
@@ -46,11 +46,12 @@ const CreateAdminAccount = () => {
       } else {
         throw new Error(data.error || 'Failed to create admin account');
       }
-    } catch (error: any) {
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to create admin account';
       console.error('Error creating admin account:', error);
       toast({
         title: "Error",
-        description: error.message || 'Failed to create admin account',
+        description: message,
         variant: "destructive",
       });
     } finally {
@@ -67,7 +68,7 @@ const CreateAdminAccount = () => {
           </div>
           <h2 className="text-2xl font-bold mb-2">Account Created!</h2>
           <p className="text-muted-foreground mb-4">
-            Admin account has been created and credentials have been sent to the specified email address.
+            Admin access has been provisioned and a secure setup link has been sent to the specified email address.
           </p>
           <Button onClick={() => setSuccess(false)}>
             Create Another Account
@@ -86,7 +87,7 @@ const CreateAdminAccount = () => {
         </div>
         <CardTitle className="text-xl">Create New Admin User</CardTitle>
         <CardDescription>
-          This will create a new admin account and send the login credentials via email.
+          This will provision a new admin account and send a secure setup link via email.
         </CardDescription>
       </CardHeader>
       
@@ -144,8 +145,7 @@ const CreateAdminAccount = () => {
           
           <Alert>
             <AlertDescription>
-              A secure temporary password will be generated and sent to the specified email address. 
-              The user should change their password after first login.
+              The recipient will receive a secure invite or password reset link. No plaintext password is emailed.
             </AlertDescription>
           </Alert>
           

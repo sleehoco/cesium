@@ -25,7 +25,7 @@ interface RequestAccessFormProps {
   onAccessGranted: (accessKey: string) => void;
 }
 
-const RequestAccessForm = ({ onAccessGranted }: RequestAccessFormProps) => {
+const RequestAccessForm = ({ onAccessGranted: _onAccessGranted }: RequestAccessFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 

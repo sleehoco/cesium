@@ -106,6 +106,30 @@
   html {
     scroll-behavior: smooth;
   }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  li,
+  blockquote {
+    cursor: grab;
+  }
+
+  h1:active,
+  h2:active,
+  h3:active,
+  h4:active,
+  h5:active,
+  h6:active,
+  p:active,
+  li:active,
+  blockquote:active {
+    cursor: grabbing;
+  }
 }
 
 @layer components {
@@ -236,4 +260,118 @@ button {
 .card-hover:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.text-pull-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.text-pull-controls {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 110;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  border-radius: 999px;
+  background: rgba(7, 9, 15, 0.82);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.32);
+}
+
+.text-pull-controls-label {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(248, 245, 236, 0.72);
+}
+
+.text-pull-control {
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(248, 245, 236, 0.84);
+  padding: 0.3rem 0.7rem;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+}
+
+.text-pull-control.is-active {
+  border-color: rgba(212, 175, 55, 0.64);
+  background: rgba(212, 175, 55, 0.14);
+  color: rgba(255, 236, 184, 0.98);
+  box-shadow: inset 0 0 0 1px rgba(255, 232, 170, 0.14);
+}
+
+.text-pull-ghost {
+  position: fixed;
+  padding: 0.35rem 0.45rem;
+  background: linear-gradient(135deg, rgba(10, 10, 10, 0.88), rgba(22, 22, 22, 0.72));
+  border: 1px solid rgba(212, 175, 55, 0.5);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(12px);
+  transform-origin: 8% 50%;
+  transition:
+    opacity 220ms ease,
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  white-space: pre-wrap;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.text-pull-ghost.is-releasing {
+  transition:
+    opacity 220ms ease,
+    transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.text-pull-segment {
+  border-color: rgba(212, 175, 55, 0.22);
+  background: linear-gradient(135deg, rgba(12, 12, 12, 0.46), rgba(20, 20, 20, 0.26));
+}
+
+.text-pull-head {
+  border-color: rgba(212, 175, 55, 0.62);
+  background: linear-gradient(135deg, rgba(15, 15, 15, 0.96), rgba(34, 29, 18, 0.76));
+}
+
+.text-snake-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.text-snake-glyph {
+  position: fixed;
+  display: inline-block;
+  white-space: pre;
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+}
+
+.text-scatter-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.text-scatter-glyph {
+  position: fixed;
+  display: inline-block;
+  white-space: pre;
+  transform-origin: 50% 50%;
+  will-change: transform, opacity, filter;
+}
+
+.text-pull-source-active {
+  opacity: 0.28;
+  transition: opacity 120ms ease;
 }

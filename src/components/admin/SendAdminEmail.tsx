@@ -43,10 +43,11 @@ const SendAdminEmail = () => {
       } else {
         throw new Error(data?.error || 'Unknown error occurred');
       }
-    } catch (error: any) {
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to send email';
       console.error('Error sending email:', error);
       setStatus('error');
-      setMessage(error.message || 'Failed to send email');
+      setMessage(message);
     } finally {
       setLoading(false);
     }

@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet";
+import PretextText from '@/components/utils/PretextText';
 
 const faqs = [
   {
@@ -55,16 +56,32 @@ const FaqSection = () => {
             <br />
             <span className="text-[#D4AF37]">clear answers.</span>
           </h2>
-          <p className="font-ui text-[18px] text-white/78 leading-8">
-            These are the questions small business owners usually ask before they hire a cybersecurity partner.
-          </p>
+          <PretextText
+            as="p"
+            text="These are the questions small business owners usually ask before they hire a cybersecurity partner."
+            lineHeight={32}
+            font={{ base: '400 18px "Space Grotesk"', md: '400 18px "Space Grotesk"' }}
+            className="font-ui text-[18px] text-white/78 leading-8"
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-[#D4AF37]/10">
           {faqs.map((faq) => (
             <article key={faq.question} className="bg-[#0A0A0A] p-8 border border-transparent hover:bg-[#0F0F0F] transition-colors">
-              <h3 className="font-display text-[26px] font-bold text-white mb-4 leading-tight">{faq.question}</h3>
-              <p className="font-ui text-[16px] text-white/78 leading-8">{faq.answer}</p>
+              <PretextText
+                as="h3"
+                text={faq.question}
+                lineHeight={32}
+                font={{ base: '700 26px "Space Grotesk"', md: '700 26px "Space Grotesk"' }}
+                className="font-display text-[26px] font-bold text-white mb-4 leading-tight"
+              />
+              <PretextText
+                as="p"
+                text={faq.answer}
+                lineHeight={32}
+                font={{ base: '400 16px "Space Grotesk"', md: '400 16px "Space Grotesk"' }}
+                className="font-ui text-[16px] text-white/78 leading-8"
+              />
             </article>
           ))}
         </div>

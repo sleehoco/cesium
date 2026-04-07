@@ -9,9 +9,9 @@ const HiddenCodeDetectorPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Hidden Code Detector - Remove Hidden Characters from AI Text | CesiumCyber Security</title>
-        <meta name="description" content="Free tool to detect and remove hidden codes, invisible characters, and embedded codes from OpenGPT and other AI-generated texts." />
-        <meta name="keywords" content="hidden code detector, invisible characters, AI text cleaner, Unicode cleaner, text sanitizer, security tool" />
+        <title>Hidden Code & Source Map Detector | CesiumCyber Security</title>
+        <meta name="description" content="Free tool to remove hidden characters from AI text and check websites for source map and debug artifact exposure." />
+        <meta name="keywords" content="hidden code detector, source map leak checker, invisible characters, AI text cleaner, Unicode cleaner, debug artifact scanner, security tool" />
       </Helmet>
       
       <BackgroundAnimations />

@@ -30,13 +30,14 @@ import AdminPolicyAccess from "./pages/AdminPolicyAccess";
 import SalesPipeline from "./pages/SalesPipeline";
 import LeadFollowupSettings from "./pages/LeadFollowupSettings";
 import Podcast from "./pages/Podcast";
+import TextArcade from "./pages/TextArcade";
 import ProtectedRoute from "./components/utils/ProtectedRoute";
 import AdminRoute from "./components/auth/AdminRoute";
 import AdminRoleManagement from "./components/admin/AdminRoleManagement";
-import BadgeRemover from "./components/utils/BadgeRemover";
 import GoogleAnalytics from "./components/utils/GoogleAnalytics";
 import { CookieConsent } from "./components/utils/CookieConsent";
 import { RouteErrorBoundary } from "./components/utils/RouteErrorBoundary";
+import TextPullEffect from "./components/utils/TextPullEffect";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -73,11 +74,12 @@ const App = () => {
         <AuthProvider>
           <BrowserRouter>
             {GA_MEASUREMENT_ID && <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />}
-            <BadgeRemover />
             <CookieConsent />
+            <TextPullEffect />
           <Routes>
             <Route path="/" element={<RouteErrorBoundary routeName="Home"><Index /></RouteErrorBoundary>} />
             <Route path="/podcast" element={<RouteErrorBoundary routeName="Podcast"><Podcast /></RouteErrorBoundary>} />
+            <Route path="/text-arcade" element={<RouteErrorBoundary routeName="Text Arcade"><TextArcade /></RouteErrorBoundary>} />
             <Route path="/cyber-dashboard" element={<RouteErrorBoundary routeName="Cyber Dashboard"><CyberDashboard /></RouteErrorBoundary>} />
             <Route path="/services" element={<RouteErrorBoundary routeName="Services"><Services /></RouteErrorBoundary>} />
             <Route path="/shannon-plus-plus" element={<RouteErrorBoundary routeName="Shannon++"><ShannonPlusPlus /></RouteErrorBoundary>} />
@@ -105,7 +107,16 @@ const App = () => {
               } 
             />
           <Route path="/policy-generator" element={<RouteErrorBoundary routeName="Policy Generator"><PolicyGenerator /></RouteErrorBoundary>} />
-          <Route path="/admin/policy-access" element={<RouteErrorBoundary routeName="Admin Policy Access"><AdminPolicyAccess /></RouteErrorBoundary>} />
+          <Route
+            path="/admin/policy-access"
+            element={
+              <RouteErrorBoundary routeName="Admin Policy Access">
+                <AdminRoute>
+                  <AdminPolicyAccess />
+                </AdminRoute>
+              </RouteErrorBoundary>
+            }
+          />
             {/* Redirect old insecure login route to secure auth */}
             <Route path="/login" element={<Navigate to="/auth" replace />} />
             <Route 

@@ -13,6 +13,8 @@ interface CreateAdminRequest {
   lastName?: string;
 }
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -68,21 +70,32 @@ const handler = async (req: Request): Promise<Response> => {
 
     const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
     const { email, firstName = "Admin", lastName = "User" }: CreateAdminRequest = await req.json();
+    const appUrl =
+      Deno.env.get("PUBLIC_SITE_URL") ??
+      req.headers.get("origin") ??
+      "https://cesiumcyber.com";
 
-    // Generate a secure temporary password
-    const tempPassword = generateSecurePassword();
+    if (!emailRegex.test(email)) {
+      return new Response(
+        JSON.stringify({ error: 'A valid email address is required', success: false }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
 
     console.log(`Creating admin account for: ${email}`);
-
-    // Create the user with admin client
-    const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
+    const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.generateLink({
+      type: 'invite',
       email,
-      password: tempPassword,
-      email_confirm: true,
-      user_metadata: {
-        first_name: firstName,
-        last_name: lastName
-      }
+      options: {
+        redirectTo: `${appUrl}/auth`,
+        data: {
+          first_name: firstName,
+          last_name: lastName,
+        },
+      },
     });
 
     if (authError) {
@@ -143,9 +156,27 @@ const handler = async (req: Request): Promise<Response> => {
 
         console.log("Admin role assigned to existing user successfully");
 
+        const { data: recoveryLinkData, error: recoveryLinkError } = await supabaseAdmin.auth.admin.generateLink({
+          type: 'recovery',
+          email,
+          options: {
+            redirectTo: `${appUrl}/auth`,
+          },
+        });
+
+        if (recoveryLinkError || !recoveryLinkData.properties?.action_link) {
+          await supabaseAdmin
+            .from('user_roles')
+            .delete()
+            .eq('user_id', existingUser.id)
+            .eq('role', 'admin');
+
+          throw new Error(`Failed to create secure setup link: ${recoveryLinkError?.message ?? 'missing recovery link'}`);
+        }
+
         // Send notification email to existing user
         const emailResponse = await resend.emails.send({
-          from: "CesiumCyber Admin <onboarding@resend.dev>",
+          from: "CesiumCyber Admin <no-reply@cesiumcyber.com>",
           to: [email],
           subject: "Admin Access Granted - CesiumCyber",
           html: `
@@ -158,30 +189,35 @@ const handler = async (req: Request): Promise<Response> => {
               </div>
               
               <div style="text-align: center; margin: 30px 0;">
-                <a href="${supabaseUrl.replace('.supabase.co', '.lovableproject.com')}/auth" 
+                <a href="${recoveryLinkData.properties.action_link}" 
                    style="background: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
-                  Login to Your Account
+                  Set Your Password
                 </a>
               </div>
               
               <p style="color: #666; font-size: 14px; text-align: center;">
-                You can now access all administrative features. If you have any questions, please contact the system administrator.
+                You can now access all administrative features after setting a password. If you have any questions, please contact the system administrator.
               </p>
             </div>
           `,
         });
 
         if (emailResponse.error) {
-          console.error("Error sending notification email:", emailResponse.error);
-          // Don't throw error here, admin access was already granted successfully
-        } else {
-          console.log("Notification email sent successfully:", emailResponse.data);
+          await supabaseAdmin
+            .from('user_roles')
+            .delete()
+            .eq('user_id', existingUser.id)
+            .eq('role', 'admin');
+
+          throw new Error(`Failed to send setup email: ${emailResponse.error.message}`);
         }
+
+        console.log("Notification email sent successfully:", emailResponse.data);
 
         return new Response(
           JSON.stringify({
             success: true,
-            message: `Existing user ${email} has been granted admin access and notified via email.`,
+            message: `Existing user ${email} has been granted admin access and sent a secure setup link.`,
             userId: existingUser.id,
             email: email,
             grantedAccess: true
@@ -196,7 +232,7 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error(`Failed to create user: ${authError.message}`);
     }
 
-    if (!authUser.user) {
+    if (!authUser.user || !authUser.properties?.action_link) {
       throw new Error("User creation failed - no user returned");
     }
 
@@ -221,27 +257,23 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email with credentials
     const emailResponse = await resend.emails.send({
-      from: "CesiumCyber Admin <onboarding@resend.dev>",
+      from: "CesiumCyber Admin <no-reply@cesiumcyber.com>",
       to: [email],
-      subject: "Your CesiumCyber Admin Account",
+      subject: "Your CesiumCyber Admin Invite",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <h1 style="color: #333; text-align: center;">Welcome to CesiumCyber</h1>
           
           <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h2 style="color: #333; margin-top: 0;">Your Admin Account Details</h2>
+            <h2 style="color: #333; margin-top: 0;">Your Admin Invite</h2>
             <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Temporary Password:</strong> <code style="background: #e9ecef; padding: 4px 8px; border-radius: 4px;">${tempPassword}</code></p>
-          </div>
-          
-          <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin: 20px 0;">
-            <p style="margin: 0; color: #856404;"><strong>Important:</strong> Please change your password immediately after logging in for security purposes.</p>
+            <p>Use the secure link below to activate your admin access and set your password.</p>
           </div>
           
           <div style="text-align: center; margin: 30px 0;">
-            <a href="${supabaseUrl.replace('.supabase.co', '.lovableproject.com')}/auth" 
+            <a href="${authUser.properties.action_link}" 
                style="background: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
-              Login to Your Account
+              Set Up Your Account
             </a>
           </div>
           
@@ -254,6 +286,12 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (emailResponse.error) {
       console.error("Error sending email:", emailResponse.error);
+      await supabaseAdmin
+        .from('user_roles')
+        .delete()
+        .eq('user_id', authUser.user.id)
+        .eq('role', 'admin');
+      await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);
       throw new Error(`Failed to send email: ${emailResponse.error.message}`);
     }
 
@@ -262,7 +300,7 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(
       JSON.stringify({
         success: true,
-        message: "Admin account created and credentials sent via email",
+        message: "Admin account created and secure setup link sent via email",
         userId: authUser.user.id,
         email: email
       }), 
@@ -274,12 +312,12 @@ const handler = async (req: Request): Promise<Response> => {
         },
       }
     );
-
-  } catch (error: any) {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error occurred";
     console.error("Error in create-admin-account function:", error);
     return new Response(
       JSON.stringify({ 
-        error: error.message,
+        error: message,
         success: false 
       }),
       {
@@ -292,17 +330,5 @@ const handler = async (req: Request): Promise<Response> => {
     );
   }
 };
-
-function generateSecurePassword(): string {
-  const length = 16;
-  const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-  let password = "";
-  
-  for (let i = 0; i < length; i++) {
-    password += charset.charAt(Math.floor(Math.random() * charset.length));
-  }
-  
-  return password;
-}
 
 serve(handler);

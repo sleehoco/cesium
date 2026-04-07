@@ -1,4 +1,6 @@
 
+import PretextText from '@/components/utils/PretextText';
+
 const facts = [
   { label: "Certifications", value: "CISSP, CEH, PenTest+" },
   { label: "Security partner", value: "Huntress — 24/7 threat monitoring" },
@@ -38,9 +40,12 @@ const AboutSection = () => {
           {/* Left: Plain-language about */}
           <div>
             <div className="border-l-2 border-[#D4AF37] pl-6 mb-8">
-              <div className="font-ui text-[16px] text-white/76 leading-7">
-                A cybersecurity firm that actually explains things in plain English.
-              </div>
+              <PretextText
+                text="A cybersecurity firm that actually explains things in plain English."
+                lineHeight={28}
+                font={{ base: '400 16px "Space Grotesk"', md: '400 16px "Space Grotesk"' }}
+                className="font-ui text-[16px] text-white/76 leading-7"
+              />
             </div>
 
             <h2 id="about-heading" className="font-display text-4xl md:text-5xl font-bold text-white tracking-[-0.03em] mb-8 leading-tight">
@@ -49,16 +54,28 @@ const AboutSection = () => {
               <span className="text-[#D4AF37]">Real accountability.</span>
             </h2>
 
-            <div className="space-y-5 font-ui text-[17px] text-white/80 leading-8">
-              <p>
-                We started CesiumCyber because too many small businesses were getting hurt by preventable cyber incidents and getting priced out of serious security help. That gap is still where we work best.
-              </p>
-              <p>
-                Our team is certified, experienced, and based in Columbia, Maryland. We support local companies and remote clients across the country with protection that is practical enough for lean teams.
-              </p>
-              <p>
-                You do not need to translate security jargon, manage five vendors, or guess which alert matters. We explain the risk, prioritize the fix, and stay reachable when decisions need to be made quickly.
-              </p>
+            <div className="space-y-5">
+              <PretextText
+                as="p"
+                text="We started CesiumCyber because too many small businesses were getting hurt by preventable cyber incidents and getting priced out of serious security help. That gap is still where we work best."
+                lineHeight={32}
+                font={{ base: '400 17px "Space Grotesk"', md: '400 17px "Space Grotesk"' }}
+                className="font-ui text-[17px] text-white/80 leading-8"
+              />
+              <PretextText
+                as="p"
+                text="Our team is certified, experienced, and based in Columbia, Maryland. We support local companies and remote clients across the country with protection that is practical enough for lean teams."
+                lineHeight={32}
+                font={{ base: '400 17px "Space Grotesk"', md: '400 17px "Space Grotesk"' }}
+                className="font-ui text-[17px] text-white/80 leading-8"
+              />
+              <PretextText
+                as="p"
+                text="You do not need to translate security jargon, manage five vendors, or guess which alert matters. We explain the risk, prioritize the fix, and stay reachable when decisions need to be made quickly."
+                lineHeight={32}
+                font={{ base: '400 17px "Space Grotesk"', md: '400 17px "Space Grotesk"' }}
+                className="font-ui text-[17px] text-white/80 leading-8"
+              />
             </div>
 
             <div className="mt-10 space-y-3">
@@ -91,13 +108,23 @@ const AboutSection = () => {
                 }`}
               >
                 <span className="font-tech text-[10px] tracking-[0.12em] text-white/35 w-32 shrink-0 pt-px">{row.label}</span>
-                <span className="font-ui text-[16px] text-white/82 leading-7">{row.value}</span>
+                <PretextText
+                  text={row.value}
+                  lineHeight={28}
+                  font={{ base: '400 16px "Space Grotesk"', md: '400 16px "Space Grotesk"' }}
+                  className="font-ui text-[16px] text-white/82 leading-7"
+                />
               </div>
             ))}
 
             <div className="px-5 py-4 flex items-center gap-3">
               <div className="h-1.5 w-1.5 bg-green-400 rounded-full animate-pulse" />
-              <span className="font-ui text-[15px] text-green-400/80">Available now. Response within 24 hours.</span>
+              <PretextText
+                text="Available now. Response within 24 hours."
+                lineHeight={24}
+                font={{ base: '400 15px "Space Grotesk"', md: '400 15px "Space Grotesk"' }}
+                className="font-ui text-[15px] text-green-400/80"
+              />
             </div>
           </div>
 

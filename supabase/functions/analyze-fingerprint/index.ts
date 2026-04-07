@@ -21,7 +21,7 @@ serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const lovableApiKey = Deno.env.get('LOVABLE_API_KEY')!;
+    const geminiApiKey = Deno.env.get('GEMINI_API_KEY')!;
 
     const supabase = createClient(supabaseUrl, supabaseKey);
     
@@ -55,20 +55,23 @@ Connection Metadata: ${JSON.stringify(connectionMetadata, null, 2)}
 
 Provide analysis in JSON format with keys: riskScore, threats, deviceInfo, confidence, recommendations`;
 
-    // Call Lovable AI for analysis
-    const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+    // Call Gemini directly for analysis
+    const aiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${geminiApiKey}`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${lovableApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: `${systemPrompt}\n\n${userPrompt}` }],
+          }
         ],
-        temperature: 0.3,
+        generationConfig: {
+          temperature: 0.3,
+          maxOutputTokens: 1200,
+        },
       }),
     });
 
@@ -93,7 +96,7 @@ Provide analysis in JSON format with keys: riskScore, threats, deviceInfo, confi
     }
 
     const aiData = await aiResponse.json();
-    const aiAnalysisText = aiData.choices[0]?.message?.content || '';
+    const aiAnalysisText = aiData.candidates?.[0]?.content?.parts?.[0]?.text || '';
     
     console.log('AI Analysis:', aiAnalysisText);
 

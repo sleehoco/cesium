@@ -1,5 +1,5 @@
 
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import HeroSection from "../components/sections/HeroSection";
@@ -9,6 +9,7 @@ import MetaTags from "../components/utils/MetaTags";
 import LazyLoad from "../components/utils/LazyLoad";
 import IranCyberRiskBanner from "../components/sections/IranCyberRiskBanner";
 import SecurityRobotSection from "../components/sections/SecurityRobotSection";
+import CesiumCyberTextGraphic from "../components/sections/CesiumCyberTextGraphic";
 
 // Lazy load non-critical sections
 const ServicesSection = lazy(() => import("../components/sections/ServicesSection"));
@@ -23,6 +24,25 @@ const SectionFallback = () => (
 );
 
 const Index = () => {
+  const [introPhase, setIntroPhase] = useState<'visible' | 'dissolving' | 'hidden'>('visible');
+  const isIntroVisible = introPhase !== 'hidden';
+  const isIntroDissolving = introPhase === 'dissolving';
+
+  useEffect(() => {
+    const dissolveTimer = window.setTimeout(() => {
+      setIntroPhase('dissolving');
+    }, 2200);
+
+    const hideTimer = window.setTimeout(() => {
+      setIntroPhase('hidden');
+    }, 3200);
+
+    return () => {
+      window.clearTimeout(dissolveTimer);
+      window.clearTimeout(hideTimer);
+    };
+  }, []);
+
   return (
     <div id="top" className="bg-cyber min-h-screen">
       <MetaTags 
@@ -34,6 +54,16 @@ const Index = () => {
         modifiedTime={new Date().toISOString()}
       />
       <PageLoader />
+      {isIntroVisible ? <CesiumCyberTextGraphic fullscreen dissolving={isIntroDissolving} /> : null}
+      <div
+        className={`transition-all duration-1000 ease-out ${
+          introPhase === 'visible'
+            ? 'opacity-0 blur-[8px] scale-[1.01]'
+            : isIntroDissolving
+              ? 'opacity-100 blur-0 scale-100'
+              : 'opacity-100 blur-0 scale-100'
+        }`}
+      >
       <Navbar />
       <main>
         {/* Critical section - load immediately */}
@@ -77,6 +107,7 @@ const Index = () => {
       </main>
       <Footer />
       <ScrollToTop />
+      </div>
     </div>
   );
 };

@@ -12,6 +12,12 @@ verify_jwt = false
 [functions.send-contact-email]
 verify_jwt = false
 
+[functions.debug-artifact-scan]
+verify_jwt = false
+
+[functions.npm-compromise-check]
+verify_jwt = false
+
 [functions.cyber-news-llm]
 verify_jwt = false
 

@@ -28,7 +28,6 @@ const PolicyGeneratorForm = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedPolicy, setGeneratedPolicy] = useState<string>('');
   const [hasAccess, setHasAccess] = useState(false);
-  const [isValidatingKey, setIsValidatingKey] = useState(false);
   const [savedAccessKey, setSavedAccessKey] = useState<string>('');
 
   const form = useForm<FormValues>({
@@ -43,48 +42,13 @@ const PolicyGeneratorForm = () => {
   });
 
   useEffect(() => {
-    // Check if there's a saved access key in localStorage
     const savedKey = localStorage.getItem('policyGeneratorAccessKey');
     if (savedKey) {
       setSavedAccessKey(savedKey);
       form.setValue('accessKey', savedKey);
-      validateAccessKey(savedKey);
-    }
-  }, []);
-
-  const validateAccessKey = async (key: string) => {
-    setIsValidatingKey(true);
-    try {
-      const { data, error } = await supabase.rpc('validate_policy_access_key', {
-        key_to_validate: key
-      });
-
-      if (error) {
-        console.error('Error validating access key:', error);
-        setHasAccess(false);
-        toast.error('Failed to validate access key');
-        return;
-      }
-
-      const result = data as { valid: boolean; error?: string };
-
-      if (!result.valid) {
-        setHasAccess(false);
-        toast.error(result.error || 'Invalid or expired access key');
-        return;
-      }
-
       setHasAccess(true);
-      localStorage.setItem('policyGeneratorAccessKey', key);
-      toast.success('Access key validated successfully!');
-    } catch (error) {
-      console.error('Error validating access key:', error);
-      setHasAccess(false);
-      toast.error('Failed to validate access key');
-    } finally {
-      setIsValidatingKey(false);
     }
-  };
+  }, [form]);
 
   const handleAccessKeyValidation = async () => {
     const key = form.getValues('accessKey');
@@ -92,7 +56,11 @@ const PolicyGeneratorForm = () => {
       toast.error('Please enter an access key');
       return;
     }
-    await validateAccessKey(key);
+
+    localStorage.setItem('policyGeneratorAccessKey', key);
+    setSavedAccessKey(key);
+    setHasAccess(true);
+    toast.success('Access key saved. It will be verified when you generate a policy.');
   };
 
   const onSubmit = async (values: FormValues) => {
@@ -122,9 +90,13 @@ const PolicyGeneratorForm = () => {
       } else {
         throw new Error('No policy content received');
       }
-    } catch (error: any) {
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to generate policy. Please try again.';
       console.error('Error generating policy:', error);
-      toast.error(error.message || 'Failed to generate policy. Please try again.');
+      setHasAccess(false);
+      localStorage.removeItem('policyGeneratorAccessKey');
+      setSavedAccessKey('');
+      toast.error(message);
     } finally {
       setIsGenerating(false);
     }
@@ -196,20 +168,15 @@ const PolicyGeneratorForm = () => {
               <Button 
                 type="submit" 
                 className="w-full"
-                disabled={isValidatingKey}
               >
-                {isValidatingKey ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Validating...
-                  </>
-                ) : (
-                  'Validate Access Key'
-                )}
+                Continue
               </Button>
             </form>
           </Form>
           <div className="mt-6 pt-6 border-t border-border">
+            <p className="text-xs text-muted-foreground mb-4">
+              The key is checked securely on the server when you generate a policy.
+            </p>
             <p className="text-sm text-muted-foreground mb-4">Don't have an access key?</p>
             <RequestAccessForm onAccessGranted={() => {}} />
           </div>

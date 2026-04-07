@@ -39,7 +39,7 @@ const MetaTags = ({
         "name": "CesiumCyber Security",
         "url": url,
         "image": imageUrl,
-        "logo": `${url}/lovable-uploads/b24b90f5-8a07-4589-821e-d614e2703fa9.png`,
+        "logo": `${url}/favicon.ico`,
         "telephone": "+1-301-531-5670",
         "email": "information@cesiumcyber.com",
         "priceRange": "$$",

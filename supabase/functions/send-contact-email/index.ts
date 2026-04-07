@@ -21,7 +21,11 @@ interface ContactFormData {
   name: string;
   email: string;
   company?: string;
+  phone?: string;
   message: string;
+  leadSource?: string;
+  serviceInterest?: string;
+  expectedCloseDate?: string;
 }
 
 serve(async (req) => {
@@ -101,7 +105,16 @@ serve(async (req) => {
     const formData: ContactFormData = JSON.parse(requestText);
     
     // Extract only allowed fields (ignore any recipient field from request)
-    const { name, email, company, message } = formData;
+    const {
+      name,
+      email,
+      company,
+      phone,
+      message,
+      leadSource,
+      serviceInterest,
+      expectedCloseDate,
+    } = formData;
     
     // Validate required fields
     if (!name || !email || !message) {
@@ -116,7 +129,7 @@ serve(async (req) => {
     }
 
     // Basic input validation
-    if (name.length > 100 || email.length > 254 || message.length > 5000) {
+    if (name.length > 100 || email.length > 254 || message.length > 5000 || (phone && phone.length > 50)) {
       return new Response(
         JSON.stringify({ error: "Input exceeds maximum length" }),
         {
@@ -175,14 +188,35 @@ serve(async (req) => {
     const safeEmail = sanitizeForHtml(email);
     const safeCompany = company ? sanitizeForHtml(company) : null;
     const safeMessage = sanitizeForHtml(message);
+    const safePhone = phone ? sanitizeForHtml(phone) : null;
+
+    if (leadSource) {
+      const { error: leadError } = await supabaseAdmin
+        .from('leads')
+        .insert({
+          name,
+          email,
+          company: company || null,
+          phone: phone || null,
+          source: leadSource,
+          service_interest: serviceInterest || 'General Inquiry',
+          initial_message: message,
+          expected_close_date: expectedCloseDate || null,
+          status: 'new',
+          priority: 'medium',
+        });
+
+      if (leadError) {
+        console.error('Error creating lead from contact submission:', leadError);
+      }
+    }
 
     // Send confirmation email to the user
     console.log("Sending confirmation email to user");
     let userEmailSent = false;
-    let userEmailResponse;
     
     try {
-      userEmailResponse = await resend.emails.send({
+      await resend.emails.send({
         from: "Cesium Cyber <no-reply@cesiumcyber.com>",
         to: [email],
         subject: "We've received your message - Cesium Cyber",
@@ -200,16 +234,14 @@ serve(async (req) => {
       userEmailSent = true;
     } catch (userEmailError) {
       console.error("Error sending user confirmation email:", userEmailError);
-      userEmailResponse = { error: userEmailError.message };
     }
     
     // Send notification email to company with HARDCODED recipient
     console.log("Sending notification email to company at:", COMPANY_EMAIL);
     let companyEmailSent = false;
-    let companyEmailResponse;
     
     try {
-      companyEmailResponse = await resend.emails.send({
+      await resend.emails.send({
         from: "Contact Form <no-reply@cesiumcyber.com>",
         to: [COMPANY_EMAIL], // Always use hardcoded recipient
         subject: "New Contact Form Submission",
@@ -219,6 +251,7 @@ serve(async (req) => {
             <p><strong>Name:</strong> ${safeName}</p>
             <p><strong>Email:</strong> ${safeEmail}</p>
             ${safeCompany ? `<p><strong>Company:</strong> ${safeCompany}</p>` : ''}
+            ${safePhone ? `<p><strong>Phone:</strong> ${safePhone}</p>` : ''}
             <p><strong>Message:</strong><br>${safeMessage}</p>
             <hr/>
             <p style="color: #666; font-size: 12px;">Submitted from IP: ${clientIP}</p>
@@ -229,7 +262,6 @@ serve(async (req) => {
       companyEmailSent = true;
     } catch (companyEmailError) {
       console.error("Error sending company notification email:", companyEmailError);
-      companyEmailResponse = { error: companyEmailError.message };
     }
 
     // Return appropriate response based on what succeeded

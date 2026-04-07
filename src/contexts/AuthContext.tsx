@@ -121,10 +121,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const resetPassword = async (email: string) => {
-    // Use the production URL instead of localhost
-    const redirectUrl = window.location.hostname === 'localhost' 
-      ? 'https://1bea79e8-ba4c-4077-8ea5-57cf08948b11.lovableproject.com/auth'
-      : `${window.location.origin}/auth`;
+    const redirectUrl = `${window.location.origin}/auth`;
     
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: redirectUrl,

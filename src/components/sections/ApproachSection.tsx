@@ -1,4 +1,6 @@
 
+import PretextText from '@/components/utils/PretextText';
+
 const phases = [
   {
     num: "01",
@@ -51,9 +53,13 @@ const ApproachSection = () => {
             <br />
             <span className="text-[#D4AF37]">busy business owners.</span>
           </h2>
-          <p className="font-ui text-[18px] text-white/78 max-w-2xl leading-8 mt-4">
-            You do not need an internal security department to get this done. We guide the process, explain each step clearly, and keep the work focused on business risk.
-          </p>
+          <PretextText
+            as="p"
+            text="You do not need an internal security department to get this done. We guide the process, explain each step clearly, and keep the work focused on business risk."
+            lineHeight={32}
+            font={{ base: '400 18px "Space Grotesk"', md: '400 18px "Space Grotesk"' }}
+            className="font-ui text-[18px] text-white/78 max-w-2xl leading-8 mt-4"
+          />
         </div>
 
         {/* Steps */}
@@ -76,11 +82,27 @@ const ApproachSection = () => {
                 <span className="font-display text-[#D4AF37] text-2xl font-bold">{phase.num}</span>
               </div>
               <div className="md:col-span-3">
-                <div className="font-ui text-[18px] font-semibold text-white/92 leading-snug mb-1">{phase.title}</div>
-                <div className="font-ui text-[15px] text-white/62">{phase.plain}</div>
+                <PretextText
+                  text={phase.title}
+                  lineHeight={24}
+                  font={{ base: '600 18px "Space Grotesk"', md: '600 18px "Space Grotesk"' }}
+                  className="font-ui text-[18px] font-semibold text-white/92 leading-snug mb-1"
+                />
+                <PretextText
+                  text={phase.plain}
+                  lineHeight={20}
+                  font={{ base: '400 15px "Space Grotesk"', md: '400 15px "Space Grotesk"' }}
+                  className="font-ui text-[15px] text-white/62"
+                />
               </div>
               <div className="md:col-span-6">
-                <p className="font-ui text-[16px] text-white/78 leading-8">{phase.description}</p>
+                <PretextText
+                  as="p"
+                  text={phase.description}
+                  lineHeight={32}
+                  font={{ base: '400 16px "Space Grotesk"', md: '400 16px "Space Grotesk"' }}
+                  className="font-ui text-[16px] text-white/78 leading-8"
+                />
               </div>
               <div className="md:col-span-2 md:text-right">
                 <span className={`font-tech text-[9px] tracking-[0.12em] border px-2 py-1 ${phase.statusColor}`}>

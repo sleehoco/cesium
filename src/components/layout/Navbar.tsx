@@ -71,7 +71,7 @@ const Navbar = () => {
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2.5">
               <img
-                src="/lovable-uploads/b24b90f5-8a07-4589-821e-d614e2703fa9.png"
+                src="/favicon.ico"
                 alt="CesiumCyber Logo"
                 className="h-6 w-6"
               />

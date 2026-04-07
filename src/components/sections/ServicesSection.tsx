@@ -1,6 +1,7 @@
 
 import { Link, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import PretextText from '@/components/utils/PretextText';
 
 const services = [
   {
@@ -191,9 +192,13 @@ const ServicesSection = () => {
             <br />
             <span className="text-[#D4AF37]">small business risk.</span>
           </h2>
-          <p className="font-ui text-[18px] text-white/78 max-w-2xl leading-8">
-            From vulnerability assessments to Microsoft 365 hardening and incident response, every service is designed to reduce real business risk without burying you in technical jargon.
-          </p>
+          <PretextText
+            as="p"
+            text="From vulnerability assessments to Microsoft 365 hardening and incident response, every service is designed to reduce real business risk without burying you in technical jargon."
+            lineHeight={32}
+            font={{ base: '400 18px "Space Grotesk"', md: '400 18px "Space Grotesk"' }}
+            className="font-ui text-[18px] text-white/78 max-w-2xl leading-8"
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -213,9 +218,13 @@ const ServicesSection = () => {
               <h3 className="font-display text-3xl font-bold text-white mb-4 group-hover:text-[#D4AF37] transition-colors duration-200 leading-tight">
                 {formatTitle(service.title)}
               </h3>
-              <p className="font-ui text-[17px] text-white/76 leading-8 mb-6">
-                {service.description}
-              </p>
+              <PretextText
+                as="p"
+                text={service.description}
+                lineHeight={32}
+                font={{ base: '400 17px "Space Grotesk"', md: '400 17px "Space Grotesk"' }}
+                className="font-ui text-[17px] text-white/76 leading-8 mb-6"
+              />
               <span className="font-ui text-[16px] text-[#D4AF37] group-hover:text-[#FFD700] transition-colors font-medium">
                 {service.cta} →
               </span>
@@ -240,9 +249,13 @@ const ServicesSection = () => {
               <h3 className="font-display text-2xl font-bold text-white mb-3 leading-tight group-hover:text-[#D4AF37] transition-colors">
                 {formatTitle(service.title)}
               </h3>
-              <p className="font-ui text-[16px] text-white/74 leading-7 flex-1 mb-5">
-                {service.description}
-              </p>
+              <PretextText
+                as="p"
+                text={service.description}
+                lineHeight={28}
+                font={{ base: '400 16px "Space Grotesk"', md: '400 16px "Space Grotesk"' }}
+                className="font-ui text-[16px] text-white/74 leading-7 flex-1 mb-5"
+              />
               <span className="font-ui text-[15px] text-[#D4AF37] font-medium group-hover:text-[#FFD700] transition-colors">
                 {service.cta} →
               </span>

@@ -226,8 +226,7 @@ CREATE TABLE connection_fingerprints (
 ### Common Issues
 
 **AI Analysis Fails**
-- Check Lovable AI credits
-- Verify LOVABLE_API_KEY is set
+- Verify GEMINI_API_KEY is set
 - Check rate limits
 
 **No Fingerprint Data**
@@ -242,6 +241,6 @@ CREATE TABLE connection_fingerprints (
 
 ## Credits
 
-- Lovable AI for security analysis
+- Gemini API for security analysis
 - Google Gemini 2.5 Flash model
 - Supabase for backend infrastructure

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import PretextText from '@/components/utils/PretextText';
 
 const trustItems = [
   'Plain-English security guidance',
@@ -15,41 +16,55 @@ const HeroSection = () => {
     <section className="relative min-h-screen flex items-center overflow-hidden bg-[#0A0A0A] pt-24" aria-labelledby="home-hero-heading">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20">
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-start">
 
           {/* ── Left: Main content (3/5) ── */}
           <div className="lg:col-span-3">
+            <div className="relative border border-[#D4AF37]/22 bg-[linear-gradient(180deg,rgba(15,18,26,0.82),rgba(10,10,10,0.34))] px-6 py-7 md:px-8 md:py-8 mb-10">
+              <div className="pointer-events-none absolute left-3 top-3 h-5 w-5 border-l border-t border-[#D4AF37]/55" />
+              <div className="pointer-events-none absolute right-3 top-3 h-5 w-5 border-r border-t border-[#D4AF37]/55" />
+              <div className="pointer-events-none absolute bottom-3 left-3 h-5 w-5 border-b border-l border-[#D4AF37]/55" />
+              <div className="pointer-events-none absolute bottom-3 right-3 h-5 w-5 border-b border-r border-[#D4AF37]/55" />
 
-            {/* Eyebrow label */}
-            <div className="inline-flex items-center gap-3 mb-8">
-              <div className="h-px w-8 bg-[#D4AF37]" />
-              <span className="font-tech text-[11px] tracking-[0.16em] text-white/65 uppercase">
-                Small business cybersecurity services
-              </span>
+              {/* Eyebrow label */}
+              <div className="inline-flex items-center gap-3 mb-8">
+                <div className="h-px w-8 bg-[#D4AF37]" />
+                <span className="font-tech text-[11px] tracking-[0.16em] text-white/65 uppercase">
+                  Small business cybersecurity services
+                </span>
+              </div>
+
+              {/* Headline — maximum contrast */}
+              <h1 id="home-hero-heading" className="font-display font-bold text-white leading-[0.98] tracking-[-0.04em] mb-8">
+                <span className="block text-[3.2rem] md:text-7xl lg:text-[5.2rem]">Cybersecurity for</span>
+                <span className="block text-[3.2rem] md:text-7xl lg:text-[5.2rem] text-[#D4AF37]">small businesses</span>
+                <span className="block text-[3.2rem] md:text-7xl lg:text-[5.2rem]">that need real help.</span>
+              </h1>
+
+              {/* Gold rule */}
+              <div className="flex items-center gap-4 mb-8">
+                <div className="h-px bg-[#D4AF37] w-16" />
+                <span className="font-ui text-[15px] text-white/82 tracking-[0.01em]">
+                  Columbia, Maryland based. Serving local and nationwide teams.
+                </span>
+              </div>
+
+              {/* Body copy */}
+              <PretextText
+                as="p"
+                text="Managed cybersecurity, security assessments, and incident response for small businesses."
+                lineHeight={32}
+                font={{ base: '400 19px "Space Grotesk"', md: '400 19px "Space Grotesk"' }}
+                className="font-ui text-[19px] text-white/92 max-w-2xl mb-5 leading-8"
+              />
+              <PretextText
+                as="p"
+                text="Protect email, devices, Microsoft 365, and customer data without hiring a full internal security team. Get straightforward guidance, practical fixes, and fast support when something goes wrong."
+                lineHeight={32}
+                font={{ base: '400 18px "Space Grotesk"', md: '400 18px "Space Grotesk"' }}
+                className="font-ui text-[18px] text-white/78 max-w-2xl leading-8"
+              />
             </div>
-
-            {/* Headline — maximum contrast */}
-            <h1 id="home-hero-heading" className="font-display font-bold text-white leading-[0.98] tracking-[-0.04em] mb-8">
-              <span className="block text-[3.2rem] md:text-7xl lg:text-[5.2rem]">Cybersecurity for</span>
-              <span className="block text-[3.2rem] md:text-7xl lg:text-[5.2rem] text-[#D4AF37]">small businesses</span>
-              <span className="block text-[3.2rem] md:text-7xl lg:text-[5.2rem]">that need real help.</span>
-            </h1>
-
-            {/* Gold rule */}
-            <div className="flex items-center gap-4 mb-8">
-              <div className="h-px bg-[#D4AF37] w-16" />
-              <span className="font-ui text-[15px] text-white/82 tracking-[0.01em]">
-                Columbia, Maryland based. Serving local and nationwide teams.
-              </span>
-            </div>
-
-            {/* Body copy */}
-            <p className="font-ui text-[19px] text-white/92 max-w-2xl mb-5 leading-8">
-              Managed cybersecurity, security assessments, and incident response for small businesses.
-            </p>
-            <p className="font-ui text-[18px] text-white/78 max-w-2xl mb-10 leading-8">
-              Protect email, devices, Microsoft 365, and customer data without hiring a full internal security team. Get straightforward guidance, practical fixes, and fast support when something goes wrong.
-            </p>
 
             {/* CTAs */}
             <div className="flex flex-wrap gap-3 mb-14">
@@ -110,12 +125,23 @@ const HeroSection = () => {
               </div>
 
               <div className="px-5 py-6">
-                <h2 className="font-display text-3xl md:text-4xl text-white font-bold leading-tight mb-4">
-                  Security support that is clear, responsive, and built for small teams.
-                </h2>
-                <p className="font-ui text-[16px] text-white/74 leading-7 mb-6">
-                  No generic helpdesk. No 200-page reports you will never use. Just practical security work and a team you can reach when something matters.
-                </p>
+                <PretextText
+                  as="h2"
+                  text="Security support that is clear, responsive, and built for small teams."
+                  lineHeight={40}
+                  font={{
+                    base: '700 30px "Space Grotesk"',
+                    md: '700 36px "Space Grotesk"',
+                  }}
+                  className="font-display text-3xl md:text-4xl text-white font-bold leading-tight mb-4"
+                />
+                <PretextText
+                  as="p"
+                  text="No generic helpdesk. No 200-page reports you will never use. Just practical security work and a team you can reach when something matters."
+                  lineHeight={28}
+                  font={{ base: '400 16px "Space Grotesk"', md: '400 16px "Space Grotesk"' }}
+                  className="font-ui text-[16px] text-white/74 leading-7 mb-6"
+                />
 
                 <div className="space-y-4 mb-7">
                   {trustItems.map((item) => (
@@ -146,9 +172,13 @@ const HeroSection = () => {
               </div>
             </div>
 
-            <p className="font-ui text-[14px] text-white/60 mt-4 leading-6">
-              Speak with a real person about your risk, your tools, and the fastest way to improve protection.
-            </p>
+            <PretextText
+              as="p"
+              text="Speak with a real person about your risk, your tools, and the fastest way to improve protection."
+              lineHeight={24}
+              font={{ base: '400 14px "Space Grotesk"', md: '400 14px "Space Grotesk"' }}
+              className="font-ui text-[14px] text-white/60 mt-4 leading-6"
+            />
           </div>
 
         </div>

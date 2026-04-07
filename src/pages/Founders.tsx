@@ -114,7 +114,7 @@ const Founders = () => {
                   className="bg-card text-card-foreground shadow-md hover:shadow-lg transition-shadow duration-300"
                 >
                   <CardContent className="p-6">
-                    <div className="flex items-center mb-4">
+                    <div className="flex items-start mb-4">
                       <div className="w-24 h-24 rounded-full overflow-hidden mr-4 bg-muted flex-shrink-0">
                         <img
                           src={founder.image}
@@ -122,9 +122,9 @@ const Founders = () => {
                           className="w-full h-full object-cover object-center"
                         />
                       </div>
-                      <div>
-                        <h3 className="text-2xl font-semibold">{founder.name}</h3>
-                        <p className="text-muted-foreground">{founder.role}</p>
+                      <div className="pt-1">
+                        <h3 className="text-2xl font-semibold leading-tight">{founder.name}</h3>
+                        <p className="text-muted-foreground mt-2">{founder.role}</p>
                       </div>
                     </div>
                     <p className="text-muted-foreground mb-4">{founder.bio}</p>

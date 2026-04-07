@@ -3,11 +3,12 @@ import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Shield, AlertTriangle, CheckCircle, XCircle, Info, Search, BookOpen, Code, Bug, Lock } from 'lucide-react';
+import { Shield, AlertTriangle, CheckCircle, XCircle, Info, Search, BookOpen, Code, Bug, Lock, PackageSearch } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -58,11 +59,34 @@ interface ScanResults {
   };
 }
 
+interface SupplyChainFinding {
+  packageName: string;
+  version: string;
+  severity: 'Critical' | 'High' | 'Medium' | 'Low';
+  title: string;
+  description: string;
+  impact: string;
+  references: string[];
+  remediation: string[];
+}
+
+interface SupplyChainResults {
+  overallRisk: 'Critical' | 'High' | 'Medium' | 'Low' | 'None';
+  findingCount: number;
+  findings: SupplyChainFinding[];
+  guidance: string[];
+}
+
 const SecurityScanner = () => {
   const { toast } = useToast();
   const [isScanning, setIsScanning] = useState(false);
   const [scanResults, setScanResults] = useState<ScanResults | null>(null);
   const [scanProgress, setScanProgress] = useState(0);
+  const [packageName, setPackageName] = useState('axios');
+  const [packageVersion, setPackageVersion] = useState('');
+  const [lockfileText, setLockfileText] = useState('');
+  const [isCheckingSupplyChain, setIsCheckingSupplyChain] = useState(false);
+  const [supplyChainResults, setSupplyChainResults] = useState<SupplyChainResults | null>(null);
 
   const form = useForm<ScanFormData>({
     resolver: zodResolver(scanFormSchema),
@@ -154,6 +178,53 @@ const SecurityScanner = () => {
     }
   };
 
+  const checkSupplyChain = async () => {
+    if (!packageName.trim() && !lockfileText.trim()) {
+      toast({
+        title: "Missing Input",
+        description: "Enter a package/version or paste lockfile text.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsCheckingSupplyChain(true);
+    setSupplyChainResults(null);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('npm-compromise-check', {
+        body: {
+          packageName: packageName.trim() || undefined,
+          packageVersion: packageVersion.trim() || undefined,
+          lockfileText: lockfileText.trim() || undefined,
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      setSupplyChainResults(data as SupplyChainResults);
+
+      toast({
+        title: data.findingCount > 0 ? "Supply-Chain Risk Found" : "No Seeded Match Found",
+        description: data.findingCount > 0
+          ? `Found ${data.findingCount} compromised package match(es).`
+          : "No known compromised package match was found in this check.",
+        variant: data.findingCount > 0 ? "destructive" : "default",
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to complete supply-chain check.";
+      toast({
+        title: "Check Failed",
+        description: message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsCheckingSupplyChain(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
@@ -178,10 +249,14 @@ const SecurityScanner = () => {
         </div>
 
         <Tabs defaultValue="scanner" className="space-y-8">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
+          <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-3">
             <TabsTrigger value="scanner">
               <Search className="w-4 h-4 mr-2" />
               Scanner
+            </TabsTrigger>
+            <TabsTrigger value="supply-chain">
+              <PackageSearch className="w-4 h-4 mr-2" />
+              Supply Chain
             </TabsTrigger>
             <TabsTrigger value="guides">
               <BookOpen className="w-4 h-4 mr-2" />
@@ -435,6 +510,147 @@ const SecurityScanner = () => {
                     </CardContent>
                   </Card>
                 )}
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="supply-chain" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Compromised npm Package Check</CardTitle>
+                <CardDescription>
+                  Check a package/version directly or paste lockfile contents to look for known compromised releases such as the March 31, 2026 Axios incident.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <FormLabel>Package Name</FormLabel>
+                    <Input
+                      value={packageName}
+                      onChange={(e) => setPackageName(e.target.value)}
+                      placeholder="axios"
+                      disabled={isCheckingSupplyChain}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <FormLabel>Package Version</FormLabel>
+                    <Input
+                      value={packageVersion}
+                      onChange={(e) => setPackageVersion(e.target.value)}
+                      placeholder="1.14.1"
+                      disabled={isCheckingSupplyChain}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <FormLabel>Lockfile or Dependency Snippet</FormLabel>
+                  <Textarea
+                    value={lockfileText}
+                    onChange={(e) => setLockfileText(e.target.value)}
+                    placeholder='Paste package-lock.json, pnpm-lock, yarn lock snippet, or dependency text here'
+                    disabled={isCheckingSupplyChain}
+                    className="min-h-[220px] font-mono text-sm"
+                  />
+                </div>
+
+                <Button onClick={checkSupplyChain} disabled={isCheckingSupplyChain}>
+                  {isCheckingSupplyChain ? 'Checking...' : 'Run Supply-Chain Check'}
+                </Button>
+              </CardContent>
+            </Card>
+
+            {supplyChainResults && (
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Supply-Chain Summary</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">Overall Risk</span>
+                      <Badge className={getSeverityColor(supplyChainResults.overallRisk === 'None' ? 'low' : supplyChainResults.overallRisk)}>
+                        {supplyChainResults.overallRisk}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">Matches Found</span>
+                      <span className="font-semibold">{supplyChainResults.findingCount}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {supplyChainResults.findings.length > 0 && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Compromised Package Findings</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <Accordion type="single" collapsible className="w-full relative z-10">
+                        {supplyChainResults.findings.map((finding, index) => (
+                          <AccordionItem key={`${finding.packageName}-${finding.version}-${index}`} value={`supply-${index}`}>
+                            <AccordionTrigger className="hover:no-underline cursor-pointer">
+                              <div className="flex items-center gap-3 text-left w-full pointer-events-none">
+                                <Badge className={getSeverityColor(finding.severity)}>
+                                  {getSeverityIcon(finding.severity)}
+                                  <span className="ml-1">{finding.severity}</span>
+                                </Badge>
+                                <div className="flex-1">
+                                  <p className="font-semibold">{finding.packageName}@{finding.version}</p>
+                                  <p className="text-sm text-muted-foreground">{finding.title}</p>
+                                </div>
+                              </div>
+                            </AccordionTrigger>
+                            <AccordionContent className="space-y-4 pt-4">
+                              <p className="text-muted-foreground">{finding.description}</p>
+                              <div>
+                                <h4 className="font-semibold mb-2">Impact</h4>
+                                <p className="text-muted-foreground">{finding.impact}</p>
+                              </div>
+                              <div>
+                                <h4 className="font-semibold mb-2">Remediation</h4>
+                                <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
+                                  {finding.remediation.map((step, stepIndex) => (
+                                    <li key={stepIndex}>{step}</li>
+                                  ))}
+                                </ol>
+                              </div>
+                              <div>
+                                <h4 className="font-semibold mb-2">References</h4>
+                                <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+                                  {finding.references.map((reference, refIndex) => (
+                                    <li key={refIndex}>
+                                      <a href={reference} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                                        {reference}
+                                      </a>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </AccordionContent>
+                          </AccordionItem>
+                        ))}
+                      </Accordion>
+                    </CardContent>
+                  </Card>
+                )}
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Prevention Guidance</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2">
+                      {supplyChainResults.guidance.map((item, index) => (
+                        <li key={index} className="flex items-start gap-2">
+                          <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                          <span className="text-muted-foreground">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
               </div>
             )}
           </TabsContent>
