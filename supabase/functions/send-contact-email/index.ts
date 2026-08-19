@@ -12,9 +12,13 @@ const COMPANY_EMAIL = "information@cesiumcyber.com";
 const ALLOWED_ORIGINS = [
   "https://cesiumcyber.com",
   "https://www.cesiumcyber.com",
-  "http://localhost:8080",
-  "http://localhost:5173",
 ];
+
+// Any loopback port, so local dev works whichever port Vite settles on.
+const LOCALHOST_ORIGIN = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
+
+const isAllowedOrigin = (origin: string | null): origin is string =>
+  !!origin && (ALLOWED_ORIGINS.includes(origin) || LOCALHOST_ORIGIN.test(origin));
 
 // Rate limiting constants
 const MAX_ATTEMPTS_PER_HOUR = 3;
@@ -40,7 +44,7 @@ interface ContactFormData {
 }
 
 const corsFor = (origin: string | null) => {
-  const allowed = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  const allowed = isAllowedOrigin(origin) ? origin : ALLOWED_ORIGINS[0];
   return {
     "Access-Control-Allow-Origin": allowed,
     "Access-Control-Allow-Headers":
@@ -158,7 +162,7 @@ serve(async (req) => {
   }
 
   // Layer 1: origin allowlist. Direct-to-endpoint bots never get past this.
-  if (!origin || !ALLOWED_ORIGINS.includes(origin)) {
+  if (!isAllowedOrigin(origin)) {
     console.log(`[SPAM-DROP] disallowed origin: ${origin ?? "(none)"}`);
     return new Response(JSON.stringify({ error: "Forbidden" }), {
       status: 403,
@@ -247,6 +251,21 @@ serve(async (req) => {
     }
     if (elapsedMs > MAX_FILL_MS) {
       return silentDrop(`stale payload (${elapsedMs}ms) from ${clientIP}`, corsHeaders);
+    }
+
+    // JSON gives no type guarantees: a non-string here would sail past the
+    // length checks below and then throw inside sanitizeForHtml.
+    const isStr = (v: unknown): v is string => typeof v === "string";
+    if (
+      !isStr(name) || !isStr(email) || !isStr(message) ||
+      (company !== undefined && company !== null && !isStr(company)) ||
+      (phone !== undefined && phone !== null && !isStr(phone))
+    ) {
+      console.log("Malformed field types");
+      return new Response(JSON.stringify({ error: "Missing required fields" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
     }
 
     if (!name || !email || !message) {
@@ -392,7 +411,7 @@ serve(async (req) => {
             <p><strong>Message:</strong><br>${safeMessage}</p>
             <hr/>
             <p style="color: #666; font-size: 12px;">
-              Submitted from IP: ${clientIP}${score > 0 ? ` &middot; spam score ${score} (${reasons.join(", ")})` : ""}
+              Submitted from IP: ${sanitizeForHtml(clientIP)}${score > 0 ? ` &middot; spam score ${score} (${reasons.join(", ")})` : ""}
             </p>
           </div>
         `,
