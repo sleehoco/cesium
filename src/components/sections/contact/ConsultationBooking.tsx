@@ -3,6 +3,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { ConsultationBookingValues } from "./booking/ConsultationBookingSchema";
 import { useConsultationService } from "./booking/useConsultationService";
+import { ShieldPayload } from "@/lib/useFormShield";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import ConsultationBookingForm from "./booking/ConsultationBookingForm";
@@ -22,11 +23,11 @@ const ConsultationBooking = ({ className }: ConsultationBookingProps) => {
     "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM"
   ];
 
-  const onSubmit = async (values: ConsultationBookingValues) => {
+  const onSubmit = async (values: ConsultationBookingValues, shield: ShieldPayload) => {
     setIsSubmitting(true);
     
     try {
-      await submitConsultation(values);
+      await submitConsultation(values, shield);
       
       toast.success("Consultation booked successfully!", {
         description: `Your appointment is scheduled for ${format(values.bookingDate, "MMMM do, yyyy")} at ${values.bookingTime}. A confirmation has been sent to your email.`,

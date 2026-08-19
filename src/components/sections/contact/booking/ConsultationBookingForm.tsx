@@ -18,9 +18,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { HoneypotField, useFormShield, ShieldPayload } from "@/lib/useFormShield";
 
 type ConsultationBookingFormProps = {
-  onSubmit: (values: ConsultationBookingValues) => Promise<void>;
+  onSubmit: (values: ConsultationBookingValues, shield: ShieldPayload) => Promise<void>;
   isSubmitting: boolean;
   availableTimes: string[];
 };
@@ -39,9 +40,15 @@ const ConsultationBookingForm = ({
     },
   });
 
+  const { honeypotRef, getShieldPayload } = useFormShield();
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
+      <form
+        onSubmit={form.handleSubmit((values) => onSubmit(values, getShieldPayload()))}
+        className="space-y-4 mt-4"
+      >
+        <HoneypotField ref={honeypotRef} />
         <FormField
           control={form.control}
           name="bookingName"

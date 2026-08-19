@@ -7,6 +7,7 @@ import { formSchema, FormValues } from './form/PdfDownloadFormSchema';
 import { usePdfDownloadSubmission } from './form/usePdfDownloadSubmission';
 import PdfDownloadFormFields from './form/PdfDownloadFormFields';
 import PdfDownloadSubmitButton from './form/PdfDownloadSubmitButton';
+import { HoneypotField, useFormShield } from '@/lib/useFormShield';
 
 interface PdfDownloadFormProps {
   onSubmitSuccess: () => void;
@@ -14,6 +15,7 @@ interface PdfDownloadFormProps {
 
 const PdfDownloadForm = ({ onSubmitSuccess }: PdfDownloadFormProps) => {
   const { submitForm, isLoading } = usePdfDownloadSubmission(onSubmitSuccess);
+  const { honeypotRef, getShieldPayload } = useFormShield();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -34,7 +36,11 @@ const PdfDownloadForm = ({ onSubmitSuccess }: PdfDownloadFormProps) => {
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(submitForm)} className="space-y-4">
+        <form
+          onSubmit={form.handleSubmit((values) => submitForm(values, getShieldPayload()))}
+          className="space-y-4"
+        >
+          <HoneypotField ref={honeypotRef} />
           <PdfDownloadFormFields control={form.control} />
           <PdfDownloadSubmitButton isLoading={isLoading} />
         </form>

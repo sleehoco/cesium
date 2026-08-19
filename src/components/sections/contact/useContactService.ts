@@ -1,8 +1,9 @@
 import { supabase } from "@/integrations/supabase/client";
 import { ContactFormValues } from "./ContactFormSchema";
+import { ShieldPayload } from "@/lib/useFormShield";
 
 export const useContactService = () => {
-  const submitContact = async (values: ContactFormValues) => {
+  const submitContact = async (values: ContactFormValues, shield: ShieldPayload) => {
     const { data: emailData, error: emailError } = await supabase.functions.invoke("send-contact-email", {
       body: {
         name: values.name,
@@ -11,6 +12,8 @@ export const useContactService = () => {
         message: values.message,
         leadSource: "contact_form",
         serviceInterest: "General Inquiry",
+        hpWebsite: shield.hpWebsite,
+        elapsedMs: shield.elapsedMs,
       }
     });
 

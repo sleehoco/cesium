@@ -1,11 +1,12 @@
 
 import { useState } from 'react';
 import { FormValues } from './PdfDownloadFormSchema';
+import { ShieldPayload } from '@/lib/useFormShield';
 
 export const usePdfDownloadSubmission = (onSubmitSuccess: () => void) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const submitForm = async (values: FormValues) => {
+  const submitForm = async (values: FormValues, shield: ShieldPayload) => {
     setIsLoading(true);
     
     try {
@@ -28,7 +29,8 @@ Contact Details:
 - Download Time: ${new Date().toLocaleString()}
 
 This person has requested to download the AI Meets Quantum Computing Business Review research paper.`,
-          recipient: 'jmorrison@cesiumcyber.com'
+          hpWebsite: shield.hpWebsite,
+          elapsedMs: shield.elapsedMs,
         };
 
         console.log('Sending email notification with data:', emailData);

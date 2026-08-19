@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { contactFormSchema, ContactFormValues } from "./ContactFormSchema";
 import { useContactService } from "./useContactService";
+import { HoneypotField, useFormShield } from "@/lib/useFormShield";
 import {
   Form,
   FormControl,
@@ -24,6 +25,7 @@ type ContactFormProps = {
 const ContactForm = ({ className }: ContactFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { submitContact } = useContactService();
+  const { honeypotRef, getShieldPayload } = useFormShield();
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
@@ -33,7 +35,7 @@ const ContactForm = ({ className }: ContactFormProps) => {
   const onSubmit = async (values: ContactFormValues) => {
     setIsSubmitting(true);
     try {
-      await submitContact(values);
+      await submitContact(values, getShieldPayload());
       toast.success("Transmission received.", {
         description: "A CesiumCyber analyst will respond within 24 hours.",
       });
@@ -62,6 +64,8 @@ const ContactForm = ({ className }: ContactFormProps) => {
       <div className="px-6 py-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+
+            <HoneypotField ref={honeypotRef} />
 
             <FormField
               control={form.control}

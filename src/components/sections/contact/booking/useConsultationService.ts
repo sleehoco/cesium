@@ -2,9 +2,10 @@
 import { format } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import { ConsultationBookingValues } from "./ConsultationBookingSchema";
+import { ShieldPayload } from "@/lib/useFormShield";
 
 export const useConsultationService = () => {
-  const submitConsultation = async (values: ConsultationBookingValues) => {
+  const submitConsultation = async (values: ConsultationBookingValues, shield: ShieldPayload) => {
     const dateStr = format(values.bookingDate, "MMMM do, yyyy");
 
     const { data: emailData, error: emailError } = await supabase.functions.invoke("send-contact-email", {
@@ -16,6 +17,8 @@ export const useConsultationService = () => {
         leadSource: "consultation_booking",
         serviceInterest: "Consultation",
         expectedCloseDate: format(values.bookingDate, "yyyy-MM-dd"),
+        hpWebsite: shield.hpWebsite,
+        elapsedMs: shield.elapsedMs,
       }
     });
 
