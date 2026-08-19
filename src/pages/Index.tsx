@@ -7,7 +7,6 @@ import ScrollToTop from "../components/utils/ScrollToTop";
 import PageLoader from "../components/utils/PageLoader";
 import MetaTags from "../components/utils/MetaTags";
 import LazyLoad from "../components/utils/LazyLoad";
-import IranCyberRiskBanner from "../components/sections/IranCyberRiskBanner";
 import SecurityRobotSection from "../components/sections/SecurityRobotSection";
 import CesiumCyberTextGraphic from "../components/sections/CesiumCyberTextGraphic";
 
@@ -68,9 +67,6 @@ const Index = () => {
       <main>
         {/* Critical section - load immediately */}
         <HeroSection />
-
-        {/* Iran Cyber Risk Advisory */}
-        <IranCyberRiskBanner />
         
         {/* Non-critical sections - lazy load */}
         <LazyLoad height="400px">
